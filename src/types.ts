@@ -24,6 +24,9 @@ export interface CardData {
   vault_answer: string;
 }
 
+/** Typographic layout variants for the Thought Stream poster cards */
+export type LayoutVariant = "thesis" | "blockquote" | "fragment" | "epigraph";
+
 export interface FeedCard {
   id: string;
   category: string;
@@ -36,6 +39,14 @@ export interface FeedCard {
   vault_answer: string;
   presentation: Presentation;
   stack_id?: string;
+  /** Assigned programmatically — cycles through 4 typographic layouts */
+  layoutVariant?: LayoutVariant;
+  /**
+   * Cloze deletion segments for spaced-repetition cards.
+   * Odd-indexed segments are the "blanked" words to be revealed on tap.
+   * e.g., ["The unexamined life is not worth ", "living", "."]
+   */
+  quote?: string[];
 }
 
 export interface ContentStack {
@@ -64,6 +75,8 @@ export interface SavedVaultCard {
   interval: number;
   next_review_date: string;
   review_count: number;
+  /** Cloze deletion segments inherited from FeedCard */
+  quote?: string[];
 }
 
 export interface MoodAesthetic {
@@ -77,4 +90,15 @@ export interface MoodAesthetic {
   btnColor: string;
   badgeColor: string;
   display: string;
+}
+
+/** Relationship types for Knowledge Constellation edges */
+export type EdgeRelationship = "Influenced" | "Critiqued" | "Contradicts" | "Contemporaries" | "Inspired";
+
+/** Graph edge with philosophical relationship metadata */
+export interface GraphEdge {
+  from: string;
+  to: string;
+  relationship: EdgeRelationship;
+  dashed?: boolean;
 }

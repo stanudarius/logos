@@ -49,7 +49,8 @@ export const INITIAL_FEED_CARDS: FeedCard[] = [
     explore_subtext: "The struggle itself toward the heights is enough to fill a human heart. One must imagine Sisyphus happy.",
     vault_question: "What is Camus's final conclusion about Sisyphus?",
     vault_answer: "One must imagine Sisyphus happy, because his persistent struggle gives form to human dignity and freedom.",
-    presentation: PRESENTATIONS.camus
+    presentation: PRESENTATIONS.camus,
+    quote: ["The struggle itself toward the heights is enough to fill a ", "human heart", ". One must imagine Sisyphus ", "happy", "."]
   },
 
   // --- SENECA (4 CARDS) ---
@@ -63,7 +64,8 @@ export const INITIAL_FEED_CARDS: FeedCard[] = [
     explore_subtext: "Time is our most precious asset, yet it is the only resource we let others steal without reservation.",
     vault_question: "What is Seneca's view on time conservation?",
     vault_answer: "He argues we guard our money and estates fiercely but scatter our days like fallen leaves, letting others steal them easily.",
-    presentation: PRESENTATIONS.seneca
+    presentation: PRESENTATIONS.seneca,
+    quote: ["Time is our most precious ", "asset", ", yet it is the only resource we let others ", "steal", " without reservation."]
   },
   {
     id: "seneca_2",
@@ -125,7 +127,8 @@ export const INITIAL_FEED_CARDS: FeedCard[] = [
     explore_subtext: "What stands in the way becomes the way. Every barrier is an opportunity to practice virtue and patience.",
     vault_question: "What is Amor Fati in Stoicism?",
     vault_answer: "The active embrace of destiny and choosing to view every tragedy or obstacle as perfect fuel for personal growth.",
-    presentation: PRESENTATIONS.marcus
+    presentation: PRESENTATIONS.marcus,
+    quote: ["What stands in the way becomes ", "the way", ". Every barrier is an opportunity to practice ", "virtue", " and patience."]
   },
   {
     id: "marcus_3",
@@ -187,7 +190,8 @@ export const INITIAL_FEED_CARDS: FeedCard[] = [
     explore_subtext: "The unexamined life is not worth living. Self-reflection is the absolute threshold of virtue.",
     vault_question: "Why did Socrates declare the unexamined life not worth living?",
     vault_answer: "Because without self-knowledge and moral inquiry, we act on impulse and remain blind to our true purpose.",
-    presentation: PRESENTATIONS.socrates
+    presentation: PRESENTATIONS.socrates,
+    quote: ["The ", "unexamined", " life is not worth ", "living", ". Self-reflection is the absolute threshold of virtue."]
   },
   {
     id: "socrates_4",
@@ -325,7 +329,8 @@ export const INITIAL_FEED_CARDS: FeedCard[] = [
     explore_subtext: "Upon waking, Gregor Samsa finds himself transformed into a monstrous insect—the ultimate physical alienation.",
     vault_question: "What does Gregor's insect state symbolize in Kafka's work?",
     vault_answer: "Absolute existential displacement, and being viewed as a burden within a hyper-capitalist family dynamic.",
-    presentation: PRESENTATIONS.kafka
+    presentation: PRESENTATIONS.kafka,
+    quote: ["Upon waking, Gregor Samsa finds himself transformed into a monstrous ", "insect", "—the ultimate physical ", "alienation", "."]
   },
   {
     id: "kafka_3",
@@ -399,6 +404,7 @@ export const INITIAL_FEED_CARDS: FeedCard[] = [
     explore_subtext: "Active love is a harsh and dreadful thing compared to dreaming, requiring lifelong patience.",
     vault_question: "How does Father Zosima describe active love?",
     vault_answer: "As a disciplined, practical struggle of devotion, in contrast to abstract or purely emotional love.",
-    presentation: PRESENTATIONS.dostoevsky
+    presentation: PRESENTATIONS.dostoevsky,
+    quote: ["Active love is a ", "harsh", " and ", "dreadful", " thing compared to dreaming, requiring lifelong patience."]
   }
 ];
