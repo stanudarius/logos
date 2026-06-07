@@ -23,7 +23,7 @@ import type { Session } from "@supabase/supabase-js";
 
 export default function App() {
   const [toastMessage, setToastMessage] = useState<string | null>(null);
-  
+
   // Mobile Emulation States
   const [selectedSlide, setSelectedSlide] = useState(0);
   const [feedCards, setFeedCards] = useState<FeedCard[]>(INITIAL_FEED_CARDS);
@@ -60,7 +60,7 @@ export default function App() {
   // Fetch data when session loads
   useEffect(() => {
     if (!session?.user) return;
-    
+
     const fetchData = async () => {
       // Fetch profile
       const { data: profile } = await supabase.from('profiles').select('*').eq('id', session.user.id).single();
@@ -70,14 +70,14 @@ export default function App() {
       } else {
         await supabase.from('profiles').insert([{ id: session.user.id, mastery_points: 120, streak: 3 }]);
       }
-      
+
       // Fetch vault
       const { data: vault } = await supabase.from('vault_cards').select('*').eq('user_id', session.user.id);
       if (vault) {
         setSavedVaultCards(vault.map(row => row.card_data as SavedVaultCard));
       }
     };
-    
+
     fetchData();
   }, [session]);
 
@@ -107,7 +107,7 @@ export default function App() {
     if (isFetchingInfinite) return;
     setIsFetchingInfinite(true);
     triggerToast("Discovering new ideas...");
-    
+
     try {
       const response = await fetch("/api/generate", {
         method: "POST",
@@ -151,7 +151,7 @@ export default function App() {
       if (document.activeElement?.tagName === "INPUT" || document.activeElement?.tagName === "TEXTAREA") {
         return;
       }
-      
+
       if (e.key === "ArrowDown") {
         e.preventDefault();
         handleNextSlide();
@@ -175,7 +175,7 @@ export default function App() {
 
   const toggleSaveToVault = useCallback(async (index: number) => {
     if (!session?.user) return;
-    
+
     const card = currentDisplayCards[index] || INITIAL_FEED_CARDS[0];
     const isSaved = savedVaultCards.some(c => c.stack_id === card.stack_id);
 
@@ -204,14 +204,14 @@ export default function App() {
 
   const deleteFromVault = useCallback(async (id: string) => {
     if (!session?.user) return;
-    
+
     setSavedVaultCards(prev => prev.filter(c => c.id !== id));
     triggerToast("Card removed from vault.");
-    
+
     if (vaultReviewIndex >= Math.max(1, savedVaultCards.length - 1)) {
       setVaultReviewIndex(0);
     }
-    
+
     await supabase.from('vault_cards').delete().eq('user_id', session.user.id).eq('card_id', id);
   }, [triggerToast, vaultReviewIndex, savedVaultCards.length, session]);
 
@@ -240,7 +240,7 @@ export default function App() {
   if (!session) {
     return (
       <div className="w-full h-[100dvh] bg-[#0A0A0A] flex items-center justify-center overflow-hidden p-4 sm:p-8">
-        <AuthScreen onLoginSuccess={() => {}} />
+        <AuthScreen onLoginSuccess={() => { }} />
       </div>
     );
   }
@@ -250,40 +250,40 @@ export default function App() {
       <div className="w-full max-w-[420px] h-full flex flex-col items-center justify-center font-sans relative">
         <Toast message={toastMessage} />
 
-      <PhoneEmulator
-        phoneTab={phoneTab}
-        selectedSlide={selectedSlide}
-        slideDirection={slideDirection}
-        previewVault={previewVault}
-        isDeepDive={isDeepDive}
-        currentDisplayCards={currentDisplayCards}
-        activeCard={activeCard}
-        activeAesthetic={activeAesthetic}
-        generatedStack={generatedStack}
-        savedVaultCards={savedVaultCards}
-        vaultReviewIndex={vaultReviewIndex}
-        vRecallRevealed={vRecallRevealed}
-        reviewedCount={reviewedCount}
-        masteryPoints={masteryPoints}
-        onNextSlide={handleNextSlide}
-        onPrevSlide={handlePrevSlide}
-        onSetPhoneTab={setPhoneTab}
-        onSetPreviewVault={setPreviewVault}
-        onSetDeepDive={setIsDeepDive}
-        onToggleSaveToVault={toggleSaveToVault}
-        isCardSavedInVault={isCardSavedInVault}
-        onDeleteFromVault={deleteFromVault}
-        onRevealRecall={handleRevealRecall}
-        onSubmitReviewRating={submitReviewRating}
-        onTriggerToast={triggerToast}
-        onOpenConstellation={() => setIsConstellationOpen(true)}
-      />
+        <PhoneEmulator
+          phoneTab={phoneTab}
+          selectedSlide={selectedSlide}
+          slideDirection={slideDirection}
+          previewVault={previewVault}
+          isDeepDive={isDeepDive}
+          currentDisplayCards={currentDisplayCards}
+          activeCard={activeCard}
+          activeAesthetic={activeAesthetic}
+          generatedStack={generatedStack}
+          savedVaultCards={savedVaultCards}
+          vaultReviewIndex={vaultReviewIndex}
+          vRecallRevealed={vRecallRevealed}
+          reviewedCount={reviewedCount}
+          masteryPoints={masteryPoints}
+          onNextSlide={handleNextSlide}
+          onPrevSlide={handlePrevSlide}
+          onSetPhoneTab={setPhoneTab}
+          onSetPreviewVault={setPreviewVault}
+          onSetDeepDive={setIsDeepDive}
+          onToggleSaveToVault={toggleSaveToVault}
+          isCardSavedInVault={isCardSavedInVault}
+          onDeleteFromVault={deleteFromVault}
+          onRevealRecall={handleRevealRecall}
+          onSubmitReviewRating={submitReviewRating}
+          onTriggerToast={triggerToast}
+          onOpenConstellation={() => setIsConstellationOpen(true)}
+        />
       </div>
 
       <AnimatePresence>
         {isConstellationOpen && (
-          <ConstellationMap 
-            onClose={() => setIsConstellationOpen(false)} 
+          <ConstellationMap
+            onClose={() => setIsConstellationOpen(false)}
           />
         )}
       </AnimatePresence>

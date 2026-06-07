@@ -192,7 +192,12 @@ const PhoneEmulator: React.FC<PhoneEmulatorProps> = ({
                     >
                       <p className={`text-[12px] font-semibold tracking-tight group-hover/read:underline ${activeAesthetic.text}`}>{activeCard?.philosopher}</p>
                       <div className="flex items-center gap-1.5">
-                        <p className="text-[10px] font-normal text-amber-500 tracking-wide uppercase truncate max-w-[200px]">{activeCard?.presentation?.title || activeCard?.topic || "The Myth of Sisyphus"}</p>
+                        <p className="text-[10px] font-normal text-amber-500 tracking-wide uppercase truncate max-w-[190px]">
+                          {(() => {
+                            const subtitle = activeCard?.presentation?.title || activeCard?.topic || "The Myth of Sisyphus";
+                            return subtitle.length > 30 ? subtitle.substring(0, 30) + "..." : subtitle;
+                          })()}
+                        </p>
                         <span className="text-[10px] text-amber-500 transition-transform group-hover/read:translate-x-0.5">→</span>
                       </div>
                     </div>
