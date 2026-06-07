@@ -139,9 +139,9 @@ app.post("/api/generate", async (req, res) => {
     ---
     `;
 
-    // Query Gemini 1.5 Flash for high performance and structured accuracy
+    // Query Gemini 3.5 Flash for high performance and structured accuracy
     const response = await ai.models.generateContent({
-      model: "gemini-1.5-flash",
+      model: "gemini-3.5-flash",
       contents: prompt,
       config: {
         temperature: 0.5,

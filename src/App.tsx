@@ -144,6 +144,27 @@ export default function App() {
     setPreviewVault(false);
   }, [currentDisplayCards.length]);
 
+  // Keyboard navigation
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // Don't trigger if user is typing in an input
+      if (document.activeElement?.tagName === "INPUT" || document.activeElement?.tagName === "TEXTAREA") {
+        return;
+      }
+      
+      if (e.key === "ArrowDown") {
+        e.preventDefault();
+        handleNextSlide();
+      } else if (e.key === "ArrowUp") {
+        e.preventDefault();
+        handlePrevSlide();
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [handleNextSlide, handlePrevSlide]);
+
   const isCardSavedInVault = useCallback((slideIdx: number) => {
     const ac = currentDisplayCards[slideIdx];
     if (!ac) return false;
