@@ -14,6 +14,7 @@ interface PhoneEmulatorProps {
   phoneTab: "explore" | "vault";
   currentDisplayCards: FeedCard[];
   activeAesthetic: MoodAesthetic;
+  isFetchingMore: boolean;
 
   // Vault state
   savedVaultCards: SavedVaultCard[];
@@ -39,6 +40,7 @@ const PhoneEmulator: React.FC<PhoneEmulatorProps> = ({
   phoneTab,
   currentDisplayCards,
   activeAesthetic,
+  isFetchingMore,
   savedVaultCards,
   vaultReviewIndex,
   vRecallRevealed,
@@ -111,6 +113,7 @@ const PhoneEmulator: React.FC<PhoneEmulatorProps> = ({
         {phoneTab === "explore" && (
           <ThoughtStream
             cards={currentDisplayCards}
+            isLoading={isFetchingMore}
             onActiveCardChange={onActiveCardChange}
             onFetchMore={onFetchMore}
             isCardSaved={isCardSavedInVault}

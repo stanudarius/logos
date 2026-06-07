@@ -210,6 +210,7 @@ export default function App() {
           phoneTab={phoneTab}
           currentDisplayCards={feedCards}
           activeAesthetic={activeAesthetic}
+          isFetchingMore={isFetchingInfinite}
           savedVaultCards={savedVaultCards}
           vaultReviewIndex={vaultReviewIndex}
           vRecallRevealed={vRecallRevealed}
