@@ -13,6 +13,7 @@ interface PhoneEmulatorProps {
   // Display state
   phoneTab: "explore" | "vault";
   currentDisplayCards: FeedCard[];
+  activeCardIndex: number;
   activeAesthetic: MoodAesthetic;
   isFetchingMore: boolean;
 
@@ -39,6 +40,7 @@ interface PhoneEmulatorProps {
 const PhoneEmulator: React.FC<PhoneEmulatorProps> = ({
   phoneTab,
   currentDisplayCards,
+  activeCardIndex,
   activeAesthetic,
   isFetchingMore,
   savedVaultCards,
@@ -59,6 +61,64 @@ const PhoneEmulator: React.FC<PhoneEmulatorProps> = ({
 }) => {
   const [currentTime, setCurrentTime] = useState<string>("9:41");
   const [clozeComplete, setClozeComplete] = useState(false);
+  const [isSharing, setIsSharing] = useState(false);
+
+  const handleShareClick = useCallback(async () => {
+    if (isSharing) return;
+    setIsSharing(true);
+    try {
+      const { toPng } = await import("html-to-image");
+      const node = document.getElementById(`thought-atom-${activeCardIndex}`);
+      if (!node) throw new Error("Card node not found");
+
+      onTriggerToast("Generating shareable image...");
+      
+      // Temporarily hide the deep dive drawer and buttons if they exist
+      const dataUrl = await toPng(node, { 
+        quality: 0.95,
+        pixelRatio: 2,
+        filter: (el) => {
+          // Filter out the bookmark toggle and drawer when capturing
+          if (el.tagName === 'BUTTON' && el.id?.startsWith('bookmark-toggle')) return false;
+          if (el.classList && el.classList.contains('deep-dive-drawer')) return false;
+          return true;
+        }
+      });
+
+      const philosopher = currentDisplayCards[activeCardIndex]?.philosopher || "philosophy";
+      const filename = `${philosopher.replace(/\s+/g, '-').toLowerCase()}-logos.png`;
+
+      // Try native share API first (mobile)
+      if (navigator.share) {
+        const res = await fetch(dataUrl);
+        const blob = await res.blob();
+        const file = new File([blob], filename, { type: blob.type });
+        try {
+          await navigator.share({
+            title: 'Logos Philosophy Stack',
+            text: `Check out this insight from ${philosopher}!`,
+            files: [file]
+          });
+          onTriggerToast("Shared successfully!");
+        } catch (shareErr) {
+          // User might have cancelled share
+          console.log(shareErr);
+        }
+      } else {
+        // Fallback to direct download
+        const link = document.createElement("a");
+        link.download = filename;
+        link.href = dataUrl;
+        link.click();
+        onTriggerToast("Saved to downloads!");
+      }
+    } catch (err) {
+      console.error(err);
+      onTriggerToast("Failed to generate image.");
+    } finally {
+      setIsSharing(false);
+    }
+  }, [activeCardIndex, isSharing, currentDisplayCards, onTriggerToast]);
 
   useEffect(() => {
     const updateTime = () => {
@@ -96,13 +156,23 @@ const PhoneEmulator: React.FC<PhoneEmulatorProps> = ({
         <span className="opacity-45 text-[#1C1C1E]">{currentTime}</span>
 
         {phoneTab === "explore" && (
-          <button
-            onClick={onOpenConstellation}
-            className="p-1.5 rounded-full backdrop-blur-md bg-[#1C1C1E]/5 hover:bg-[#1C1C1E]/15 transition-all pointer-events-auto text-[#1C1C1E]"
-            title="View Knowledge Constellation"
-          >
-            <Network className="w-5 h-5" />
-          </button>
+          <div className="flex items-center gap-1.5 pointer-events-auto">
+            <button
+              onClick={handleShareClick}
+              disabled={isSharing}
+              className="p-1.5 rounded-full backdrop-blur-md bg-[#1C1C1E]/5 hover:bg-[#1C1C1E]/15 transition-all text-[#1C1C1E] disabled:opacity-50"
+              title="Share Snapshot"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" x2="12" y1="2" y2="15"/></svg>
+            </button>
+            <button
+              onClick={onOpenConstellation}
+              className="p-1.5 rounded-full backdrop-blur-md bg-[#1C1C1E]/5 hover:bg-[#1C1C1E]/15 transition-all text-[#1C1C1E]"
+              title="View Knowledge Constellation"
+            >
+              <Network className="w-5 h-5" />
+            </button>
+          </div>
         )}
       </div>
 

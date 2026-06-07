@@ -45,7 +45,7 @@ const ThoughtAtom: React.FC<ThoughtAtomProps> = ({
   }, [onTriggerToast]);
 
   return (
-    <div className="thought-atom relative" data-card-index={index}>
+    <div id={`thought-atom-${index}`} className="thought-atom relative" data-card-index={index}>
       {/* Main Card Surface */}
       <div
         className={`h-full w-full bg-[#FAF8F3] flex flex-col relative cursor-pointer select-none layout-${layoutVariant}`}

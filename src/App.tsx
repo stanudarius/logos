@@ -209,6 +209,7 @@ export default function App() {
         <PhoneEmulator
           phoneTab={phoneTab}
           currentDisplayCards={feedCards}
+          activeCardIndex={activeCardIndex}
           activeAesthetic={activeAesthetic}
           isFetchingMore={isFetchingInfinite}
           savedVaultCards={savedVaultCards}
