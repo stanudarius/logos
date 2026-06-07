@@ -58,9 +58,12 @@ export interface SavedVaultCard {
   explore_subtext: string;
   vault_question: string;
   vault_answer: string;
-  savedAt: string;
-  reviewCount: number;
-  masteryLevel: string;
+  presentation: Presentation;
+  date_added: string;
+  ease_factor: number;
+  interval: number;
+  next_review_date: string;
+  review_count: number;
 }
 
 export interface MoodAesthetic {

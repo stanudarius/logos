@@ -7,6 +7,7 @@ import type { ContentStack, FeedCard } from "../types";
 export function mapStackToFeedCards(stack: ContentStack): FeedCard[] {
   return (stack.cards || []).map((card, idx) => ({
     id: `gen_${stack.stack_id || "gen"}_card_${idx}_${Date.now()}`,
+    stack_id: stack.stack_id,
     category: stack.category || "philosophy",
     topic: stack.topic,
     philosopher: stack.philosopher,

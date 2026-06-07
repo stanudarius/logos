@@ -168,21 +168,19 @@ export default function App() {
   const isCardSavedInVault = useCallback((slideIdx: number) => {
     const ac = currentDisplayCards[slideIdx];
     if (!ac) return false;
-    return savedVaultCards.some(
-      saved => saved.explore_title === ac.explore_title && (saved.stack_id === ac.stack_id || saved.id === ac.id)
-    );
+    return savedVaultCards.some(saved => saved.id === ac.id);
   }, [currentDisplayCards, savedVaultCards]);
 
   const toggleSaveToVault = useCallback(async (index: number) => {
     if (!session?.user) return;
 
     const card = currentDisplayCards[index] || INITIAL_FEED_CARDS[0];
-    const isSaved = savedVaultCards.some(c => c.stack_id === card.stack_id);
+    const isSaved = savedVaultCards.some(c => c.id === card.id);
 
     if (isSaved) {
-      setSavedVaultCards(prev => prev.filter(c => c.stack_id !== card.stack_id));
+      setSavedVaultCards(prev => prev.filter(c => c.id !== card.id));
       triggerToast("Removed from Vault");
-      await supabase.from('vault_cards').delete().eq('user_id', session.user.id).eq('card_id', card.stack_id);
+      await supabase.from('vault_cards').delete().eq('user_id', session.user.id).eq('card_id', card.id);
     } else {
       const vaultCard: SavedVaultCard = {
         ...card,
@@ -196,7 +194,7 @@ export default function App() {
       triggerToast("Saved to Vault. Scheduled for spaced repetition.");
       await supabase.from('vault_cards').insert([{
         user_id: session.user.id,
-        card_id: vaultCard.stack_id,
+        card_id: vaultCard.id,
         card_data: vaultCard
       }]);
     }
