@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { 
   BookOpen, Bookmark, BookmarkCheck, X, 
-  Brain, Trash2, HelpCircle
+  Brain, Trash2, HelpCircle, Network
 } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import type { FeedCard, MoodAesthetic, SavedVaultCard, ReadingPart } from "../types";
@@ -65,6 +65,7 @@ interface PhoneEmulatorProps {
   onRevealRecall: () => void;
   onSubmitReviewRating: (rating: "again" | "hard" | "easy") => void;
   onTriggerToast: (msg: string) => void;
+  onOpenConstellation?: () => void;
 }
 
 const PhoneEmulator: React.FC<PhoneEmulatorProps> = ({
@@ -92,7 +93,8 @@ const PhoneEmulator: React.FC<PhoneEmulatorProps> = ({
   onDeleteFromVault,
   onRevealRecall,
   onSubmitReviewRating,
-  onTriggerToast
+  onTriggerToast,
+  onOpenConstellation
 }) => {
   const [currentTime, setCurrentTime] = useState<string>("9:41");
 
@@ -118,10 +120,19 @@ const PhoneEmulator: React.FC<PhoneEmulatorProps> = ({
         {/* Visual Mood Gradient Overlay */}
         <div className="absolute inset-0 bg-gradient-to-b from-white/20 via-transparent to-transparent opacity-50 pointer-events-none" />
 
-        {/* Simulated top notch */}
-        <div className="relative z-10 flex justify-between items-center text-[10px] font-bold tracking-widest uppercase opacity-45 px-1">
-          <span className="invisible">{currentTime}</span>
-          <span className={activeAesthetic.text}>{currentTime}</span>
+        {/* Simulated top notch & Constellation Trigger */}
+        <div className="relative z-50 flex justify-between items-center text-[10px] font-bold tracking-widest uppercase px-1 pointer-events-none">
+          <span className={`opacity-45 ${activeAesthetic.text}`}>{currentTime}</span>
+          
+          {phoneTab === "explore" && !isDeepDive && !previewVault && (
+            <button 
+              onClick={onOpenConstellation}
+              className={`p-1.5 rounded-full backdrop-blur-md bg-white/5 hover:bg-white/20 transition-all pointer-events-auto ${activeAesthetic.text}`}
+              title="View Knowledge Constellation"
+            >
+              <Network className="w-5 h-5" />
+            </button>
+          )}
         </div>
 
         {/* Animated Body Display */}

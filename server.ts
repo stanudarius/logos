@@ -13,7 +13,7 @@ const PORT = 3000;
 // Middleware
 app.use(express.json());
 
-// Initialize Gemini SDK server-side (keys are never exposed to browser)
+// Initialize Gemini SDK server-side
 const ai = new GoogleGenAI({
   apiKey: process.env.GEMINI_API_KEY,
   httpOptions: {
@@ -23,7 +23,7 @@ const ai = new GoogleGenAI({
   },
 });
 
-// JSON Schema corresponding exactly to the user's requested specification.
+// JSON Schema
 const microlearningSchema = {
   type: Type.OBJECT,
   properties: {
@@ -139,9 +139,9 @@ app.post("/api/generate", async (req, res) => {
     ---
     `;
 
-    // Query Gemini 3.5 Flash for high performance and structured accuracy
+    // Query Gemini 1.5 Flash for high performance and structured accuracy
     const response = await ai.models.generateContent({
-      model: "gemini-3.5-flash",
+      model: "gemini-1.5-flash",
       contents: prompt,
       config: {
         temperature: 0.5,

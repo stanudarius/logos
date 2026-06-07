@@ -15,6 +15,7 @@ import { mapStackToFeedCards } from "./utils/cardMapper";
 import Toast from "./components/Toast";
 import PhoneEmulator from "./components/PhoneEmulator";
 import { AuthScreen } from "./components/AuthScreen";
+import { ConstellationMap } from "./components/ConstellationMap";
 
 // Supabase
 import { supabase } from "./lib/supabase";
@@ -31,6 +32,7 @@ export default function App() {
   const [isDeepDive, setIsDeepDive] = useState(false);
   const [phoneTab, setPhoneTab] = useState<"explore" | "vault">("explore");
   const [isFetchingInfinite, setIsFetchingInfinite] = useState(false);
+  const [isConstellationOpen, setIsConstellationOpen] = useState(false);
 
   // Supabase Session State
   const [session, setSession] = useState<Session | null>(null);
@@ -253,8 +255,17 @@ export default function App() {
         onRevealRecall={handleRevealRecall}
         onSubmitReviewRating={submitReviewRating}
         onTriggerToast={triggerToast}
+        onOpenConstellation={() => setIsConstellationOpen(true)}
       />
       </div>
+
+      <AnimatePresence>
+        {isConstellationOpen && (
+          <ConstellationMap 
+            onClose={() => setIsConstellationOpen(false)} 
+          />
+        )}
+      </AnimatePresence>
     </div>
   );
 }
