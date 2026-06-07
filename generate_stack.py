@@ -1,29 +1,9 @@
-#!/usr/bin/env python3
-"""
-Aura Stack - Milestone 1 Content Generator Engine
-This script takes raw text about philosophical/historical concepts and uses 
-Google's Gemini API via the google-generativeai SDK to convert it into a highly 
-structured, premium microlearning JSON pack ready for Supabase injection.
-
-Prerequisites:
-  pip install google-generativeai pydantic
-
-Usage:
-  1. Set your Gemini API key in your terminal env:
-     export GEMINI_API_KEY="your-api-key-here"
-  2. Run the script:
-     python generate_stack.py
-"""
-
 import os
 import json
 import sys
 from typing import List
 from pydantic import BaseModel, Field
 import google.generativeai as genai
-
-# Define the exact structural schema required by Aura Stack using Pydantic.
-# This ensures that Gemini will output valid, structured data.
 
 class Card(BaseModel):
     explore_title: str = Field(

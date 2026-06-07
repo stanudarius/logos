@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { 
   BookOpen, Bookmark, BookmarkCheck, X, 
-  Brain, Trash2, HelpCircle, Search
+  Brain, Trash2, HelpCircle
 } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import type { FeedCard, MoodAesthetic, SavedVaultCard, ReadingPart } from "../types";
@@ -65,7 +65,6 @@ interface PhoneEmulatorProps {
   onRevealRecall: () => void;
   onSubmitReviewRating: (rating: "again" | "hard" | "easy") => void;
   onTriggerToast: (msg: string) => void;
-  onFetchCustomTopic?: (topic: string) => void;
 }
 
 const PhoneEmulator: React.FC<PhoneEmulatorProps> = ({
@@ -93,12 +92,9 @@ const PhoneEmulator: React.FC<PhoneEmulatorProps> = ({
   onDeleteFromVault,
   onRevealRecall,
   onSubmitReviewRating,
-  onTriggerToast,
-  onFetchCustomTopic
+  onTriggerToast
 }) => {
   const [currentTime, setCurrentTime] = useState<string>("9:41");
-  const [isSearchOpen, setIsSearchOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
     const updateTime = () => {
@@ -122,67 +118,11 @@ const PhoneEmulator: React.FC<PhoneEmulatorProps> = ({
         {/* Visual Mood Gradient Overlay */}
         <div className="absolute inset-0 bg-gradient-to-b from-white/20 via-transparent to-transparent opacity-50 pointer-events-none" />
 
-        {/* Simulated top notch & Search */}
-        <div className="relative z-50 flex justify-between items-center text-[10px] font-bold tracking-widest uppercase px-1">
-          <span className={`opacity-45 ${activeAesthetic.text}`}>{currentTime}</span>
-          
-          {phoneTab === "explore" && (
-            <button 
-              onClick={() => setIsSearchOpen(true)}
-              className={`p-1.5 rounded-full backdrop-blur-md bg-white/5 hover:bg-white/20 transition-all ${activeAesthetic.text}`}
-            >
-              <Search className="w-5 h-5" />
-            </button>
-          )}
+        {/* Simulated top notch */}
+        <div className="relative z-10 flex justify-between items-center text-[10px] font-bold tracking-widest uppercase opacity-45 px-1">
+          <span className="invisible">{currentTime}</span>
+          <span className={activeAesthetic.text}>{currentTime}</span>
         </div>
-
-        {/* Search Overlay */}
-        <AnimatePresence>
-          {isSearchOpen && (
-            <motion.div
-              initial={{ opacity: 0, y: -20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              className="absolute inset-0 z-50 bg-black/95 backdrop-blur-xl flex flex-col p-6 rounded-[40px]"
-            >
-              <div className="flex justify-between items-center mb-8 mt-4">
-                <h3 className="text-white text-lg font-serif italic">What do you want to learn?</h3>
-                <button onClick={() => setIsSearchOpen(false)} className="p-2 text-white/50 hover:text-white transition-colors">
-                  <X className="w-6 h-6" />
-                </button>
-              </div>
-              
-              <form 
-                onSubmit={(e) => {
-                  e.preventDefault();
-                  if (searchQuery.trim() && onFetchCustomTopic) {
-                    onFetchCustomTopic(searchQuery);
-                    setIsSearchOpen(false);
-                    setSearchQuery("");
-                  }
-                }}
-                className="flex flex-col gap-4"
-              >
-                <input
-                  type="text"
-                  autoFocus
-                  placeholder="e.g. Quantum Physics, Stoicism..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full bg-white/10 border border-white/20 rounded-2xl px-5 py-4 text-white placeholder-white/30 focus:outline-none focus:ring-2 focus:ring-white/50 transition-all text-lg"
-                />
-                
-                <button
-                  type="submit"
-                  disabled={!searchQuery.trim()}
-                  className="w-full bg-white text-black font-semibold rounded-2xl px-5 py-4 text-lg hover:bg-neutral-200 transition-colors disabled:opacity-50 mt-4"
-                >
-                  Generate Cinematic Feed
-                </button>
-              </form>
-            </motion.div>
-          )}
-        </AnimatePresence>
 
         {/* Animated Body Display */}
         <div className="relative z-10 flex-1 flex flex-col justify-center my-6 overflow-hidden">

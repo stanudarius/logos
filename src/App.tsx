@@ -125,41 +125,13 @@ export default function App() {
     }
   }, [isFetchingInfinite, triggerToast]);
 
-  const fetchCustomTopic = useCallback(async (topic: string) => {
-    if (isFetchingInfinite || !topic.trim()) return;
-    setIsFetchingInfinite(true);
-    triggerToast(`Discovering ${topic}...`);
-    
-    try {
-      const response = await fetch("/api/generate", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ rawText: topic }),
-      });
-      if (response.ok) {
-        const data = await response.json();
-        const newFeedItems = mapStackToFeedCards(data);
-        
-        // Replace current feed completely and jump back to the start
-        setFeedCards(newFeedItems);
-        setSelectedSlide(0);
-        setPhoneTab("explore");
-      }
-    } catch (err: unknown) {
-      console.error(err);
-      triggerToast("Failed to fetch custom topic.");
-    } finally {
-      setIsFetchingInfinite(false);
-    }
-  }, [isFetchingInfinite, triggerToast]);
-
   const handleNextSlide = useCallback(() => {
     if (currentDisplayCards.length === 0) return;
     if (selectedSlide >= currentDisplayCards.length - 2 && !isFetchingInfinite) {
       fetchInfiniteFeed();
     }
     setSlideDirection(1);
-    setSelectedSlide(prev => (prev < currentDisplayCards.length - 1 ? prev + 1 : 0));
+    setSelectedSlide(prev => (prev < currentDisplayCards.length - 1 ? prev + 1 : prev));
     setPreviewVault(false);
   }, [currentDisplayCards.length, selectedSlide, isFetchingInfinite, fetchInfiniteFeed]);
 
@@ -281,7 +253,6 @@ export default function App() {
         onRevealRecall={handleRevealRecall}
         onSubmitReviewRating={submitReviewRating}
         onTriggerToast={triggerToast}
-        onFetchCustomTopic={fetchCustomTopic}
       />
       </div>
     </div>

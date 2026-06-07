@@ -43,7 +43,6 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({ onLoginSuccess }) => {
             <BookOpen className="w-8 h-8 text-white" />
           </div>
           <h1 className="text-3xl font-serif italic font-semibold tracking-tight">Logos</h1>
-          <p className="text-xs text-neutral-400 mt-2 font-light tracking-wide uppercase">Cinematic Microlearning</p>
         </div>
 
         <form onSubmit={handleAuth} className="space-y-4">
