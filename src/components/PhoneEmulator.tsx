@@ -1,13 +1,14 @@
 import React, { useState, useEffect, useCallback } from "react";
 import {
   BookOpen, Bookmark, BookmarkCheck, X,
-  Brain, Trash2, HelpCircle, Network, ArrowLeft
+  Brain, Trash2, HelpCircle, Network, ArrowLeft, Timer
 } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
-import type { FeedCard, MoodAesthetic, SavedVaultCard, ReadingPart } from "../types";
+import type { FeedCard, MoodAesthetic, SavedVaultCard, ReadingPart, JournalEntry } from "../types";
 import { getInitials } from "../utils/aesthetics";
 import ThoughtStream from "./ThoughtStream";
 import ClozeCard from "./ClozeCard";
+import Journal from "./Journal";
 
 interface PhoneEmulatorProps {
   // Display state
@@ -35,6 +36,10 @@ interface PhoneEmulatorProps {
   onSubmitReviewRating: (rating: "again" | "hard" | "easy") => void;
   onTriggerToast: (msg: string) => void;
   onOpenConstellation?: () => void;
+  onOpenZenMode?: () => void;
+  journalEntries: JournalEntry[];
+  onAddJournalEntry: (cardId: string, text: string) => void;
+  onDeleteJournalEntry: (entryId: string) => void;
 }
 
 const PhoneEmulator: React.FC<PhoneEmulatorProps> = ({
@@ -57,7 +62,11 @@ const PhoneEmulator: React.FC<PhoneEmulatorProps> = ({
   onRevealRecall,
   onSubmitReviewRating,
   onTriggerToast,
-  onOpenConstellation
+  onOpenConstellation,
+  onOpenZenMode,
+  journalEntries,
+  onAddJournalEntry,
+  onDeleteJournalEntry
 }) => {
   const [currentTime, setCurrentTime] = useState<string>("9:41");
   const [clozeComplete, setClozeComplete] = useState(false);
@@ -153,10 +162,39 @@ const PhoneEmulator: React.FC<PhoneEmulatorProps> = ({
 
       {/* Simulated top notch & Constellation Trigger */}
       <div className="relative z-50 flex justify-between items-center text-[10px] font-bold tracking-widest uppercase px-5 pt-4 pb-2 pointer-events-none">
-        <span className="opacity-45 text-[#1C1C1E]">{currentTime}</span>
+        <div className="flex items-center gap-2">
+          <span className="opacity-45 text-[#1C1C1E]">{currentTime}</span>
+          
+          {/* Generating Indicator (Status Bar) */}
+          {isFetchingMore && (
+            <div className="flex items-center gap-1 px-2 py-0.5 bg-white/40 backdrop-blur-md border border-[#1C1C1E]/10 rounded-full animate-in fade-in zoom-in duration-300">
+              <div className="flex items-center gap-0.5">
+                {[0, 1, 2].map((i) => (
+                  <div
+                    key={i}
+                    className="w-[3px] h-[3px] rounded-full bg-[#B5A48B]"
+                    style={{
+                      animation: `pulse 1.4s ease-in-out ${i * 0.2}s infinite`,
+                    }}
+                  />
+                ))}
+              </div>
+              <span className="text-[7px] font-mono uppercase tracking-widest text-[#1C1C1E] font-medium leading-none">
+                Gen
+              </span>
+            </div>
+          )}
+        </div>
 
         {phoneTab === "explore" && (
           <div className="flex items-center gap-1.5 pointer-events-auto">
+            <button
+              onClick={onOpenZenMode}
+              className="p-1.5 rounded-full backdrop-blur-md bg-[#1C1C1E]/5 hover:bg-[#1C1C1E]/15 transition-all text-[#1C1C1E]"
+              title="Zen Mode"
+            >
+              <Timer className="w-5 h-5" />
+            </button>
             <button
               onClick={handleShareClick}
               disabled={isSharing}
@@ -181,15 +219,86 @@ const PhoneEmulator: React.FC<PhoneEmulatorProps> = ({
 
         {/* EXPLORE FEED — THOUGHT STREAM */}
         {phoneTab === "explore" && (
-          <ThoughtStream
-            cards={currentDisplayCards}
-            isLoading={isFetchingMore}
-            onActiveCardChange={onActiveCardChange}
-            onFetchMore={onFetchMore}
-            isCardSaved={isCardSavedInVault}
-            onToggleSave={onToggleSaveToVault}
-            onTriggerToast={onTriggerToast}
-          />
+          <>
+            <ThoughtStream
+              cards={currentDisplayCards}
+              isLoading={isFetchingMore}
+              onActiveCardChange={onActiveCardChange}
+              onFetchMore={onFetchMore}
+              isCardSaved={isCardSavedInVault}
+              onToggleSave={onToggleSaveToVault}
+              onTriggerToast={onTriggerToast}
+            />
+
+            {/* Static Attribution Footer Overlay */}
+            {currentDisplayCards[activeCardIndex] && (
+              <div className="absolute bottom-[60px] left-0 right-0 px-5 pb-5 z-20 pointer-events-none">
+                <div className="flex items-center justify-between border-t border-[#E8E4DC]/60 pt-3">
+                  <div className="flex items-center gap-2.5">
+                    <div className="w-9 h-9 rounded-full bg-[#1C1C1E] flex items-center justify-center text-[#FAF8F3] text-[11px] font-serif italic shadow-sm flex-shrink-0">
+                      {getInitials(currentDisplayCards[activeCardIndex].philosopher)}
+                    </div>
+                    <div>
+                      <p className="text-[11px] font-semibold text-[#1C1C1E] tracking-tight leading-none mb-0.5">
+                        {currentDisplayCards[activeCardIndex].philosopher}
+                      </p>
+                      <p className="text-[9px] font-normal text-[#B5A48B] tracking-wide uppercase truncate max-w-[160px]">
+                        {currentDisplayCards[activeCardIndex].presentation?.title || currentDisplayCards[activeCardIndex].topic}
+                      </p>
+                      {/* 4-card Sequence Progress Indicator */}
+                      <div className="flex items-center gap-1 mt-1.5">
+                        {(() => {
+                          const currentCard = currentDisplayCards[activeCardIndex];
+                          let cardSequence = 1;
+                          const genMatch = currentCard.id.match(/_card_(\d+)_/);
+                          if (genMatch) {
+                            cardSequence = parseInt(genMatch[1], 10) + 1;
+                          } else {
+                            const match = currentCard.id.match(/_(\d+)$/);
+                            cardSequence = match ? parseInt(match[1], 10) : 1;
+                          }
+                          return [...Array(4)].map((_, i) => (
+                            <div
+                              key={i}
+                              className={`h-[2px] w-2.5 rounded-full transition-all ${
+                                i < cardSequence ? "bg-[#B5A48B]" : "bg-[#E8E4DC]"
+                              }`}
+                            />
+                          ));
+                        })()}
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Bookmark toggle */}
+                  <button
+                    id={`bookmark-toggle-btn-${activeCardIndex}`}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onToggleSaveToVault(activeCardIndex);
+                    }}
+                    className={`pointer-events-auto flex items-center gap-1 text-[10px] font-semibold py-1.5 px-2.5 rounded-xl border transition-all active:scale-95 ${
+                      isCardSavedInVault(activeCardIndex)
+                        ? "bg-[#1C1C1E] border-[#1C1C1E] text-[#FAF8F3]"
+                        : "bg-white/80 border-[#E8E4DC] text-[#1C1C1E] hover:bg-white hover:border-[#D4CFC5]"
+                    }`}
+                  >
+                    {isCardSavedInVault(activeCardIndex) ? (
+                      <>
+                        <BookmarkCheck className="w-3.5 h-3.5 fill-current" />
+                        <span>Saved</span>
+                      </>
+                    ) : (
+                      <>
+                        <Bookmark className="w-3.5 h-3.5" />
+                        <span>Save</span>
+                      </>
+                    )}
+                  </button>
+                </div>
+              </div>
+            )}
+          </>
         )}
 
         {/* THE VAULT — SPACED REPETITION SPINDLE */}
@@ -238,14 +347,23 @@ const PhoneEmulator: React.FC<PhoneEmulatorProps> = ({
                     </span>
                   </div>
 
-                  <button
-                    id={`delete-vault-item-${currentVaultCard?.id}`}
-                    onClick={() => onDeleteFromVault(currentVaultCard?.id)}
+                  <div className="flex items-center gap-1">
+                    <Journal
+                      cardId={currentVaultCard?.id || ""}
+                      cardTitle={currentVaultCard?.explore_title || ""}
+                      entries={journalEntries}
+                      onAddEntry={onAddJournalEntry}
+                      onDeleteEntry={onDeleteJournalEntry}
+                    />
+                    <button
+                      id={`delete-vault-item-${currentVaultCard?.id}`}
+                      onClick={() => onDeleteFromVault(currentVaultCard?.id)}
                     className="text-[#D4CFC5] hover:text-red-500 p-1 transition-colors"
                     title="Delete bookmark"
                   >
-                    <Trash2 className="w-3.5 h-3.5" />
-                  </button>
+                      <Trash2 className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
                 </div>
 
                 {/* Central Question/Cloze Display */}

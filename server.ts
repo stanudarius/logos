@@ -23,6 +23,26 @@ const ai = new GoogleGenAI({
   },
 });
 
+// Robust fallback generator
+async function generateWithFallback(params: any) {
+  const models = ["gemini-2.5-flash", "gemini-2.0-flash", "gemini-1.5-flash-8b"];
+  let lastError;
+
+  for (const modelName of models) {
+    try {
+      return await ai.models.generateContent({ ...params, model: modelName });
+    } catch (e: any) {
+      if (e.status === 503 || e.status === 429) {
+        console.warn(`[${modelName}] is busy/quota exceeded (Status: ${e.status}). Falling back...`);
+        lastError = e;
+      } else {
+        throw e;
+      }
+    }
+  }
+  throw lastError || new Error("All Gemini models are currently overwhelmed.");
+}
+
 // JSON Schema
 const microlearningSchema = {
   type: Type.OBJECT,
@@ -140,8 +160,7 @@ app.post("/api/generate", async (req, res) => {
     `;
 
     // Query Gemini 2.5 Flash for high performance and structured accuracy
-    const response = await ai.models.generateContent({
-      model: "gemini-2.5-flash",
+    const response = await generateWithFallback({
       contents: prompt,
       config: {
         temperature: 0.5,
@@ -167,6 +186,62 @@ app.post("/api/generate", async (req, res) => {
   }
 });
 
+// Socratic AI Tutor — conversational debate endpoint
+app.post("/api/chat", async (req, res) => {
+  try {
+    const { philosopher, topic, essayContext, messages } = req.body;
+
+    if (!process.env.GEMINI_API_KEY) {
+      return res.status(500).json({ error: "GEMINI_API_KEY is not configured." });
+    }
+
+    if (!philosopher || !topic) {
+      return res.status(400).json({ error: "philosopher and topic are required." });
+    }
+
+    const systemInstruction = `You are ${philosopher}, the great thinker. You are having an intimate, intellectually rigorous philosophical conversation with a curious student.
+
+PERSONA RULES:
+- Speak in first person AS ${philosopher}. Use "I" and refer to your own works and ideas directly.
+- Be warm but intellectually challenging — push the student to think deeper.
+- Use the Socratic method: answer questions with provocative counter-questions when appropriate.
+- Reference your actual philosophical positions, works, and historical context accurately.
+- Keep responses concise (2-4 sentences max) to maintain a natural conversational rhythm.
+- If the student disagrees, engage genuinely — don't just agree. Defend your positions.
+- Occasionally use a memorable aphorism or quote from your actual writings.
+
+TOPIC CONTEXT: The conversation is about "${topic}".
+${essayContext ? `\nESSAY BEING DISCUSSED:\n${essayContext}` : ""}`;
+
+    // Build conversation history for Gemini
+    const contents = (messages || []).map((msg: { role: string; text: string }) => ({
+      role: msg.role === "user" ? "user" : "model",
+      parts: [{ text: msg.text }],
+    }));
+
+    const response = await generateWithFallback({
+      contents,
+      config: {
+        temperature: 0.8,
+        systemInstruction,
+        maxOutputTokens: 800,
+      },
+    });
+
+    const text = response.text;
+    if (!text) {
+      throw new Error("No response received from the philosopher.");
+    }
+
+    res.json({ reply: text.trim() });
+  } catch (error: any) {
+    console.error("Socratic Chat Error:", error);
+    res.status(500).json({
+      error: error.message || "The philosopher is momentarily lost in thought."
+    });
+  }
+});
+
 // Configure Vite middleware / asset-serving depending on NODE_ENV
 async function configureServer() {
   if (process.env.NODE_ENV !== "production") {
@@ -183,6 +258,7 @@ async function configureServer() {
     });
   }
 
+// trigger reload to fix hanging requests
   app.listen(PORT, "0.0.0.0", () => {
     console.log(`[Logos] Running on http://localhost:${PORT}`);
   });

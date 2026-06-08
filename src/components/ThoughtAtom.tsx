@@ -1,8 +1,10 @@
 import React, { useState, useCallback } from "react";
+import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "motion/react";
-import { Bookmark, BookmarkCheck, BookOpen, X } from "lucide-react";
+import { Bookmark, BookmarkCheck, BookOpen, X, MessageCircle } from "lucide-react";
 import type { FeedCard, LayoutVariant, ReadingPart } from "../types";
 import { getInitials } from "../utils/aesthetics";
+import SocraticChat from "./SocraticChat";
 
 interface ThoughtAtomProps {
   card: FeedCard;
@@ -27,6 +29,7 @@ const ThoughtAtom: React.FC<ThoughtAtomProps> = ({
   onTriggerToast,
 }) => {
   const [isDeepDiveOpen, setIsDeepDiveOpen] = useState(false);
+  const [isChatOpen, setIsChatOpen] = useState(false);
 
   const handleCardTap = useCallback(
     (e: React.MouseEvent) => {
@@ -60,139 +63,104 @@ const ThoughtAtom: React.FC<ThoughtAtomProps> = ({
         />
 
         {renderLayout(card, layoutVariant)}
-
-        {/* Attribution Footer */}
-        <div className="absolute bottom-0 left-0 right-0 px-5 pb-5">
-          <div className="flex items-center justify-between border-t border-[#E8E4DC] pt-3">
-            <div className="flex items-center gap-2.5">
-              <div className="w-9 h-9 rounded-full bg-[#1C1C1E] flex items-center justify-center text-[#FAF8F3] text-[11px] font-serif italic shadow-sm flex-shrink-0">
-                {getInitials(card.philosopher)}
-              </div>
-              <div>
-                <p className="text-[11px] font-semibold text-[#1C1C1E] tracking-tight leading-none mb-0.5">
-                  {card.philosopher}
-                </p>
-                <p className="text-[9px] font-normal text-[#B5A48B] tracking-wide uppercase truncate max-w-[160px]">
-                  {card.presentation?.title || card.topic}
-                </p>
-                {/* 4-card Sequence Progress Indicator */}
-                <div className="flex items-center gap-1 mt-1.5">
-                  {(() => {
-                    const match = card.id.match(/_(\d+)$/);
-                    const cardSequence = match ? parseInt(match[1], 10) : 1;
-                    return [...Array(4)].map((_, i) => (
-                      <div
-                        key={i}
-                        className={`h-[2px] w-2.5 rounded-full transition-all ${
-                          i < cardSequence ? "bg-[#B5A48B]" : "bg-[#E8E4DC]"
-                        }`}
-                      />
-                    ));
-                  })()}
-                </div>
-              </div>
-            </div>
-
-            {/* Bookmark toggle */}
-            <button
-              id={`bookmark-toggle-btn-${index}`}
-              onClick={(e) => {
-                e.stopPropagation();
-                onToggleSave();
-              }}
-              className={`flex items-center gap-1 text-[10px] font-semibold py-1.5 px-2.5 rounded-xl border transition-all active:scale-95 ${
-                isSaved
-                  ? "bg-[#1C1C1E] border-[#1C1C1E] text-[#FAF8F3]"
-                  : "bg-white/80 border-[#E8E4DC] text-[#1C1C1E] hover:bg-white hover:border-[#D4CFC5]"
-              }`}
-            >
-              {isSaved ? (
-                <>
-                  <BookmarkCheck className="w-3.5 h-3.5 fill-current" />
-                  <span>Saved</span>
-                </>
-              ) : (
-                <>
-                  <Bookmark className="w-3.5 h-3.5" />
-                  <span>Save</span>
-                </>
-              )}
-            </button>
-          </div>
-        </div>
       </div>
 
       {/* Deep Dive Drawer */}
-      <AnimatePresence>
-        {isDeepDiveOpen && (
-          <motion.div
-            initial={{ y: "100%" }}
-            animate={{ y: 0 }}
-            exit={{ y: "100%" }}
-            transition={{ type: "spring", damping: 30, stiffness: 260 }}
-            className="deep-dive-drawer absolute inset-x-0 bottom-0 top-[8%] bg-[#FAF9F5] z-30 flex flex-col rounded-t-[28px] shadow-[0_-8px_40px_rgba(0,0,0,0.12)] border-t border-[#E8E4DC]"
-          >
-            {/* Drawer handle */}
-            <div className="flex justify-center pt-3 pb-1">
-              <div className="w-10 h-1 rounded-full bg-[#D4CFC5]" />
-            </div>
-
-            {/* Drawer header */}
-            <div className="flex items-center justify-between px-5 pb-3 border-b border-[#E8E4DC]">
-              <div className="flex items-center gap-1.5">
-                <BookOpen className="w-3.5 h-3.5 text-[#B5A48B]" />
-                <span className="text-[9px] font-bold font-mono uppercase tracking-[0.15em] text-[#B5A48B]">
-                  Deep Dive
-                </span>
-              </div>
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleCloseDeepDive();
-                }}
-                className="w-7 h-7 rounded-full bg-[#F0EDE6] hover:bg-[#E8E4DC] flex items-center justify-center text-[#1C1C1E] transition-all"
-              >
-                <X className="w-3.5 h-3.5" />
-              </button>
-            </div>
-
-            {/* Reading content */}
-            <div className="flex-1 overflow-y-auto px-5 pt-5 pb-8 space-y-4">
-              <div className="mb-3 space-y-1.5">
-                <span className="text-[9px] font-bold font-mono uppercase tracking-[0.2em] text-[#B5A48B] block">
-                  {card.topic}
-                </span>
-                <h2 className="text-lg font-serif italic text-[#1C1C1E] font-semibold leading-tight">
-                  {card.presentation?.title || card.topic}
-                </h2>
-                <p className="text-[10px] font-mono text-[#B5A48B]/80 font-bold mt-0.5">
-                  {card.philosopher}
-                </p>
+      {createPortal(
+        <AnimatePresence>
+          {isDeepDiveOpen && (
+            <motion.div
+              initial={{ y: "100%", opacity: 0, borderRadius: "40px" }}
+              animate={{ y: 0, opacity: 1, borderRadius: "0px" }}
+              exit={{ y: "100%", opacity: 0, borderRadius: "40px" }}
+              transition={{ type: "spring", damping: 25, stiffness: 200 }}
+              className="absolute inset-0 z-[60] bg-[#FAF8F3] flex flex-col shadow-[0_-10px_30px_rgba(0,0,0,0.1)] pointer-events-auto"
+              onClick={(e) => e.stopPropagation()}
+              onWheel={(e) => e.stopPropagation()} // Stop scroll bubbling
+              onTouchMove={(e) => e.stopPropagation()}
+            >
+              {/* Header */}
+              <div className="flex items-center justify-between px-5 py-4 border-b border-[#E8E4DC]">
+                <div className="flex items-center gap-2">
+                  <BookOpen className="w-4 h-4 text-[#B5A48B]" />
+                  <span className="text-[9px] font-bold font-mono uppercase tracking-[0.15em] text-[#B5A48B]">
+                    Deep Dive
+                  </span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={(e) => { e.stopPropagation(); e.preventDefault(); setIsChatOpen(true); }}
+                    className="flex items-center gap-1 px-2.5 py-1.5 rounded-xl bg-[#1C1C1E] text-[#FAF8F3] hover:bg-[#2C2C2E] text-[9px] font-bold transition-all active:scale-95"
+                  >
+                    <MessageCircle className="w-3 h-3" />
+                    <span>Debate</span>
+                  </button>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleCloseDeepDive();
+                    }}
+                    className="w-7 h-7 rounded-full bg-[#F0EDE6] hover:bg-[#E8E4DC] flex items-center justify-center text-[#1C1C1E] transition-all"
+                  >
+                    <X className="w-3.5 h-3.5" />
+                  </button>
+                </div>
               </div>
 
-              {card.presentation?.reading_parts?.map(
-                (part: ReadingPart, partIdx: number, arr: ReadingPart[]) => (
-                  <div key={partIdx} className="space-y-1.5 animate-fade-in-up" style={{ animationDelay: `${partIdx * 0.08}s` }}>
-                    <p className="text-xs leading-relaxed text-[#3A3A3E] font-serif font-light text-justify">
-                      {part.text}
-                    </p>
-                    {partIdx < arr.length - 1 && (
-                      <div className="flex justify-center py-2.5">
-                        <span className="text-[8px] text-[#D4CFC5]">❖</span>
-                      </div>
-                    )}
-                  </div>
-                )
+              {/* Reading content */}
+              <div className="flex-1 overflow-y-auto px-5 pt-5 pb-8 space-y-4" style={{ overscrollBehaviorY: "contain" }}>
+                <div className="mb-3 space-y-1.5">
+                  <span className="text-[9px] font-bold font-mono uppercase tracking-[0.2em] text-[#B5A48B] block">
+                    {card.topic}
+                  </span>
+                  <h2 className="text-lg font-serif italic text-[#1C1C1E] font-semibold leading-tight">
+                    {card.presentation?.title || card.topic}
+                  </h2>
+                  <p className="text-[10px] font-mono text-[#B5A48B]/80 font-bold mt-0.5">
+                    {card.philosopher}
+                  </p>
+                </div>
+
+                {card.presentation?.reading_parts?.map(
+                  (part: ReadingPart, partIdx: number, arr: ReadingPart[]) => (
+                    <div key={partIdx} className="space-y-1.5 animate-fade-in-up" style={{ animationDelay: `${partIdx * 0.08}s` }}>
+                      <p className="text-xs leading-relaxed text-[#3A3A3E] font-serif font-light text-justify">
+                        {part.text}
+                      </p>
+                      {partIdx < arr.length - 1 && (
+                        <div className="flex justify-center py-2.5">
+                          <span className="text-[8px] text-[#D4CFC5]">❖</span>
+                        </div>
+                      )}
+                    </div>
+                  )
+                )}
+              </div>
+
+              {/* Footer */}
+              <div className="px-5 py-3 border-t border-[#E8E4DC] text-center text-[8px] font-mono text-[#B5A48B] uppercase tracking-widest pb-12">
+                End of Essay
+              </div>
+
+              {/* Socratic Chat Overlay */}
+              {createPortal(
+                <AnimatePresence>
+                  {isChatOpen && (
+                    <SocraticChat
+                      philosopher={card.philosopher}
+                      topic={card.topic}
+                      essayContext={card.presentation?.reading_parts?.map(p => p.text).join(" ") || ""}
+                      onClose={() => setIsChatOpen(false)}
+                    />
+                  )}
+                </AnimatePresence>,
+                document.getElementById("phone-device-emulation") || document.body
               )}
-            </div>
-
-            {/* Footer */}
-            <div className="px-5 py-3 border-t border-[#E8E4DC] text-center text-[8px] font-mono text-[#B5A48B] uppercase tracking-widest">
-              End of Essay
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+            </motion.div>
+          )}
+        </AnimatePresence>,
+        document.getElementById("phone-device-emulation") || document.body
+      )}
     </div>
   );
 };

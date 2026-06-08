@@ -166,45 +166,6 @@ const ThoughtStream: React.FC<ThoughtStreamProps> = ({
           onTriggerToast={onTriggerToast}
         />
       ))}
-
-      {/* Loading indicator — shown when Gemini is generating new cards */}
-      {isLoading && (
-        <div className="thought-atom flex flex-col items-center justify-center bg-[#FAF8F3] gap-6 px-8">
-          {/* Animated progress bar */}
-          <div className="w-48 h-[3px] bg-[#E8E4DC] rounded-full overflow-hidden">
-            <div
-              className="h-full bg-gradient-to-r from-[#B5A48B] via-[#1C1C1E] to-[#B5A48B] rounded-full"
-              style={{
-                width: '40%',
-                animation: 'shimmer 1.8s ease-in-out infinite',
-              }}
-            />
-          </div>
-
-          {/* Literary loading copy */}
-          <div className="text-center space-y-2">
-            <p className="text-[11px] font-serif italic text-[#1C1C1E] opacity-70">
-              Discovering new ideas…
-            </p>
-            <p className="text-[9px] font-mono uppercase tracking-[0.2em] text-[#B5A48B]">
-              Generating Thought Atoms
-            </p>
-          </div>
-
-          {/* Pulsing dots */}
-          <div className="flex items-center gap-2">
-            {[0, 1, 2].map((i) => (
-              <div
-                key={i}
-                className="w-1.5 h-1.5 rounded-full bg-[#B5A48B]"
-                style={{
-                  animation: `pulse 1.4s ease-in-out ${i * 0.2}s infinite`,
-                }}
-              />
-            ))}
-          </div>
-        </div>
-      )}
     </div>
   );
 };

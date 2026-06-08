@@ -102,3 +102,11 @@ export interface GraphEdge {
   relationship: EdgeRelationship;
   dashed?: boolean;
 }
+
+/** Personal reflection journal entry attached to a vault card */
+export interface JournalEntry {
+  id: string;
+  card_id: string;
+  text: string;
+  created_at: string;
+}

@@ -2,13 +2,14 @@ import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { AnimatePresence } from "motion/react";
 
 import { INITIAL_FEED_CARDS } from "./data/feedCards";
-import type { FeedCard, ContentStack, SavedVaultCard } from "./types";
+import type { FeedCard, ContentStack, SavedVaultCard, JournalEntry } from "./types";
 import { getMoodAesthetic } from "./utils/aesthetics";
 import { mapStackToFeedCards } from "./utils/cardMapper";
 import Toast from "./components/Toast";
 import PhoneEmulator from "./components/PhoneEmulator";
 import { AuthScreen } from "./components/AuthScreen";
 import { ConstellationMap } from "./components/ConstellationMap";
+import ZenMode from "./components/ZenMode";
 import { supabase } from "./lib/supabase";
 import type { Session } from "@supabase/supabase-js";
 
@@ -20,12 +21,20 @@ export default function App() {
   const [phoneTab, setPhoneTab] = useState<"explore" | "vault">("explore");
   const [isFetchingInfinite, setIsFetchingInfinite] = useState(false);
   const [isConstellationOpen, setIsConstellationOpen] = useState(false);
+  const [isZenModeOpen, setIsZenModeOpen] = useState(false);
 
   const [session, setSession] = useState<Session | null>(null);
 
   const [savedVaultCards, setSavedVaultCards] = useState<SavedVaultCard[]>([]);
   const [masteryPoints, setMasteryPoints] = useState<number>(120);
   const [activeStreak, setActiveStreak] = useState<number>(3);
+
+  const [journalEntries, setJournalEntries] = useState<JournalEntry[]>(() => {
+    try {
+      const stored = localStorage.getItem("logos_journal_entries");
+      return stored ? JSON.parse(stored) : [];
+    } catch { return []; }
+  });
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -69,6 +78,7 @@ export default function App() {
   useEffect(() => { localStorage.setItem("logos_vault_cards", JSON.stringify(savedVaultCards)); }, [savedVaultCards]);
   useEffect(() => { localStorage.setItem("logos_mastery_points", masteryPoints.toString()); }, [masteryPoints]);
   useEffect(() => { localStorage.setItem("logos_streak", activeStreak.toString()); }, [activeStreak]);
+  useEffect(() => { localStorage.setItem("logos_journal_entries", JSON.stringify(journalEntries)); }, [journalEntries]);
 
   const triggerToast = useCallback((msg: string) => {
     setToastMessage(msg);
@@ -171,6 +181,27 @@ export default function App() {
 
   const handleRevealRecall = useCallback(() => setVRecallRevealed(true), []);
 
+  const addJournalEntry = useCallback((cardId: string, text: string) => {
+    const entry: JournalEntry = {
+      id: crypto.randomUUID(),
+      card_id: cardId,
+      text,
+      created_at: new Date().toISOString(),
+    };
+    setJournalEntries(prev => [entry, ...prev]);
+    triggerToast("Reflection saved.");
+  }, [triggerToast]);
+
+  const deleteJournalEntry = useCallback((entryId: string) => {
+    setJournalEntries(prev => prev.filter(e => e.id !== entryId));
+    triggerToast("Reflection removed.");
+  }, [triggerToast]);
+
+  const handleZenSessionComplete = useCallback(() => {
+    setMasteryPoints(prev => prev + 15);
+    triggerToast("Zen session complete! +15 XP");
+  }, [triggerToast]);
+
   /**
    * Filter-by-Thinker: Re-sort feedCards so that cards matching
    * the selected philosopher bubble to the top. Non-matching cards
@@ -227,6 +258,10 @@ export default function App() {
           onSubmitReviewRating={submitReviewRating}
           onTriggerToast={triggerToast}
           onOpenConstellation={() => setIsConstellationOpen(true)}
+          onOpenZenMode={() => setIsZenModeOpen(true)}
+          journalEntries={journalEntries}
+          onAddJournalEntry={addJournalEntry}
+          onDeleteJournalEntry={deleteJournalEntry}
         />
       </div>
 
@@ -235,6 +270,13 @@ export default function App() {
           <ConstellationMap
             onClose={() => setIsConstellationOpen(false)}
             onFilterByThinker={filterByThinker}
+          />
+        )}
+        {isZenModeOpen && (
+          <ZenMode
+            aesthetic={activeAesthetic}
+            onClose={() => setIsZenModeOpen(false)}
+            onSessionComplete={handleZenSessionComplete}
           />
         )}
       </AnimatePresence>
