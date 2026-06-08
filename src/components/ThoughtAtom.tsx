@@ -75,6 +75,21 @@ const ThoughtAtom: React.FC<ThoughtAtomProps> = ({
                 <p className="text-[9px] font-normal text-[#B5A48B] tracking-wide uppercase truncate max-w-[160px]">
                   {card.presentation?.title || card.topic}
                 </p>
+                {/* 4-card Sequence Progress Indicator */}
+                <div className="flex items-center gap-1 mt-1.5">
+                  {(() => {
+                    const match = card.id.match(/_(\d+)$/);
+                    const cardSequence = match ? parseInt(match[1], 10) : 1;
+                    return [...Array(4)].map((_, i) => (
+                      <div
+                        key={i}
+                        className={`h-[2px] w-2.5 rounded-full transition-all ${
+                          i < cardSequence ? "bg-[#B5A48B]" : "bg-[#E8E4DC]"
+                        }`}
+                      />
+                    ));
+                  })()}
+                </div>
               </div>
             </div>
 
