@@ -1,14 +1,12 @@
 import React, { useState, useEffect, useCallback } from "react";
 import {
-  BookOpen, Bookmark, BookmarkCheck, X,
-  Brain, Trash2, HelpCircle, Network, ArrowLeft, Timer
+  BookOpen, Bookmark, BookmarkCheck, Network, ArrowLeft, Timer
 } from "lucide-react";
-import { motion, AnimatePresence } from "motion/react";
-import type { FeedCard, MoodAesthetic, SavedVaultCard, ReadingPart, JournalEntry } from "../types";
+import { motion } from "motion/react";
+import type { FeedCard, MoodAesthetic, SavedVaultCard } from "../types";
 import { getInitials } from "../utils/aesthetics";
 import ThoughtStream from "./ThoughtStream";
-import ClozeCard from "./ClozeCard";
-import Journal from "./Journal";
+import CommonplaceBook from "./CommonplaceBook";
 
 interface PhoneEmulatorProps {
   // Display state
@@ -20,10 +18,6 @@ interface PhoneEmulatorProps {
 
   // Vault state
   savedVaultCards: SavedVaultCard[];
-  vaultReviewIndex: number;
-  vRecallRevealed: boolean;
-  reviewedCount: number;
-  masteryPoints: number;
 
   // Callbacks
   onActiveCardChange: (index: number) => void;
@@ -31,45 +25,29 @@ interface PhoneEmulatorProps {
   onSetPhoneTab: (tab: "explore" | "vault") => void;
   onToggleSaveToVault: (idx: number) => void;
   isCardSavedInVault: (idx: number) => boolean;
-  onDeleteFromVault: (id: string) => void;
-  onRevealRecall: () => void;
-  onSubmitReviewRating: (rating: "again" | "hard" | "easy") => void;
   onTriggerToast: (msg: string) => void;
   onOpenConstellation?: () => void;
   onOpenZenMode?: () => void;
-  journalEntries: JournalEntry[];
-  onAddJournalEntry: (cardId: string, text: string) => void;
-  onDeleteJournalEntry: (entryId: string) => void;
+  onUpdateVaultCardAnnotation: (cardId: string, text: string) => void;
 }
 
 const PhoneEmulator: React.FC<PhoneEmulatorProps> = ({
   phoneTab,
   currentDisplayCards,
   activeCardIndex,
-  activeAesthetic,
   isFetchingMore,
   savedVaultCards,
-  vaultReviewIndex,
-  vRecallRevealed,
-  reviewedCount,
-  masteryPoints,
   onActiveCardChange,
   onFetchMore,
   onSetPhoneTab,
   onToggleSaveToVault,
   isCardSavedInVault,
-  onDeleteFromVault,
-  onRevealRecall,
-  onSubmitReviewRating,
   onTriggerToast,
   onOpenConstellation,
   onOpenZenMode,
-  journalEntries,
-  onAddJournalEntry,
-  onDeleteJournalEntry
+  onUpdateVaultCardAnnotation
 }) => {
   const [currentTime, setCurrentTime] = useState<string>("9:41");
-  const [clozeComplete, setClozeComplete] = useState(false);
   const [isSharing, setIsSharing] = useState(false);
 
   const handleShareClick = useCallback(async () => {
@@ -142,17 +120,7 @@ const PhoneEmulator: React.FC<PhoneEmulatorProps> = ({
     return () => clearInterval(interval);
   }, []);
 
-  // Reset cloze state when vault card changes
-  useEffect(() => {
-    setClozeComplete(false);
-  }, [vaultReviewIndex]);
 
-  const handleClozeAllRevealed = useCallback(() => {
-    setClozeComplete(true);
-  }, []);
-
-  const currentVaultCard = savedVaultCards[vaultReviewIndex];
-  const hasCloze = currentVaultCard?.quote && currentVaultCard.quote.length > 0;
 
   return (
     <div
@@ -232,7 +200,13 @@ const PhoneEmulator: React.FC<PhoneEmulatorProps> = ({
 
             {/* Static Attribution Footer Overlay */}
             {currentDisplayCards[activeCardIndex] && (
-              <div className="absolute bottom-[60px] left-0 right-0 px-5 pb-5 z-20 pointer-events-none">
+              <motion.div 
+                key={`footer-${currentDisplayCards[activeCardIndex].id}`}
+                initial={{ y: 100, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ type: "spring", stiffness: 300, damping: 30, delay: 0.6 }}
+                className="absolute bottom-[60px] left-0 right-0 px-5 pb-5 z-20 pointer-events-none"
+              >
                 <div className="flex items-center justify-between border-t border-[#E8E4DC]/60 pt-3">
                   <div className="flex items-center gap-2.5">
                     <div className="w-9 h-9 rounded-full bg-[#1C1C1E] flex items-center justify-center text-[#FAF8F3] text-[11px] font-serif italic shadow-sm flex-shrink-0">
@@ -296,27 +270,26 @@ const PhoneEmulator: React.FC<PhoneEmulatorProps> = ({
                     )}
                   </button>
                 </div>
-              </div>
+              </motion.div>
             )}
           </>
         )}
 
-        {/* THE VAULT — SPACED REPETITION SPINDLE */}
+        {/* THE VAULT */}
         {phoneTab === "vault" && (
-          <div id="vault-dashboard-emulation" className="h-full flex flex-col justify-between px-4 py-2">
-
+          <div id="vault-dashboard-emulation" className="h-full flex flex-col justify-between px-4 py-2 pt-4">
             {savedVaultCards.length === 0 ? (
               /* ===== EMPTY STATE CTA ===== */
               <div className="flex-1 flex flex-col items-center justify-center text-center p-4 space-y-5">
                 <div className="w-14 h-14 rounded-full bg-[#F5F3ED] flex items-center justify-center">
-                  <Brain className="w-7 h-7 text-[#D4CFC5]" />
+                  <Bookmark className="w-7 h-7 text-[#D4CFC5]" />
                 </div>
                 <div className="space-y-2">
                   <h4 className="text-sm font-serif italic text-[#1C1C1E] font-semibold">
                     Your Vault is Vacant
                   </h4>
                   <p className="text-[11px] text-[#8A8A8E] font-light leading-relaxed max-w-[240px]">
-                    Spaced repetition requires material. Save Thought Atoms from the Stream to begin forging memory.
+                    Save Thought Atoms from the Stream to begin collecting ideas in your Corkboard.
                   </p>
                 </div>
 
@@ -335,153 +308,11 @@ const PhoneEmulator: React.FC<PhoneEmulatorProps> = ({
                 </button>
               </div>
             ) : (
-              /* ===== ACTIVE VAULT REVIEW ===== */
-              <div className="flex-1 flex flex-col justify-between bg-white/95 p-4 rounded-3xl border border-[#E8E4DC] shadow-xs">
-
-                {/* Active card info header */}
-                <div className="flex items-center justify-between pb-2 border-b border-[#E8E4DC]">
-                  <div>
-                    <span className="text-[8px] font-mono text-[#B5A48B] uppercase block">Recall Spindle Queue</span>
-                    <span className="text-[10px] font-semibold text-[#1C1C1E] truncate max-w-[120px] block">
-                      {currentVaultCard?.explore_title}
-                    </span>
-                  </div>
-
-                  <div className="flex items-center gap-1">
-                    <Journal
-                      cardId={currentVaultCard?.id || ""}
-                      cardTitle={currentVaultCard?.explore_title || ""}
-                      entries={journalEntries}
-                      onAddEntry={onAddJournalEntry}
-                      onDeleteEntry={onDeleteJournalEntry}
-                    />
-                    <button
-                      id={`delete-vault-item-${currentVaultCard?.id}`}
-                      onClick={() => onDeleteFromVault(currentVaultCard?.id)}
-                    className="text-[#D4CFC5] hover:text-red-500 p-1 transition-colors"
-                    title="Delete bookmark"
-                  >
-                      <Trash2 className="w-3.5 h-3.5" />
-                    </button>
-                  </div>
-                </div>
-
-                {/* Central Question/Cloze Display */}
-                <div className="my-2 space-y-2 flex-1 flex flex-col justify-center">
-                  {hasCloze ? (
-                    /* === CLOZE DELETION MODE === */
-                    <ClozeCard
-                      segments={currentVaultCard.quote!}
-                      onAllRevealed={handleClozeAllRevealed}
-                    />
-                  ) : (
-                    /* === STANDARD Q&A MODE === */
-                    <>
-                      <span className="text-[9px] font-mono text-[#B5A48B] uppercase tracking-wider block font-bold">RECALL QUESTION</span>
-                      <div className="text-xs font-serif italic text-[#1C1C1E] font-medium leading-relaxed">
-                        {currentVaultCard?.vault_question}
-                      </div>
-
-                      <AnimatePresence>
-                        {vRecallRevealed && (
-                          <motion.div
-                            initial={{ opacity: 0, y: 10 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            className="mt-3 pt-3 border-t border-dashed border-[#E8E4DC] space-y-1"
-                          >
-                            <span className="text-[9px] font-mono text-[#5CB888] uppercase tracking-wider block font-bold">CORRECT RECALL</span>
-                            <p className="text-xs text-[#3A3A3E] font-light leading-relaxed">
-                              {currentVaultCard?.vault_answer}
-                            </p>
-                          </motion.div>
-                        )}
-                      </AnimatePresence>
-                    </>
-                  )}
-                </div>
-
-                {/* Interactive Testing controls */}
-                <div className="pt-2 border-t border-[#E8E4DC]">
-                  {hasCloze ? (
-                    /* Cloze mode grading — shows after all blanks revealed */
-                    clozeComplete ? (
-                      <div className="space-y-1.5 animate-fade-in-up">
-                        <span className="text-[8px] font-mono text-[#B5A48B] text-center block">How accurately did you recall?</span>
-                        <div className="grid grid-cols-3 gap-1.5">
-                          <button
-                            onClick={() => { onSubmitReviewRating("again"); setClozeComplete(false); }}
-                            className="py-1.5 bg-red-50 hover:bg-red-100 border border-red-200 text-red-700 rounded-lg text-[9px] font-bold transition-all active:scale-95"
-                          >
-                            Again
-                          </button>
-                          <button
-                            onClick={() => { onSubmitReviewRating("hard"); setClozeComplete(false); }}
-                            className="py-1.5 bg-amber-50 hover:bg-amber-100 border border-amber-200 text-amber-700 rounded-lg text-[9px] font-bold transition-all active:scale-95"
-                          >
-                            Hard
-                          </button>
-                          <button
-                            onClick={() => { onSubmitReviewRating("easy"); setClozeComplete(false); }}
-                            className="py-1.5 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 text-emerald-700 rounded-lg text-[9px] font-bold transition-all active:scale-95"
-                          >
-                            Easy
-                          </button>
-                        </div>
-                      </div>
-                    ) : (
-                      <p className="text-[9px] font-mono text-[#B5A48B] text-center py-2">
-                        Tap each blank to reveal the hidden term
-                      </p>
-                    )
-                  ) : (
-                    /* Standard Q&A mode grading */
-                    !vRecallRevealed ? (
-                      <button
-                        id="reveal-recall-btn"
-                        onClick={onRevealRecall}
-                        className="w-full py-2 bg-[#1C1C1E] text-[#FAF8F3] hover:bg-[#2C2C2E] rounded-xl text-xs font-semibold flex items-center justify-center gap-1 shadow-sm transition-all active:scale-95"
-                      >
-                        <span>Reveal Recall Answer</span>
-                        <HelpCircle className="w-3 h-3" />
-                      </button>
-                    ) : (
-                      <div className="space-y-1.5">
-                        <span className="text-[8px] font-mono text-[#B5A48B] text-center block">How accurate was your memory?</span>
-
-                        <div className="grid grid-cols-3 gap-1.5">
-                          <button
-                            id="rate-recall-again"
-                            onClick={() => onSubmitReviewRating("again")}
-                            className="py-1.5 bg-red-50 hover:bg-red-100 border border-red-200 text-red-700 rounded-lg text-[9px] font-bold transition-all active:scale-95"
-                          >
-                            Again (0)
-                          </button>
-                          <button
-                            id="rate-recall-hard"
-                            onClick={() => onSubmitReviewRating("hard")}
-                            className="py-1.5 bg-amber-50 hover:bg-amber-100 border border-amber-200 text-amber-700 rounded-lg text-[9px] font-bold transition-all active:scale-95"
-                          >
-                            Hard (3d)
-                          </button>
-                          <button
-                            id="rate-recall-easy"
-                            onClick={() => onSubmitReviewRating("easy")}
-                            className="py-1.5 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 text-emerald-700 rounded-lg text-[9px] font-bold transition-all active:scale-95"
-                          >
-                            Easy (7d)
-                          </button>
-                        </div>
-                      </div>
-                    )
-                  )}
-                </div>
-
-                <div className="mt-2 text-[8px] font-mono text-[#B5A48B] flex justify-between">
-                  <span>Reviewed: {reviewedCount} cards</span>
-                  <span>Level: {masteryPoints > 200 ? "Grandmaster" : masteryPoints > 140 ? "Scholar" : "Novice"}</span>
-                </div>
-
-              </div>
+              <CommonplaceBook 
+                cards={savedVaultCards}
+                onUpdateAnnotation={onUpdateVaultCardAnnotation}
+                onTriggerToast={onTriggerToast}
+              />
             )}
           </div>
         )}
@@ -512,7 +343,7 @@ const PhoneEmulator: React.FC<PhoneEmulatorProps> = ({
           id="phone-mode-vault-tab"
           onClick={() => {
             onSetPhoneTab("vault");
-            onTriggerToast("Opened Spaced Repetition Spindle.");
+            onTriggerToast("Opened Corkboard.");
           }}
           className="flex flex-col items-center gap-1 active:scale-95 transition-all focus:outline-none"
         >

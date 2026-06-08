@@ -20,8 +20,6 @@ export interface Preset {
 export interface CardData {
   explore_title: string;
   explore_subtext: string;
-  vault_question: string;
-  vault_answer: string;
 }
 
 /** Typographic layout variants for the Thought Stream poster cards */
@@ -35,18 +33,10 @@ export interface FeedCard {
   visual_mood: string;
   explore_title: string;
   explore_subtext: string;
-  vault_question: string;
-  vault_answer: string;
   presentation: Presentation;
   stack_id?: string;
   /** Assigned programmatically — cycles through 4 typographic layouts */
   layoutVariant?: LayoutVariant;
-  /**
-   * Cloze deletion segments for spaced-repetition cards.
-   * Odd-indexed segments are the "blanked" words to be revealed on tap.
-   * e.g., ["The unexamined life is not worth ", "living", "."]
-   */
-  quote?: string[];
 }
 
 export interface ContentStack {
@@ -67,16 +57,10 @@ export interface SavedVaultCard {
   visual_mood: string;
   explore_title: string;
   explore_subtext: string;
-  vault_question: string;
-  vault_answer: string;
   presentation: Presentation;
   date_added: string;
-  ease_factor: number;
-  interval: number;
-  next_review_date: string;
-  review_count: number;
-  /** Cloze deletion segments inherited from FeedCard */
-  quote?: string[];
+  /** Personal annotation for the Commonplace Book */
+  annotation?: string;
 }
 
 export interface MoodAesthetic {
@@ -101,12 +85,4 @@ export interface GraphEdge {
   to: string;
   relationship: EdgeRelationship;
   dashed?: boolean;
-}
-
-/** Personal reflection journal entry attached to a vault card */
-export interface JournalEntry {
-  id: string;
-  card_id: string;
-  text: string;
-  created_at: string;
 }

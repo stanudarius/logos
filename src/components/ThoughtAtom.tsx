@@ -1,6 +1,7 @@
 import React, { useState, useCallback } from "react";
 import { createPortal } from "react-dom";
-import { motion, AnimatePresence } from "motion/react";
+import { motion, AnimatePresence, useScroll, useTransform, Variants } from "motion/react";
+import { useRef } from "react";
 import { Bookmark, BookmarkCheck, BookOpen, X, MessageCircle } from "lucide-react";
 import type { FeedCard, LayoutVariant, ReadingPart } from "../types";
 import { getInitials } from "../utils/aesthetics";
@@ -47,12 +48,24 @@ const ThoughtAtom: React.FC<ThoughtAtomProps> = ({
     onTriggerToast("Closed Deep Dive reading layer.");
   }, [onTriggerToast]);
 
+  const containerRef = useRef<HTMLDivElement>(null);
+  
+  // Fling Physics based on vertical scroll
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start end", "end start"]
+  });
+  const rotate = useTransform(scrollYProgress, [0, 0.3, 0.7, 1], [-15, 0, 0, 15]);
+  const scale = useTransform(scrollYProgress, [0, 0.3, 0.7, 1], [0.85, 1, 1, 0.85]);
+  const y = useTransform(scrollYProgress, [0, 0.3, 0.7, 1], [-50, 0, 0, 50]);
+
   return (
-    <div id={`thought-atom-${index}`} className="thought-atom relative" data-card-index={index}>
+    <div id={`thought-atom-${index}`} ref={containerRef} className="thought-atom relative overflow-hidden" data-card-index={index}>
       {/* Main Card Surface */}
-      <div
+      <motion.div
         className={`h-full w-full bg-[#FAF8F3] flex flex-col relative cursor-pointer select-none layout-${layoutVariant}`}
         onClick={handleCardTap}
+        style={{ rotate, scale, y }}
       >
         {/* Subtle grain texture overlay */}
         <div
@@ -63,7 +76,7 @@ const ThoughtAtom: React.FC<ThoughtAtomProps> = ({
         />
 
         {renderLayout(card, layoutVariant)}
-      </div>
+      </motion.div>
 
       {/* Deep Dive Drawer */}
       {createPortal(
@@ -142,21 +155,22 @@ const ThoughtAtom: React.FC<ThoughtAtomProps> = ({
                 End of Essay
               </div>
 
-              {/* Socratic Chat Overlay */}
-              {createPortal(
-                <AnimatePresence>
-                  {isChatOpen && (
-                    <SocraticChat
-                      philosopher={card.philosopher}
-                      topic={card.topic}
-                      essayContext={card.presentation?.reading_parts?.map(p => p.text).join(" ") || ""}
-                      onClose={() => setIsChatOpen(false)}
-                    />
-                  )}
-                </AnimatePresence>,
-                document.getElementById("phone-device-emulation") || document.body
-              )}
             </motion.div>
+          )}
+        </AnimatePresence>,
+        document.getElementById("phone-device-emulation") || document.body
+      )}
+
+      {/* Socratic Chat Overlay */}
+      {createPortal(
+        <AnimatePresence>
+          {isChatOpen && (
+            <SocraticChat
+              philosopher={card.philosopher}
+              topic={card.topic}
+              essayContext={card.presentation?.reading_parts?.map(p => p.text).join(" ") || ""}
+              onClose={() => setIsChatOpen(false)}
+            />
           )}
         </AnimatePresence>,
         document.getElementById("phone-device-emulation") || document.body
@@ -166,76 +180,162 @@ const ThoughtAtom: React.FC<ThoughtAtomProps> = ({
 };
 
 /**
+ * Typewriter text component for category labels
+ */
+const TypewriterText = ({ text, className }: { text: string; className?: string }) => {
+  const container: Variants = {
+    hidden: { opacity: 1 },
+    visible: {
+      opacity: 1,
+      transition: { staggerChildren: 0.04, delayChildren: 0.2 },
+    },
+  };
+  const child: Variants = {
+    hidden: { opacity: 0, y: 5 },
+    visible: { opacity: 1, y: 0 },
+  };
+
+  return (
+    <motion.span
+      className={className}
+      variants={container}
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: false, amount: 0.5 }}
+    >
+      {text.split("").map((char, index) => (
+        <motion.span key={index} variants={child}>
+          {char}
+        </motion.span>
+      ))}
+    </motion.span>
+  );
+};
+
+/**
+ * Universal Giant Monogram
+ */
+const Monogram = ({ philosopher }: { philosopher: string }) => (
+  <motion.span
+    initial={{ scale: 1.4, opacity: 0 }}
+    whileInView={{ scale: 1, opacity: 0.07 }}
+    transition={{ duration: 1.2, ease: "easeOut" }}
+    viewport={{ once: false, amount: 0.2 }}
+    className="atom-monogram absolute left-[-1.5rem] top-1/2 -translate-y-1/2 font-[var(--font-literary)] text-[14rem] font-semibold text-[#1C1C1E] leading-none pointer-events-none select-none z-0"
+  >
+    {getInitials(philosopher).charAt(0)}
+  </motion.span>
+);
+
+/**
+ * Common Animation Variants
+ */
+const titleAnim = {
+  hidden: { y: 20, opacity: 0 },
+  visible: { 
+    y: 0, opacity: 1, 
+    transition: { type: "spring", stiffness: 200, damping: 15, delay: 0.5 } 
+  }
+};
+
+const descAnim = {
+  hidden: { opacity: 0, y: 10 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.8, delay: 0.8 } }
+};
+
+/**
  * Renders the appropriate typographic layout for a card.
  */
 function renderLayout(card: FeedCard, variant: LayoutVariant) {
   switch (variant) {
     case "thesis":
       return (
-        <div className="flex-1 flex flex-col items-center justify-center text-center px-6 pb-16">
-          <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#B5A48B] mb-4">
-            {card.topic}
-          </span>
-          <h1 className="atom-title font-serif text-[2rem] leading-[1.08] font-semibold italic text-[#1C1C1E] mb-5 tracking-tight">
+        <div className="flex-1 flex flex-col items-center justify-center text-center px-6 pb-16 relative overflow-hidden">
+          <Monogram philosopher={card.philosopher} />
+          <TypewriterText text={card.topic} className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#B5A48B] mb-4 relative z-10" />
+          
+          <motion.h1 
+            variants={titleAnim} initial="hidden" whileInView="visible" viewport={{ once: false }}
+            className="atom-title font-serif text-[2rem] leading-[1.08] font-semibold italic text-[#1C1C1E] mb-5 tracking-tight relative z-10"
+          >
             {card.explore_title}
-          </h1>
-          <p className="atom-subtext text-[0.8125rem] leading-[1.7] text-[#6B6B6F] font-light max-w-[85%]">
+          </motion.h1>
+          <motion.p 
+            variants={descAnim} initial="hidden" whileInView="visible" viewport={{ once: false }}
+            className="atom-subtext text-[0.8125rem] leading-[1.7] text-[#6B6B6F] font-light max-w-[85%] relative z-10"
+          >
             {card.explore_subtext}
-          </p>
+          </motion.p>
         </div>
       );
 
     case "blockquote":
       return (
         <div className="flex-1 flex flex-col justify-center text-right px-6 pr-6 pl-8 pb-16 relative overflow-hidden">
-          {/* Giant monogram watermark */}
-          <span className="atom-monogram absolute left-[-1.5rem] top-1/2 -translate-y-1/2 font-[var(--font-literary)] text-[14rem] font-semibold text-[#1C1C1E] opacity-[0.03] leading-none pointer-events-none select-none">
-            {getInitials(card.philosopher).charAt(0)}
-          </span>
-          <span className="text-[9px] font-bold uppercase tracking-[0.2em] text-[#B5A48B] mb-4 relative z-[1]">
-            {card.topic}
-          </span>
-          <h1 className="atom-title text-[1.375rem] leading-[1.35] font-normal italic text-[#1C1C1E] mb-4 relative z-[1]" style={{ fontFamily: "var(--font-literary)" }}>
+          <Monogram philosopher={card.philosopher} />
+          
+          <TypewriterText text={card.topic} className="text-[9px] font-bold uppercase tracking-[0.2em] text-[#B5A48B] mb-4 relative z-10" />
+          
+          <motion.h1 
+            variants={titleAnim} initial="hidden" whileInView="visible" viewport={{ once: false }}
+            className="atom-title text-[1.375rem] leading-[1.35] font-normal italic text-[#1C1C1E] mb-4 relative z-10" style={{ fontFamily: "var(--font-literary)" }}
+          >
             "{card.explore_title}"
-          </h1>
-          <p className="atom-subtext text-[0.75rem] leading-[1.65] text-[#6B6B6F] font-light relative z-[1]">
+          </motion.h1>
+          <motion.p 
+            variants={descAnim} initial="hidden" whileInView="visible" viewport={{ once: false }}
+            className="atom-subtext text-[0.75rem] leading-[1.65] text-[#6B6B6F] font-light relative z-10"
+          >
             {card.explore_subtext}
-          </p>
+          </motion.p>
         </div>
       );
 
     case "fragment":
       return (
-        <div className="flex-1 flex flex-col justify-center px-5 pb-16">
-          <div className="flex items-center gap-2 mb-5">
+        <div className="flex-1 flex flex-col justify-center px-5 pb-16 relative overflow-hidden">
+          <Monogram philosopher={card.philosopher} />
+
+          <div className="flex items-center gap-2 mb-5 relative z-10">
             <div className="h-[2px] w-8 bg-[#B5A48B] opacity-50" />
-            <span className="text-[9px] font-bold uppercase tracking-[0.2em] text-[#B5A48B]">
-              {card.topic}
-            </span>
+            <TypewriterText text={card.topic} className="text-[9px] font-bold uppercase tracking-[0.2em] text-[#B5A48B]" />
           </div>
-          <h1 className="atom-title text-[1.125rem] leading-[1.6] font-medium text-[#1C1C1E] text-justify mb-5" style={{ letterSpacing: "-0.025em", fontFamily: "var(--font-sans)", hyphens: "auto" }}>
+          <motion.h1 
+            variants={titleAnim} initial="hidden" whileInView="visible" viewport={{ once: false }}
+            className="atom-title text-[1.125rem] leading-[1.6] font-medium text-[#1C1C1E] text-justify mb-5 relative z-10" style={{ letterSpacing: "-0.025em", fontFamily: "var(--font-sans)", hyphens: "auto" }}
+          >
             {card.explore_title}. {card.explore_subtext}
-          </h1>
-          <p className="atom-subtext text-[0.8125rem] leading-[1.6] text-[#8A8A8E] font-normal italic text-justify font-serif">
+          </motion.h1>
+          <motion.p 
+            variants={descAnim} initial="hidden" whileInView="visible" viewport={{ once: false }}
+            className="atom-subtext text-[0.8125rem] leading-[1.6] text-[#8A8A8E] font-normal italic text-justify font-serif relative z-10"
+          >
             — {card.philosopher}
-          </p>
+          </motion.p>
         </div>
       );
 
     case "epigraph":
       return (
-        <div className="flex-1 flex flex-col items-center justify-center text-center px-7 pb-16">
-          <span className="atom-label text-[0.625rem] font-bold uppercase tracking-[0.25em] text-[#B5A48B] mb-5">
-            {card.topic}
-          </span>
-          <div className="atom-rule w-8 h-px bg-[#D4CFC5] mb-5" />
-          <h1 className="atom-title text-[1.5rem] leading-[1.35] font-normal italic text-[#1C1C1E] mb-5" style={{ fontFamily: "var(--font-literary)" }}>
+        <div className="flex-1 flex flex-col items-center justify-center text-center px-7 pb-16 relative overflow-hidden">
+          <Monogram philosopher={card.philosopher} />
+
+          <TypewriterText text={card.topic} className="atom-label text-[0.625rem] font-bold uppercase tracking-[0.25em] text-[#B5A48B] mb-5 relative z-10 block" />
+          
+          <div className="atom-rule w-8 h-px bg-[#D4CFC5] mb-5 relative z-10" />
+          <motion.h1 
+            variants={titleAnim} initial="hidden" whileInView="visible" viewport={{ once: false }}
+            className="atom-title text-[1.5rem] leading-[1.35] font-normal italic text-[#1C1C1E] mb-5 relative z-10" style={{ fontFamily: "var(--font-literary)" }}
+          >
             {card.explore_title}
-          </h1>
-          <div className="atom-rule-bottom w-8 h-px bg-[#D4CFC5] mb-4" />
-          <p className="atom-subtext text-[0.6875rem] leading-[1.7] text-[#8A8A8E] font-light max-w-[90%]">
+          </motion.h1>
+          <div className="atom-rule-bottom w-8 h-px bg-[#D4CFC5] mb-4 relative z-10" />
+          <motion.p 
+            variants={descAnim} initial="hidden" whileInView="visible" viewport={{ once: false }}
+            className="atom-subtext text-[0.6875rem] leading-[1.7] text-[#8A8A8E] font-light max-w-[90%] relative z-10"
+          >
             {card.explore_subtext}
-          </p>
+          </motion.p>
         </div>
       );
   }

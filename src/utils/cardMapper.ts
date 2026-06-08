@@ -12,10 +12,8 @@ export function mapStackToFeedCards(stack: ContentStack): FeedCard[] {
     topic: stack.topic,
     philosopher: stack.philosopher,
     visual_mood: stack.visual_mood,
-    explore_title: card.explore_title,
-    explore_subtext: card.explore_subtext,
-    vault_question: card.vault_question,
-    vault_answer: card.vault_answer,
-    presentation: stack.presentation
+    explore_title: card.explore_title || "Untitled",
+    explore_subtext: card.explore_subtext || "",
+    presentation: stack.presentation || { title: "", reading_parts: [] }
   }));
 }

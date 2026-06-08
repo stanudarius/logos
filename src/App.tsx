@@ -2,7 +2,7 @@ import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { AnimatePresence } from "motion/react";
 
 import { INITIAL_FEED_CARDS } from "./data/feedCards";
-import type { FeedCard, ContentStack, SavedVaultCard, JournalEntry } from "./types";
+import type { FeedCard, SavedVaultCard } from "./types";
 import { getMoodAesthetic } from "./utils/aesthetics";
 import { mapStackToFeedCards } from "./utils/cardMapper";
 import Toast from "./components/Toast";
@@ -26,15 +26,9 @@ export default function App() {
   const [session, setSession] = useState<Session | null>(null);
 
   const [savedVaultCards, setSavedVaultCards] = useState<SavedVaultCard[]>([]);
-  const [masteryPoints, setMasteryPoints] = useState<number>(120);
-  const [activeStreak, setActiveStreak] = useState<number>(3);
 
-  const [journalEntries, setJournalEntries] = useState<JournalEntry[]>(() => {
-    try {
-      const stored = localStorage.getItem("logos_journal_entries");
-      return stored ? JSON.parse(stored) : [];
-    } catch { return []; }
-  });
+
+
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -54,12 +48,9 @@ export default function App() {
     if (!session?.user) return;
 
     const fetchData = async () => {
-      const { data: profile } = await supabase.from('profiles').select('*').eq('id', session.user.id).single();
-      if (profile) {
-        setMasteryPoints(profile.mastery_points || 120);
-        setActiveStreak(profile.streak || 3);
-      } else {
-        await supabase.from('profiles').insert([{ id: session.user.id, mastery_points: 120, streak: 3 }]);
+      const { data: profile } = await supabase.from('profiles').select('id').eq('id', session.user.id).single();
+      if (!profile) {
+        await supabase.from('profiles').insert([{ id: session.user.id }]);
       }
 
       const { data: vault } = await supabase.from('vault_cards').select('*').eq('user_id', session.user.id);
@@ -71,14 +62,10 @@ export default function App() {
     fetchData();
   }, [session]);
 
-  const [vaultReviewIndex, setVaultReviewIndex] = useState(0);
-  const [vRecallRevealed, setVRecallRevealed] = useState(false);
-  const [reviewedCount, setReviewedCount] = useState(0);
+
 
   useEffect(() => { localStorage.setItem("logos_vault_cards", JSON.stringify(savedVaultCards)); }, [savedVaultCards]);
-  useEffect(() => { localStorage.setItem("logos_mastery_points", masteryPoints.toString()); }, [masteryPoints]);
-  useEffect(() => { localStorage.setItem("logos_streak", activeStreak.toString()); }, [activeStreak]);
-  useEffect(() => { localStorage.setItem("logos_journal_entries", JSON.stringify(journalEntries)); }, [journalEntries]);
+
 
   const triggerToast = useCallback((msg: string) => {
     setToastMessage(msg);
@@ -133,14 +120,10 @@ export default function App() {
     } else {
       const vaultCard: SavedVaultCard = {
         ...card,
-        date_added: new Date().toISOString(),
-        ease_factor: 2.5,
-        interval: 1,
-        next_review_date: new Date().toISOString(),
-        review_count: 0
+        date_added: new Date().toISOString()
       };
       setSavedVaultCards(prev => [...prev, vaultCard]);
-      triggerToast("Saved to Vault. Scheduled for spaced repetition.");
+      triggerToast("Saved to Corkboard.");
       await supabase.from('vault_cards').insert([{
         user_id: session.user.id,
         card_id: vaultCard.id,
@@ -155,51 +138,30 @@ export default function App() {
     setSavedVaultCards(prev => prev.filter(c => c.id !== id));
     triggerToast("Card removed from vault.");
 
-    if (vaultReviewIndex >= Math.max(1, savedVaultCards.length - 1)) {
-      setVaultReviewIndex(0);
-    }
+    triggerToast("Card removed from vault.");
 
     await supabase.from('vault_cards').delete().eq('user_id', session.user.id).eq('card_id', id);
-  }, [triggerToast, vaultReviewIndex, savedVaultCards.length, session]);
+  }, [triggerToast, savedVaultCards.length, session]);
 
-  const submitReviewRating = useCallback((rating: "again" | "hard" | "easy") => {
-    setVRecallRevealed(false);
-    setReviewedCount(prev => prev + 1);
-
-    if (rating === "easy") { setMasteryPoints(prev => prev + 25); triggerToast("Excellent recall! +25 xp"); }
-    else if (rating === "hard") { setMasteryPoints(prev => prev + 10); triggerToast("Good reinforcement! +10 xp"); }
-    else { triggerToast("Knowledge queued. Focus and re-trigger!"); }
-
-    if (vaultReviewIndex < savedVaultCards.length - 1) {
-      setVaultReviewIndex(prev => prev + 1);
-    } else {
-      setVaultReviewIndex(0);
-      setActiveStreak(prev => prev + 1);
-      triggerToast("Daily Spindle Active! Streak incremented.");
+  const updateVaultCardAnnotation = useCallback(async (id: string, annotation: string) => {
+    setSavedVaultCards(prev => prev.map(c => c.id === id ? { ...c, annotation } : c));
+    
+    if (session?.user) {
+      // Find the updated card to sync to supabase
+      const updatedCard = savedVaultCards.find(c => c.id === id);
+      if (updatedCard) {
+        await supabase.from('vault_cards')
+          .update({ card_data: { ...updatedCard, annotation } })
+          .eq('user_id', session.user.id)
+          .eq('card_id', id);
+      }
     }
-  }, [triggerToast, vaultReviewIndex, savedVaultCards.length]);
+  }, [savedVaultCards, session]);
 
-  const handleRevealRecall = useCallback(() => setVRecallRevealed(true), []);
 
-  const addJournalEntry = useCallback((cardId: string, text: string) => {
-    const entry: JournalEntry = {
-      id: crypto.randomUUID(),
-      card_id: cardId,
-      text,
-      created_at: new Date().toISOString(),
-    };
-    setJournalEntries(prev => [entry, ...prev]);
-    triggerToast("Reflection saved.");
-  }, [triggerToast]);
-
-  const deleteJournalEntry = useCallback((entryId: string) => {
-    setJournalEntries(prev => prev.filter(e => e.id !== entryId));
-    triggerToast("Reflection removed.");
-  }, [triggerToast]);
 
   const handleZenSessionComplete = useCallback(() => {
-    setMasteryPoints(prev => prev + 15);
-    triggerToast("Zen session complete! +15 XP");
+    triggerToast("Zen session complete!");
   }, [triggerToast]);
 
   /**
@@ -244,24 +206,16 @@ export default function App() {
           activeAesthetic={activeAesthetic}
           isFetchingMore={isFetchingInfinite}
           savedVaultCards={savedVaultCards}
-          vaultReviewIndex={vaultReviewIndex}
-          vRecallRevealed={vRecallRevealed}
-          reviewedCount={reviewedCount}
-          masteryPoints={masteryPoints}
           onActiveCardChange={handleActiveCardChange}
           onFetchMore={fetchInfiniteFeed}
           onSetPhoneTab={setPhoneTab}
           onToggleSaveToVault={toggleSaveToVault}
           isCardSavedInVault={isCardSavedInVault}
           onDeleteFromVault={deleteFromVault}
-          onRevealRecall={handleRevealRecall}
-          onSubmitReviewRating={submitReviewRating}
           onTriggerToast={triggerToast}
           onOpenConstellation={() => setIsConstellationOpen(true)}
           onOpenZenMode={() => setIsZenModeOpen(true)}
-          journalEntries={journalEntries}
-          onAddJournalEntry={addJournalEntry}
-          onDeleteJournalEntry={deleteJournalEntry}
+          onUpdateVaultCardAnnotation={updateVaultCardAnnotation}
         />
       </div>
 

@@ -36,8 +36,10 @@ body {
    THOUGHT STREAM — Vertical Scroll-Snap Container
    ================================================ */
 .thought-stream {
+  display: flex;
+  flex-direction: column;
   scroll-snap-type: y mandatory;
-  overflow-y: scroll;
+  overflow-y: auto;
   -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
   overscroll-behavior-y: contain;
@@ -48,6 +50,7 @@ body {
 }
 
 .thought-atom {
+  flex: 0 0 100%;
   scroll-snap-align: center;
   scroll-snap-stop: always;
   height: 100%;
@@ -222,41 +225,7 @@ body {
   max-width: 90%;
 }
 
-/* ================================================
-   CLOZE DELETION CARD STYLES
-   ================================================ */
-.cloze-blank {
-  display: inline-block;
-  min-width: 3.5rem;
-  height: 1.375rem;
-  background: linear-gradient(135deg, #E8E4DC, #DDD8CE);
-  border-radius: 4px;
-  vertical-align: baseline;
-  margin: 0 0.15rem;
-  cursor: pointer;
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-  position: relative;
-  border: 1px solid #D4CFC5;
-}
 
-.cloze-blank:hover {
-  background: linear-gradient(135deg, #DDD8CE, #D4CFC5);
-  transform: scale(1.03);
-}
-
-.cloze-blank:active {
-  transform: scale(0.97);
-}
-
-.cloze-revealed {
-  display: inline;
-  font-weight: 600;
-  color: #1C1C1E;
-  background: linear-gradient(135deg, rgba(181, 164, 139, 0.15), rgba(181, 164, 139, 0.08));
-  padding: 0.1rem 0.35rem;
-  border-radius: 3px;
-  border-bottom: 2px solid #B5A48B;
-}
 
 /* ================================================
    DEEP DIVE DRAWER

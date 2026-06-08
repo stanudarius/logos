@@ -23,24 +23,40 @@ const ai = new GoogleGenAI({
   },
 });
 
-// Robust fallback generator
+const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+
+// Robust fallback generator with exponential backoff
 async function generateWithFallback(params: any) {
-  const models = ["gemini-2.5-flash", "gemini-2.0-flash", "gemini-1.5-flash-8b"];
+  const models = ["gemini-2.5-flash", "gemini-3.5-flash", "gemini-2.0-flash", "gemini-flash-latest", "gemini-2.5-flash-lite"];
   let lastError;
 
   for (const modelName of models) {
-    try {
-      return await ai.models.generateContent({ ...params, model: modelName });
-    } catch (e: any) {
-      if (e.status === 503 || e.status === 429) {
-        console.warn(`[${modelName}] is busy/quota exceeded (Status: ${e.status}). Falling back...`);
-        lastError = e;
-      } else {
-        throw e;
+    let retries = 3;
+    let delay = 1500; // start with 1.5s delay
+    
+    while (retries > 0) {
+      try {
+        return await ai.models.generateContent({ ...params, model: modelName });
+      } catch (e: any) {
+        if (e.status === 429 || e.status === 503) {
+          retries--;
+          console.warn(`[${modelName}] rate limited (Status: ${e.status}). Retries left: ${retries}. Waiting ${delay}ms...`);
+          lastError = e;
+          if (retries > 0) {
+            await sleep(delay);
+            delay *= 2; // exponential backoff
+          }
+        } else if (e.status === 404 || e.status === 400) {
+          console.warn(`[${modelName}] unsupported or not found (Status: ${e.status}). Skipping model...`);
+          lastError = e;
+          break; // break the retry loop and try the next model
+        } else {
+          throw e; // throw unhandled errors
+        }
       }
     }
   }
-  throw lastError || new Error("All Gemini models are currently overwhelmed.");
+  throw lastError || new Error("All Gemini models failed after retries.");
 }
 
 // JSON Schema
@@ -80,17 +96,9 @@ const microlearningSchema = {
           explore_subtext: {
             type: Type.STRING,
             description: "A beautiful, deep explanation (1-2 sentences, max 25 words)."
-          },
-          vault_question: {
-            type: Type.STRING,
-            description: "Anki active recall test question based on this slide's core knowledge."
-          },
-          vault_answer: {
-            type: Type.STRING,
-            description: "Bite-sized direct answer to the active recall question."
           }
         },
-        required: ["explore_title", "explore_subtext", "vault_question", "vault_answer"]
+        required: ["explore_title", "explore_subtext"]
       }
     },
     presentation: {
@@ -239,6 +247,35 @@ ${essayContext ? `\nESSAY BEING DISCUSSED:\n${essayContext}` : ""}`;
     res.status(500).json({
       error: error.message || "The philosopher is momentarily lost in thought."
     });
+  }
+});
+
+// Commonplace Book API: Export Essay
+app.post("/api/export", async (req, res) => {
+  try {
+    const { cards } = req.body;
+    if (!cards || cards.length === 0) {
+      return res.json({ summary: "Your commonplace book is empty." });
+    }
+
+    const cardsContext = cards.map((c: any) => 
+      `Thinker: ${c.philosopher}\nIdea: ${c.explore_title}\nInsight: ${c.explore_subtext}\nMy Annotation: ${c.annotation || "None"}\n`
+    ).join("\n---\n");
+
+    const prompt = `Act as an eloquent editor compiling a personal 'Commonplace Book'. Weave the following saved ideas and personal annotations into a cohesive, beautifully written summary essay (about 300-500 words). Draw connections between the distinct thoughts.\n\nHere are the notes:\n${cardsContext}`;
+
+    const response = await generateWithFallback({
+      contents: prompt,
+      config: {
+        temperature: 0.7,
+        systemInstruction: "You are a thoughtful writer synthesizing disparate ideas into a profound narrative essay. Use markdown formatting.",
+      },
+    });
+
+    res.json({ summary: response.text.trim() });
+  } catch (error: any) {
+    console.error("Export API Error:", error);
+    res.status(500).json({ error: error.message });
   }
 });
 
