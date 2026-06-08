@@ -157,13 +157,13 @@ const PhoneEmulator: React.FC<PhoneEmulatorProps> = ({
   return (
     <div
       id="phone-device-emulation"
-      className={`relative rounded-[40px] h-[90vh] max-h-[850px] min-h-[600px] w-full border-[10px] border-[#1A1A1A] bg-[#FAF8F3] shadow-[0_15px_40px_rgba(0,0,0,0.08)] flex flex-col justify-between overflow-hidden transition-all duration-700 ease-out`}
+      className={`relative rounded-none sm:rounded-[40px] h-[100dvh] sm:h-[90vh] sm:max-h-[850px] sm:min-h-[600px] w-full border-0 sm:border-[10px] sm:border-[#1A1A1A] bg-[#FAF8F3] shadow-none sm:shadow-[0_15px_40px_rgba(0,0,0,0.08)] flex flex-col justify-between overflow-hidden transition-all duration-700 ease-out`}
     >
 
       {/* Simulated top notch & Constellation Trigger */}
       <div className="relative z-50 flex justify-between items-center text-[10px] font-bold tracking-widest uppercase px-5 pt-4 pb-2 pointer-events-none">
         <div className="flex items-center gap-2">
-          <span className="opacity-45 text-[#1C1C1E]">{currentTime}</span>
+          <span className="opacity-45 text-[#1C1C1E] hidden sm:block">{currentTime}</span>
           
           {/* Generating Indicator (Status Bar) */}
           {isFetchingMore && (
@@ -533,7 +533,7 @@ const PhoneEmulator: React.FC<PhoneEmulatorProps> = ({
       </div>
 
       {/* Home Indicator */}
-      <div className="absolute bottom-1 left-1/2 -translate-x-1/2 w-32 h-1 bg-[#D4CFC5]/60 rounded-full select-none pointer-events-none" />
+      <div className="absolute bottom-1 left-1/2 -translate-x-1/2 w-32 h-1 bg-[#D4CFC5]/60 rounded-full select-none pointer-events-none hidden sm:block" />
 
     </div>
   );

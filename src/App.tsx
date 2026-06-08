@@ -233,8 +233,8 @@ export default function App() {
   }
 
   return (
-    <div className="w-full h-[100dvh] bg-[#0A0A0A] flex items-center justify-center overflow-hidden p-4 sm:p-8">
-      <div className="w-full max-w-[420px] h-full flex flex-col items-center justify-center font-sans relative">
+    <div className="w-full h-[100dvh] bg-[#0A0A0A] flex items-center justify-center overflow-hidden p-0 sm:p-8">
+      <div className="w-full sm:max-w-[420px] h-full flex flex-col items-center justify-center font-sans relative">
         <Toast message={toastMessage} />
 
         <PhoneEmulator
