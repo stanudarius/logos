@@ -61,6 +61,7 @@ export interface SavedVaultCard {
   date_added: string;
   /** Personal annotation for the Commonplace Book */
   annotation?: string;
+  user_folder?: string;
 }
 
 export interface MoodAesthetic {

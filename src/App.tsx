@@ -158,15 +158,32 @@ export default function App() {
       // Find the updated card to sync to supabase
       const updatedCard = savedVaultCards.find(c => c.id === id);
       if (updatedCard) {
-        await supabase.from('vault_cards')
-          .update({ card_data: { ...updatedCard, annotation } })
-          .eq('user_id', session.user.id)
-          .eq('card_id', id);
+        const newCardData = { ...updatedCard, annotation };
+        await supabase.from('vault_cards').update({ card_data: newCardData }).eq('user_id', session.user.id).eq('card_id', id);
       }
     }
   }, [savedVaultCards, session]);
 
-
+  const assignToFolder = useCallback(async (id: string, folderName: string | undefined) => {
+    let newCardData: SavedVaultCard | undefined;
+    
+    setSavedVaultCards(prev => prev.map(c => {
+      if (c.id === id) {
+        newCardData = { ...c, user_folder: folderName };
+        return newCardData;
+      }
+      return c;
+    }));
+    
+    // We defer the Supabase call slightly to ensure the local state map created the object
+    setTimeout(async () => {
+      if (session?.user && newCardData) {
+        await supabase.from('vault_cards').update({ card_data: newCardData }).eq('user_id', session.user.id).eq('card_id', id);
+      }
+    }, 0);
+    
+    triggerToast(folderName ? `Moved to ${folderName}` : "Removed from folder");
+  }, [session, triggerToast]);
 
   const handleZenSessionComplete = useCallback(() => {
     triggerToast("Zen session complete!");
@@ -224,6 +241,7 @@ export default function App() {
           onOpenConstellation={() => setIsConstellationOpen(true)}
           onOpenZenMode={() => setIsZenModeOpen(true)}
           onUpdateVaultCardAnnotation={updateVaultCardAnnotation}
+          onAssignToFolder={assignToFolder}
         />
       </div>
 
