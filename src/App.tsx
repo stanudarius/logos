@@ -16,7 +16,15 @@ import type { Session } from "@supabase/supabase-js";
 export default function App() {
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
-  const [feedCards, setFeedCards] = useState<FeedCard[]>(INITIAL_FEED_CARDS);
+  const [feedCards, setFeedCards] = useState<FeedCard[]>(() => {
+    const groups: Record<string, FeedCard[]> = {};
+    INITIAL_FEED_CARDS.forEach(card => {
+      if (!groups[card.philosopher]) groups[card.philosopher] = [];
+      groups[card.philosopher].push(card);
+    });
+    const shuffledPhilosophers = Object.keys(groups).sort(() => Math.random() - 0.5);
+    return shuffledPhilosophers.flatMap(p => groups[p]);
+  });
   const [activeCardIndex, setActiveCardIndex] = useState(0);
   const [phoneTab, setPhoneTab] = useState<"explore" | "vault">("explore");
   const [isFetchingInfinite, setIsFetchingInfinite] = useState(false);
