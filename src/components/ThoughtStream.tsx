@@ -9,7 +9,7 @@ interface ThoughtStreamProps {
   isLoading: boolean;
   onActiveCardChange: (index: number) => void;
   onFetchMore: () => void;
-  isCardSaved: (index: number) => boolean;
+  savedVaultCardIds: Set<string>;
   onToggleSave: (index: number) => void;
   onTriggerToast: (msg: string) => void;
   onOpenDeepDive?: (index: number) => void;
@@ -26,7 +26,7 @@ const ThoughtStream: React.FC<ThoughtStreamProps> = ({
   isLoading,
   onActiveCardChange,
   onFetchMore,
-  isCardSaved,
+  savedVaultCardIds,
   onToggleSave,
   onTriggerToast,
   onOpenDeepDive,
@@ -135,7 +135,7 @@ const ThoughtStream: React.FC<ThoughtStreamProps> = ({
           card={card}
           layoutVariant={card.layoutVariant || LAYOUT_CYCLE[index % LAYOUT_CYCLE.length]}
           index={index}
-          isSaved={isCardSaved(index)}
+          isSaved={savedVaultCardIds.has(card.id)}
           isActive={index === activeIndex}
           onToggleSave={onToggleSave}
           onTriggerToast={onTriggerToast}

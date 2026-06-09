@@ -24,7 +24,7 @@ interface PhoneEmulatorProps {
   onFetchMore: () => void;
   onSetPhoneTab: (tab: "explore" | "vault") => void;
   onToggleSaveToVault: (idx: number) => void;
-  isCardSavedInVault: (idx: number) => boolean;
+  savedVaultCardIds: Set<string>;
   onTriggerToast: (msg: string) => void;
   onOpenConstellation?: () => void;
   onOpenZenMode?: () => void;
@@ -45,7 +45,7 @@ const PhoneEmulator: React.FC<PhoneEmulatorProps> = ({
   onFetchMore,
   onSetPhoneTab,
   onToggleSaveToVault,
-  isCardSavedInVault,
+  savedVaultCardIds,
   onTriggerToast,
   onOpenConstellation,
   onOpenZenMode,
@@ -75,7 +75,7 @@ const PhoneEmulator: React.FC<PhoneEmulatorProps> = ({
         filter: (el) => {
           // Filter out the bookmark toggle and drawer when capturing
           if (el.tagName === 'BUTTON' && el.id?.startsWith('bookmark-toggle')) return false;
-          if (el.classList && el.classList.contains('deep-dive-drawer')) return false;
+          if (el.classList && typeof el.classList.contains === 'function' && el.classList.contains('deep-dive-drawer')) return false;
           return true;
         }
       });
@@ -201,7 +201,7 @@ const PhoneEmulator: React.FC<PhoneEmulatorProps> = ({
               isLoading={isFetchingMore}
               onActiveCardChange={onActiveCardChange}
               onFetchMore={onFetchMore}
-              isCardSaved={isCardSavedInVault}
+              savedVaultCardIds={savedVaultCardIds}
               onToggleSave={onToggleSaveToVault}
               onTriggerToast={onTriggerToast}
               onOpenDeepDive={onOpenDeepDive}

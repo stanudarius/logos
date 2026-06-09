@@ -145,12 +145,6 @@ export default function App() {
 
   const savedVaultCardIds = useMemo(() => new Set(savedVaultCards.map(c => c.id)), [savedVaultCards]);
 
-  const isCardSavedInVault = useCallback((slideIdx: number) => {
-    const ac = feedCards[slideIdx];
-    if (!ac) return false;
-    return savedVaultCardIds.has(ac.id);
-  }, [feedCards, savedVaultCardIds]);
-
   const toggleSaveToVault = useCallback(async (index: number) => {
     if (!session?.user) return;
 
@@ -262,7 +256,7 @@ export default function App() {
           onFetchMore={fetchInfiniteFeed}
           onSetPhoneTab={setPhoneTab}
           onToggleSaveToVault={toggleSaveToVault}
-          isCardSavedInVault={isCardSavedInVault}
+          savedVaultCardIds={savedVaultCardIds}
           onDeleteFromVault={deleteFromVault}
           onTriggerToast={triggerToast}
           onOpenConstellation={() => setIsConstellationOpen(true)}

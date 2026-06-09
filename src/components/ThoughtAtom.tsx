@@ -1,6 +1,6 @@
 import React, { useState, useCallback, useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
-import { motion, AnimatePresence, useScroll, useTransform, Variants } from "motion/react";
+import { motion, AnimatePresence, useTransform, Variants, useMotionValue, useSpring } from "motion/react";
 
 import { Bookmark, BookmarkCheck, BookOpen, X, MessageCircle, Heart } from "lucide-react";
 import type { FeedCard, LayoutVariant, ReadingPart } from "../types";
@@ -41,6 +41,13 @@ const ThoughtAtom: React.FC<ThoughtAtomProps> = ({
   const [isDeepDiveOpen, setIsDeepDiveOpen] = useState(false);
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [showHeart, setShowHeart] = useState(false);
+  const heartTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (heartTimeoutRef.current) clearTimeout(heartTimeoutRef.current);
+    };
+  }, []);
 
   const handleDoubleTap = useCallback(
     (e: React.MouseEvent) => {
@@ -55,7 +62,8 @@ const ThoughtAtom: React.FC<ThoughtAtomProps> = ({
       
       // Heart animation
       setShowHeart(true);
-      setTimeout(() => setShowHeart(false), 800);
+      if (heartTimeoutRef.current) clearTimeout(heartTimeoutRef.current);
+      heartTimeoutRef.current = setTimeout(() => setShowHeart(false), 800);
       
       // Haptic feedback (Double Pop)
       if (typeof navigator !== 'undefined' && navigator.vibrate) {
@@ -90,24 +98,19 @@ const ThoughtAtom: React.FC<ThoughtAtomProps> = ({
     return () => observer.disconnect();
   }, [index, onActiveCardChange]);
   
-  // Fling Physics based on vertical scroll
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ["start end", "end start"]
-  });
-  const rotate = useTransform(scrollYProgress, [0, 0.3, 0.7, 1], [-15, 0, 0, 15]);
-  const scale = useTransform(scrollYProgress, [0, 0.3, 0.7, 1], [0.85, 1, 1, 0.85]);
-  const y = useTransform(scrollYProgress, [0, 0.3, 0.7, 1], [-50, 0, 0, 50]);
-
   // Ambient Parallax (Mouse + Mobile Gyroscope)
-  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+  const smoothX = useSpring(mouseX, { damping: 40, stiffness: 150 });
+  const smoothY = useSpring(mouseY, { damping: 40, stiffness: 150 });
   
   const handleMouseMove = useCallback((e: React.MouseEvent) => {
     // Calculate subtle mouse offset mapped from -10px to +10px
     const x = (e.clientX / window.innerWidth - 0.5) * 20;
     const y = (e.clientY / window.innerHeight - 0.5) * 20;
-    setMousePos({ x, y });
-  }, []);
+    mouseX.set(x);
+    mouseY.set(y);
+  }, [mouseX, mouseY]);
 
   useEffect(() => {
     if (!isActive) return;
@@ -118,14 +121,15 @@ const ThoughtAtom: React.FC<ThoughtAtomProps> = ({
       // beta is front-to-back tilt in degrees, where front is positive
       const x = Math.min(Math.max(e.gamma / 4.5, -10), 10);
       const y = Math.min(Math.max((e.beta - 45) / 4.5, -10), 10);
-      setMousePos({ x, y });
+      mouseX.set(x);
+      mouseY.set(y);
     };
 
     if (typeof window !== 'undefined' && window.DeviceOrientationEvent) {
       window.addEventListener('deviceorientation', handleDeviceOrientation);
       return () => window.removeEventListener('deviceorientation', handleDeviceOrientation);
     }
-  }, [isActive]);
+  }, [isActive, mouseX, mouseY]);
 
   return (
     <div 
@@ -139,16 +143,15 @@ const ThoughtAtom: React.FC<ThoughtAtomProps> = ({
       <motion.div
         className={`h-full w-full bg-[#FAF8F3] flex flex-col relative select-none layout-${layoutVariant}`}
         onDoubleClick={handleDoubleTap}
-        style={{ rotate, scale, y }}
       >
         {/* Subtle grain texture overlay with cinematic parallax */}
         <motion.div
-          animate={{ x: mousePos.x, y: mousePos.y }}
-          transition={{ type: "spring", damping: 40, stiffness: 150 }}
-          className="absolute inset-0 opacity-[0.035] pointer-events-none scale-[1.05]"
           style={{
+            x: smoothX,
+            y: smoothY,
             backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.5'/%3E%3C/svg%3E")`,
           }}
+          className="absolute inset-0 opacity-[0.035] pointer-events-none scale-[1.05]"
         />
 
         {/* Double Tap Heart Overlay */}
