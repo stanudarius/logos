@@ -30,6 +30,7 @@ interface PhoneEmulatorProps {
   onOpenZenMode?: () => void;
   onUpdateVaultCardAnnotation: (cardId: string, text: string) => void;
   onAssignToFolder: (id: string, folderName: string | undefined) => void;
+  onDeleteFromVault: (id: string) => void;
 }
 
 const PhoneEmulator: React.FC<PhoneEmulatorProps> = ({
@@ -47,7 +48,8 @@ const PhoneEmulator: React.FC<PhoneEmulatorProps> = ({
   onOpenConstellation,
   onOpenZenMode,
   onUpdateVaultCardAnnotation,
-  onAssignToFolder
+  onAssignToFolder,
+  onDeleteFromVault
 }) => {
   const [currentTime, setCurrentTime] = useState<string>("9:41");
   const [isSharing, setIsSharing] = useState(false);
@@ -314,6 +316,7 @@ const PhoneEmulator: React.FC<PhoneEmulatorProps> = ({
                 cards={savedVaultCards}
                 onUpdateAnnotation={onUpdateVaultCardAnnotation}
                 onAssignToFolder={onAssignToFolder}
+                onDeleteFromVault={onDeleteFromVault}
                 onTriggerToast={onTriggerToast}
               />
             )}

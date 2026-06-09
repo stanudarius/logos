@@ -1,12 +1,13 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Reorder, motion } from "motion/react";
-import { Network, FileText, Download, FolderPlus, Folder } from "lucide-react";
+import { Network, FileText, Download, FolderPlus, Folder, Trash2 } from "lucide-react";
 import type { SavedVaultCard } from "../types";
 
 interface CommonplaceBookProps {
   cards: SavedVaultCard[];
   onUpdateAnnotation: (id: string, text: string) => void;
   onAssignToFolder: (id: string, folderName: string | undefined) => void;
+  onDeleteFromVault: (id: string) => void;
   onTriggerToast: (msg: string) => void;
 }
 
@@ -14,6 +15,7 @@ const CommonplaceBook: React.FC<CommonplaceBookProps> = ({
   cards,
   onUpdateAnnotation,
   onAssignToFolder,
+  onDeleteFromVault,
   onTriggerToast,
 }) => {
   const [orderedCards, setOrderedCards] = useState(cards);
@@ -116,15 +118,24 @@ const CommonplaceBook: React.FC<CommonplaceBookProps> = ({
               >
                 <div className="absolute top-1 right-1/2 translate-x-1/2 w-8 h-2 bg-red-400/20 rounded-full" />
                 
-                <button 
-                  onClick={() => setAssigningCardId(card.id)}
-                  className="absolute top-2 right-2 p-1.5 text-[#B5A48B] hover:text-[#1C1C1E] transition-colors rounded-full hover:bg-black/5"
-                  title="Assign to Folder"
-                >
-                  {card.user_folder ? <Folder className="w-3.5 h-3.5 fill-current" /> : <FolderPlus className="w-3.5 h-3.5" />}
-                </button>
+                <div className="absolute top-2 right-2 flex items-center gap-0.5">
+                  <button 
+                    onClick={() => onDeleteFromVault(card.id)}
+                    className="p-1.5 text-[#B5A48B] hover:text-red-500 transition-colors rounded-full hover:bg-black/5"
+                    title="Remove from Vault"
+                  >
+                    <Trash2 className="w-3.5 h-3.5" />
+                  </button>
+                  <button 
+                    onClick={() => setAssigningCardId(card.id)}
+                    className="p-1.5 text-[#B5A48B] hover:text-[#1C1C1E] transition-colors rounded-full hover:bg-black/5"
+                    title="Assign to Folder"
+                  >
+                    {card.user_folder ? <Folder className="w-3.5 h-3.5 fill-current" /> : <FolderPlus className="w-3.5 h-3.5" />}
+                  </button>
+                </div>
 
-                <div className="flex items-center gap-2 mb-1 pr-6">
+                <div className="flex items-center gap-2 mb-1 pr-12">
                   <span className="text-[8px] font-bold font-mono uppercase tracking-[0.2em] text-[#B5A48B] block">
                     {card.philosopher}
                   </span>
