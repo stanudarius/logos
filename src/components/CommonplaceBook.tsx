@@ -29,9 +29,21 @@ const CommonplaceBook: React.FC<CommonplaceBookProps> = ({
   const folders = Array.from(new Set(cards.map(c => c.user_folder).filter(Boolean))) as string[];
   const displayCards = activeFolder ? orderedCards.filter(c => c.user_folder === activeFolder) : orderedCards;
 
-  // Sync incoming cards
+  // Sync incoming cards while preserving custom order
   useEffect(() => {
-    setOrderedCards(cards);
+    setOrderedCards(prevOrdered => {
+      // 1. Keep cards that still exist, update them with new data (e.g. annotations)
+      const newCardsMap = new Map(cards.map(c => [c.id, c]));
+      const nextOrdered = prevOrdered
+        .filter(c => newCardsMap.has(c.id))
+        .map(c => newCardsMap.get(c.id)!);
+      
+      // 2. Append newly saved cards to the end
+      const existingIds = new Set(nextOrdered.map(c => c.id));
+      const newlyAdded = cards.filter(c => !existingIds.has(c.id));
+      
+      return [...nextOrdered, ...newlyAdded];
+    });
   }, [cards]);
 
   const handleExport = async () => {

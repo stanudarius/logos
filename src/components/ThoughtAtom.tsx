@@ -18,6 +18,7 @@ interface ThoughtAtomProps {
   onOpenDeepDive?: (index: number) => void;
   onOpenChat?: (index: number) => void;
   onActiveCardChange?: (index: number) => void;
+  isActive?: boolean;
 }
 
 /**
@@ -34,7 +35,8 @@ const ThoughtAtom: React.FC<ThoughtAtomProps> = ({
   onTriggerToast,
   onOpenDeepDive,
   onOpenChat,
-  onActiveCardChange
+  onActiveCardChange,
+  isActive
 }) => {
   const [isDeepDiveOpen, setIsDeepDiveOpen] = useState(false);
   const [isChatOpen, setIsChatOpen] = useState(false);
@@ -107,6 +109,8 @@ const ThoughtAtom: React.FC<ThoughtAtomProps> = ({
   }, []);
 
   useEffect(() => {
+    if (!isActive) return;
+    
     const handleDeviceOrientation = (e: DeviceOrientationEvent) => {
       if (e.gamma === null || e.beta === null) return;
       // gamma is left-to-right tilt in degrees, where right is positive
@@ -120,7 +124,7 @@ const ThoughtAtom: React.FC<ThoughtAtomProps> = ({
       window.addEventListener('deviceorientation', handleDeviceOrientation);
       return () => window.removeEventListener('deviceorientation', handleDeviceOrientation);
     }
-  }, []);
+  }, [isActive]);
 
   return (
     <div 

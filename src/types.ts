@@ -10,13 +10,6 @@ export interface Presentation {
   reading_parts: ReadingPart[];
 }
 
-export interface Preset {
-  category: "philosophy" | "arts" | "literature" | "architecture";
-  title: string;
-  icon: string;
-  text: string;
-}
-
 export interface CardData {
   explore_title: string;
   explore_subtext: string;

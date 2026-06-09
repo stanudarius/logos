@@ -48,26 +48,3 @@ CREATE POLICY "Users can delete own vault cards"
   ON vault_cards FOR DELETE 
   USING ( auth.uid() = user_id );
 
--- 6. Create Journal Entries Table
-CREATE TABLE journal_entries (
-  id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
-  user_id UUID REFERENCES auth.users NOT NULL,
-  card_id TEXT NOT NULL,
-  text TEXT NOT NULL,
-  created_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc', NOW())
-);
-
--- 7. Set up RLS for Journal Entries
-ALTER TABLE journal_entries ENABLE ROW LEVEL SECURITY;
-
-CREATE POLICY "Users can view own journal entries"
-  ON journal_entries FOR SELECT
-  USING ( auth.uid() = user_id );
-
-CREATE POLICY "Users can insert own journal entries"
-  ON journal_entries FOR INSERT
-  WITH CHECK ( auth.uid() = user_id );
-
-CREATE POLICY "Users can delete own journal entries"
-  ON journal_entries FOR DELETE
-  USING ( auth.uid() = user_id );

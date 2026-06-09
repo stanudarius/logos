@@ -136,6 +136,7 @@ const ThoughtStream: React.FC<ThoughtStreamProps> = ({
           layoutVariant={LAYOUT_CYCLE[index % LAYOUT_CYCLE.length]}
           index={index}
           isSaved={isCardSaved(index)}
+          isActive={index === activeIndex}
           onToggleSave={onToggleSave}
           onTriggerToast={onTriggerToast}
           onOpenDeepDive={onOpenDeepDive}

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useRef } from "react";
+import React, { useState, useEffect, useCallback, useRef, useMemo } from "react";
 import { AnimatePresence } from "motion/react";
 
 import { INITIAL_FEED_CARDS } from "./data/feedCards";
@@ -134,11 +134,13 @@ export default function App() {
     setActiveCardIndex(index);
   }, []);
 
+  const savedVaultCardIds = useMemo(() => new Set(savedVaultCards.map(c => c.id)), [savedVaultCards]);
+
   const isCardSavedInVault = useCallback((slideIdx: number) => {
     const ac = feedCards[slideIdx];
     if (!ac) return false;
-    return savedVaultCards.some(saved => saved.id === ac.id);
-  }, [feedCards, savedVaultCards]);
+    return savedVaultCardIds.has(ac.id);
+  }, [feedCards, savedVaultCardIds]);
 
   const toggleSaveToVault = useCallback(async (index: number) => {
     if (!session?.user) return;
@@ -173,7 +175,7 @@ export default function App() {
     triggerToast("Card removed from vault.");
 
     await supabase.from('vault_cards').delete().eq('user_id', session.user.id).eq('card_id', id);
-  }, [triggerToast, savedVaultCards.length, session]);
+  }, [triggerToast, session]);
 
   const updateVaultCardAnnotation = useCallback(async (id: string, annotation: string) => {
     const cardToUpdate = savedVaultCards.find(c => c.id === id);
