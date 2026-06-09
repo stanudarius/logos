@@ -101,7 +101,7 @@ const SocraticChat: React.FC<SocraticChatProps> = ({
       animate={{ y: 0 }}
       exit={{ y: "100%" }}
       transition={{ type: "spring", damping: 28, stiffness: 280 }}
-      className="absolute inset-x-0 bottom-0 top-[4%] bg-[#0F0F11] z-40 flex flex-col rounded-t-[28px] shadow-[0_-8px_40px_rgba(0,0,0,0.4)] border-t border-[#2A2A2E]"
+      className="absolute inset-x-0 bottom-0 top-[4%] bg-[#0F0F11] z-[60] flex flex-col rounded-t-[28px] shadow-[0_-8px_40px_rgba(0,0,0,0.4)] border-t border-[#2A2A2E]"
     >
       {/* Handle */}
       <div className="flex justify-center pt-3 pb-1">
