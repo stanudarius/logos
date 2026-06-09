@@ -34,8 +34,11 @@ const SocraticChat: React.FC<SocraticChatProps> = ({
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const abortControllerRef = useRef<AbortController | null>(null);
 
+  const isMountedRef = useRef(true);
+
   useEffect(() => {
     return () => {
+      isMountedRef.current = false;
       abortControllerRef.current?.abort();
     };
   }, []);
@@ -79,16 +82,22 @@ const SocraticChat: React.FC<SocraticChatProps> = ({
       if (!res.ok) throw new Error("Failed to reach the philosopher.");
 
       const data = await res.json();
-      setMessages(prev => [...prev, { role: "model", text: data.reply }]);
+      if (isMountedRef.current) {
+        setMessages(prev => [...prev, { role: "model", text: data.reply }]);
+      }
     } catch (err: any) {
       if (err.name === 'AbortError') return;
-      setMessages(prev => [
-        ...prev,
-        { role: "model", text: "Forgive me — my thoughts were interrupted. Ask again." },
-      ]);
+      if (isMountedRef.current) {
+        setMessages(prev => [
+          ...prev,
+          { role: "model", text: "Forgive me — my thoughts were interrupted. Ask again." },
+        ]);
+      }
     } finally {
-      setIsLoading(false);
-      inputRef.current?.focus();
+      if (isMountedRef.current) {
+        setIsLoading(false);
+        inputRef.current?.focus();
+      }
     }
   }, [input, isLoading, messages, philosopher, topic, essayContext]);
 

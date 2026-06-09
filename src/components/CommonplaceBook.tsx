@@ -46,6 +46,18 @@ const CommonplaceBook: React.FC<CommonplaceBookProps> = ({
     });
   }, [cards]);
 
+  const handleReorder = React.useCallback((newOrder: SavedVaultCard[]) => {
+    if (activeFolder) return;
+    setOrderedCards(newOrder);
+  }, [activeFolder]);
+
+  const displayCardsWithRot = React.useMemo(() => {
+    return displayCards.map(card => ({
+      ...card,
+      _rot: (card.id.charCodeAt(0) % 7) - 3
+    }));
+  }, [displayCards]);
+
   const handleExport = async () => {
     if (orderedCards.length === 0) return;
     setIsExporting(true);
@@ -109,17 +121,10 @@ const CommonplaceBook: React.FC<CommonplaceBookProps> = ({
         <Reorder.Group 
           axis="y" 
           values={displayCards} 
-          onReorder={(newOrder) => {
-            // When filtering, we don't want to lose the non-displayed cards from orderedCards.
-            if (activeFolder) return; 
-            setOrderedCards(newOrder);
-          }}
+          onReorder={handleReorder}
           className="space-y-4 pb-20"
         >
-          {orderedCards.map((card) => {
-            // Predictable random rotation based on ID so it stays consistent
-            const rot = (card.id.charCodeAt(0) % 7) - 3; // -3 to 3
-            
+          {displayCardsWithRot.map((card) => {
             return (
               <Reorder.Item 
                 key={card.id} 
@@ -131,7 +136,7 @@ const CommonplaceBook: React.FC<CommonplaceBookProps> = ({
                 transition={{ type: "spring", stiffness: 350, damping: 25 }}
                 whileDrag={{ scale: 1.05, zIndex: 50, rotate: 0, cursor: "grabbing" }}
                 className="bg-[#FFFCE8] p-3 rounded shadow-md border border-[#E8E4DC] cursor-grab relative"
-                style={{ rotate: `${rot}deg`, willChange: "transform" }}
+                style={{ rotate: `${card._rot}deg`, willChange: "transform" }}
               >
                 <div className="absolute top-1 right-1/2 translate-x-1/2 w-8 h-2 bg-red-400/20 rounded-full" />
                 

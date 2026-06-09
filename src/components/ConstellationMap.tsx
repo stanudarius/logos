@@ -43,7 +43,7 @@ const ConstellationEdge = React.memo(({
     return {
       midX: mX,
       midY: mY,
-      adjustedAngle: angle > 90 || angle < -90 ? angle + 180 : angle
+      adjustedAngle: Math.abs(angle) > 90 ? angle + 180 : angle
     };
   }, [fromNode.x, fromNode.y, toNode.x, toNode.y]);
 
