@@ -270,7 +270,7 @@ const ThoughtAtom: React.FC<ThoughtAtomProps> = ({
                 onWheel={(e) => e.stopPropagation()} // Stop scroll bubbling
                 onTouchMove={(e) => e.stopPropagation()}
               >
-              <FocusLock returnFocus>
+              <FocusLock returnFocus className="flex flex-col h-full w-full">
                 {/* Header */}
               <div className="flex items-center justify-between px-5 py-4 border-b border-[#E8E4DC]">
                 <div className="flex items-center gap-2">
