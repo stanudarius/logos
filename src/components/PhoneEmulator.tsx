@@ -201,55 +201,6 @@ const PhoneEmulator: React.FC<PhoneEmulatorProps> = ({
               onToggleSave={onToggleSaveToVault}
               onTriggerToast={onTriggerToast}
             />
-
-            {/* Static Attribution Footer Overlay */}
-            {currentDisplayCards[activeCardIndex] && (
-              <motion.div 
-                key={`footer-${currentDisplayCards[activeCardIndex].id}`}
-                initial={{ y: 100, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                transition={{ type: "spring", stiffness: 300, damping: 30, delay: 0.6 }}
-                className="absolute bottom-[60px] left-0 right-0 px-5 pb-5 z-20 pointer-events-none"
-              >
-                <div className="flex items-center justify-between border-t border-[#E8E4DC]/60 pt-3">
-                  <div className="flex items-center gap-2.5">
-                    <div className="w-9 h-9 rounded-full bg-[#1C1C1E] flex items-center justify-center text-[#FAF8F3] text-[11px] font-serif italic shadow-sm flex-shrink-0">
-                      {getInitials(currentDisplayCards[activeCardIndex].philosopher)}
-                    </div>
-                    <div>
-                      <p className="text-[11px] font-semibold text-[#1C1C1E] tracking-tight leading-none mb-0.5">
-                        {currentDisplayCards[activeCardIndex].philosopher}
-                      </p>
-                      <p className="text-[9px] font-normal text-[#B5A48B] tracking-wide uppercase truncate max-w-[160px]">
-                        {currentDisplayCards[activeCardIndex].presentation?.title || currentDisplayCards[activeCardIndex].topic}
-                      </p>
-                      {/* 4-card Sequence Progress Indicator */}
-                      <div className="flex items-center gap-1 mt-1.5">
-                        {(() => {
-                          const currentCard = currentDisplayCards[activeCardIndex];
-                          let cardSequence = 1;
-                          const genMatch = currentCard.id.match(/_card_(\d+)_/);
-                          if (genMatch) {
-                            cardSequence = parseInt(genMatch[1], 10) + 1;
-                          } else {
-                            const match = currentCard.id.match(/_(\d+)$/);
-                            cardSequence = match ? parseInt(match[1], 10) : 1;
-                          }
-                          return [...Array(4)].map((_, i) => (
-                            <div
-                              key={i}
-                              className={`h-[2px] w-2.5 rounded-full transition-all ${
-                                i < cardSequence ? "bg-[#B5A48B]" : "bg-[#E8E4DC]"
-                              }`}
-                            />
-                          ));
-                        })()}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </motion.div>
-            )}
           </>
         )}
 

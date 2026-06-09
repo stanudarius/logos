@@ -105,6 +105,53 @@ const ThoughtAtom: React.FC<ThoughtAtomProps> = ({
         {renderLayout(card, layoutVariant)}
       </motion.div>
 
+      {/* Author Footer (Clickable to open Deep Dive) */}
+      <div 
+        className="absolute bottom-6 left-5 right-16 z-40 pointer-events-auto"
+        onClick={(e) => {
+          e.stopPropagation();
+          setIsDeepDiveOpen(true);
+          onTriggerToast("Opening Deep Dive essay!");
+        }}
+      >
+        <div className="flex items-center justify-between border-t border-[#E8E4DC] pt-3 w-full cursor-pointer group">
+          <div className="flex items-center gap-2.5">
+            <div className="w-9 h-9 rounded-full bg-[#1C1C1E] flex items-center justify-center text-[#FAF8F3] text-[11px] font-serif italic shadow-sm flex-shrink-0 group-active:scale-95 transition-transform">
+              {getInitials(card.philosopher)}
+            </div>
+            <div>
+              <p className="text-[11px] font-semibold text-[#1C1C1E] tracking-tight leading-none mb-0.5 group-hover:underline">
+                {card.philosopher}
+              </p>
+              <p className="text-[9px] font-normal text-[#B5A48B] tracking-wide uppercase truncate max-w-[160px]">
+                {card.presentation?.title || card.topic}
+              </p>
+              {/* 4-card Sequence Progress Indicator */}
+              <div className="flex items-center gap-1 mt-1.5">
+                {(() => {
+                  let cardSequence = 1;
+                  const genMatch = card.id.match(/_card_(\d+)_/);
+                  if (genMatch) {
+                    cardSequence = parseInt(genMatch[1], 10) + 1;
+                  } else {
+                    const match = card.id.match(/_(\d+)$/);
+                    cardSequence = match ? parseInt(match[1], 10) : 1;
+                  }
+                  return [...Array(4)].map((_, i) => (
+                    <div
+                      key={i}
+                      className={`h-[2px] w-2.5 rounded-full transition-all ${
+                        i < cardSequence ? "bg-[#B5A48B]" : "bg-[#E8E4DC]"
+                      }`}
+                    />
+                  ));
+                })()}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       {/* Vertical Action Bar (TikTok Style) */}
       <div className="absolute right-3 bottom-24 z-40 flex flex-col gap-5 pointer-events-auto">
         <button 
