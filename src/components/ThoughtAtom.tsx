@@ -40,19 +40,19 @@ const ThoughtAtom: React.FC<ThoughtAtomProps> = ({
       if (target.closest("button")) return;
 
       if (!isSaved) {
-        onToggleSave();
+        onToggleSave(index);
       }
       
       // Heart animation
       setShowHeart(true);
       setTimeout(() => setShowHeart(false), 800);
       
-      // Haptic feedback
+      // Haptic feedback (Double Pop)
       if (typeof navigator !== 'undefined' && navigator.vibrate) {
-        navigator.vibrate(50);
+        navigator.vibrate([30, 50, 30]);
       }
     },
-    [isSaved, onToggleSave]
+    [isSaved, onToggleSave, index]
   );
 
   const handleCloseDeepDive = useCallback(() => {
@@ -71,17 +71,34 @@ const ThoughtAtom: React.FC<ThoughtAtomProps> = ({
   const scale = useTransform(scrollYProgress, [0, 0.3, 0.7, 1], [0.85, 1, 1, 0.85]);
   const y = useTransform(scrollYProgress, [0, 0.3, 0.7, 1], [-50, 0, 0, 50]);
 
+  // Ambient Parallax
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+  const handleMouseMove = useCallback((e: React.MouseEvent) => {
+    // Calculate subtle mouse offset mapped from -10px to +10px
+    const x = (e.clientX / window.innerWidth - 0.5) * 20;
+    const y = (e.clientY / window.innerHeight - 0.5) * 20;
+    setMousePos({ x, y });
+  }, []);
+
   return (
-    <div id={`thought-atom-${index}`} ref={containerRef} className="thought-atom relative overflow-hidden h-full w-full snap-center" data-card-index={index}>
+    <div 
+      id={`thought-atom-${index}`} 
+      ref={containerRef} 
+      className="thought-atom relative overflow-hidden h-full w-full snap-center" 
+      data-card-index={index}
+      onMouseMove={handleMouseMove}
+    >
       {/* Main Card Surface */}
       <motion.div
         className={`h-full w-full bg-[#FAF8F3] flex flex-col relative select-none layout-${layoutVariant}`}
         onDoubleClick={handleDoubleTap}
         style={{ rotate, scale, y }}
       >
-        {/* Subtle grain texture overlay */}
-        <div
-          className="absolute inset-0 opacity-[0.025] pointer-events-none"
+        {/* Subtle grain texture overlay with cinematic parallax */}
+        <motion.div
+          animate={{ x: mousePos.x, y: mousePos.y }}
+          transition={{ type: "spring", damping: 40, stiffness: 150 }}
+          className="absolute inset-0 opacity-[0.035] pointer-events-none scale-[1.05]"
           style={{
             backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.5'/%3E%3C/svg%3E")`,
           }}
