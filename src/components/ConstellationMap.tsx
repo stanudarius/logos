@@ -90,7 +90,7 @@ interface ConstellationMapProps {
   onFilterByThinker?: (thinkerName: string) => void;
 }
 
-export const ConstellationMap: React.FC<ConstellationMapProps> = ({ onClose, onFilterByThinker }) => {
+export const ConstellationMap: React.FC<ConstellationMapProps> = React.memo(({ onClose, onFilterByThinker }) => {
   const [hoveredNode, setHoveredNode] = useState<string | null>(null);
 
   const handleNodeClick = useCallback(
@@ -276,4 +276,4 @@ export const ConstellationMap: React.FC<ConstellationMapProps> = ({ onClose, onF
       </div>
     </motion.div>
   );
-};
+});

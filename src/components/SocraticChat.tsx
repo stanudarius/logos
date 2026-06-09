@@ -1,6 +1,7 @@
 import React, { useState, useCallback, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { X, Send, MessageCircle } from "lucide-react";
+import FocusLock from "react-focus-lock";
 import { getInitials } from "../utils/aesthetics";
 
 interface ChatMessage {
@@ -104,15 +105,16 @@ const SocraticChat: React.FC<SocraticChatProps> = ({
   const initials = getInitials(philosopher);
 
   return (
-    <motion.div
-      initial={{ y: "100%" }}
-      animate={{ y: 0 }}
-      exit={{ y: "100%" }}
-      transition={{ type: "spring", damping: 28, stiffness: 280 }}
-      className="absolute inset-x-0 bottom-0 top-[4%] bg-[#0F0F11] z-[60] flex flex-col rounded-t-[28px] shadow-[0_-8px_40px_rgba(0,0,0,0.4)] border-t border-[#2A2A2E]"
-    >
-      {/* Handle */}
-      <div className="flex justify-center pt-3 pb-1">
+    <FocusLock returnFocus>
+      <motion.div
+        initial={{ y: "100%" }}
+        animate={{ y: 0 }}
+        exit={{ y: "100%" }}
+        transition={{ type: "spring", damping: 28, stiffness: 280 }}
+        className="absolute inset-x-0 bottom-0 top-[4%] bg-[#0F0F11] z-[60] flex flex-col rounded-t-[28px] shadow-[0_-8px_40px_rgba(0,0,0,0.4)] border-t border-[#2A2A2E]"
+      >
+        {/* Handle */}
+        <div className="flex justify-center pt-3 pb-1">
         <div className="w-10 h-1 rounded-full bg-[#3A3A3E]" />
       </div>
 
@@ -133,6 +135,7 @@ const SocraticChat: React.FC<SocraticChatProps> = ({
         </div>
         <button
           onClick={(e) => { e.stopPropagation(); onClose(); }}
+          aria-label="Close Chat"
           className="w-7 h-7 rounded-full bg-[#2A2A2E] hover:bg-[#3A3A3E] flex items-center justify-center text-white/60 hover:text-white transition-all"
         >
           <X className="w-3.5 h-3.5" />
@@ -233,7 +236,8 @@ const SocraticChat: React.FC<SocraticChatProps> = ({
           AI persona · Not the actual philosopher
         </p>
       </div>
-    </motion.div>
+      </motion.div>
+    </FocusLock>
   );
 };
 

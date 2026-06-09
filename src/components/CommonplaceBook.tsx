@@ -241,4 +241,4 @@ const CommonplaceBook: React.FC<CommonplaceBookProps> = ({
   );
 };
 
-export default CommonplaceBook;
+export default React.memo(CommonplaceBook);

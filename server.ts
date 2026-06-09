@@ -4,6 +4,10 @@ import { createServer as createViteServer } from "vite";
 import { GoogleGenAI, Type } from "@google/genai";
 import dotenv from "dotenv";
 
+import helmet from "helmet";
+import rateLimit from "express-rate-limit";
+import { z } from "zod";
+
 dotenv.config();
 
 // Initialize express app
@@ -11,7 +15,33 @@ const app = express();
 const PORT = 3000;
 
 // Middleware
+app.use(helmet({ contentSecurityPolicy: false })); // Disabled CSP for Vite dev server compatibility
 app.use(express.json());
+
+// Rate Limiting
+const apiLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 50, // limit each IP to 50 requests per windowMs
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+app.use("/api/", apiLimiter);
+
+// Validation Schemas
+const generateSchema = z.object({
+  rawText: z.string().optional().nullable(),
+  rabbitHoleContext: z.array(z.string()).optional()
+});
+
+const chatSchema = z.object({
+  philosopher: z.string().min(1),
+  topic: z.string().min(1),
+  essayContext: z.string().optional(),
+  messages: z.array(z.object({
+    role: z.enum(["user", "model"]),
+    text: z.string()
+  }))
+});
 
 // Initialize Gemini SDK server-side
 const ai = new GoogleGenAI({
@@ -132,13 +162,17 @@ const microlearningSchema = {
   required: ["stack_id", "category", "topic", "philosopher", "visual_mood", "cards", "presentation"]
 };
 
-// API Endpoint to transform raw material into the Content Stack JSON structure using Gemini
 app.post("/api/generate", async (req, res) => {
   try {
-    let { rawText, rabbitHoleContext } = req.body;
+    const parsed = generateSchema.safeParse(req.body);
+    if (!parsed.success) {
+      return res.status(400).json({ error: "Invalid request payload", details: parsed.error.issues });
+    }
+    
+    let { rawText, rabbitHoleContext } = parsed.data;
 
     // If rawText is not provided or specifically set to "RANDOM" for infinite scroll feeds, generate a random subject.
-    if (!rawText || typeof rawText !== "string" || rawText.trim().length === 0 || rawText === "RANDOM") {
+    if (!rawText || rawText.trim().length === 0 || rawText === "RANDOM") {
       const randomSubjects = [
         "Friedrich Nietzsche", "Socrates", "Claude Monet", "Rembrandt", "Pablo Picasso",
         "Frida Kahlo", "Salvador Dali", "Jane Austen", "Virginia Woolf", "Homer",
@@ -206,14 +240,15 @@ app.post("/api/generate", async (req, res) => {
 // Socratic AI Tutor — conversational debate endpoint
 app.post("/api/chat", async (req, res) => {
   try {
-    const { philosopher, topic, essayContext, messages } = req.body;
+    const parsed = chatSchema.safeParse(req.body);
+    if (!parsed.success) {
+      return res.status(400).json({ error: "Invalid request payload", details: parsed.error.issues });
+    }
+    
+    const { philosopher, topic, essayContext, messages } = parsed.data;
 
     if (!process.env.GEMINI_API_KEY) {
       return res.status(500).json({ error: "GEMINI_API_KEY is not configured." });
-    }
-
-    if (!philosopher || !topic) {
-      return res.status(400).json({ error: "philosopher and topic are required." });
     }
 
     const systemInstruction = `You are ${philosopher}, the great thinker. You are having an intimate, intellectually rigorous philosophical conversation with a curious student.

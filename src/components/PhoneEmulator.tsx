@@ -307,4 +307,4 @@ const PhoneEmulator: React.FC<PhoneEmulatorProps> = ({
   );
 };
 
-export default PhoneEmulator;
+export default React.memo(PhoneEmulator);

@@ -6,6 +6,7 @@ import { Bookmark, BookmarkCheck, BookOpen, X, MessageCircle, Heart } from "luci
 import type { FeedCard, LayoutVariant, ReadingPart } from "../types";
 import { getInitials } from "../utils/aesthetics";
 import SocraticChat from "./SocraticChat";
+import FocusLock from "react-focus-lock";
 
 interface ThoughtAtomProps {
   card: FeedCard;
@@ -216,6 +217,7 @@ const ThoughtAtom: React.FC<ThoughtAtomProps> = ({
         <button 
           id={`bookmark-toggle-btn-${index}`}
           onClick={() => onToggleSave(index)}
+          aria-label={isSaved ? "Remove from Vault" : "Save to Vault"}
           className="group flex flex-col items-center gap-1 active:scale-90 transition-transform"
         >
           <div className="w-10 h-10 rounded-full bg-white/80 backdrop-blur-md shadow-lg border border-[#E8E4DC] flex items-center justify-center">
@@ -230,6 +232,7 @@ const ThoughtAtom: React.FC<ThoughtAtomProps> = ({
             onOpenDeepDive?.(index);
             onTriggerToast("Opening Deep Dive essay!");
           }}
+          aria-label="Read Deep Dive Essay"
           className="group flex flex-col items-center gap-1 active:scale-90 transition-transform"
         >
           <div className="w-10 h-10 rounded-full bg-[#1C1C1E] shadow-lg border border-[#3A3A3E] flex items-center justify-center">
@@ -243,6 +246,7 @@ const ThoughtAtom: React.FC<ThoughtAtomProps> = ({
             setIsChatOpen(true);
             onOpenChat?.(index);
           }}
+          aria-label="Debate with AI"
           className="group flex flex-col items-center gap-1 active:scale-90 transition-transform"
         >
           <div className="w-10 h-10 rounded-full bg-[#FAF8F3] shadow-lg border border-[#D4CFC5] flex items-center justify-center">
@@ -256,17 +260,18 @@ const ThoughtAtom: React.FC<ThoughtAtomProps> = ({
       {createPortal(
         <AnimatePresence>
           {isDeepDiveOpen && (
-            <motion.div
-              initial={{ y: "100%", opacity: 0, borderRadius: "40px" }}
-              animate={{ y: 0, opacity: 1, borderRadius: "0px" }}
-              exit={{ y: "100%", opacity: 0, borderRadius: "40px" }}
-              transition={{ type: "spring", damping: 25, stiffness: 200 }}
-              className="absolute inset-0 z-[60] bg-[#FAF8F3] flex flex-col shadow-[0_-10px_30px_rgba(0,0,0,0.1)] pointer-events-auto"
-              onClick={(e) => e.stopPropagation()}
-              onWheel={(e) => e.stopPropagation()} // Stop scroll bubbling
-              onTouchMove={(e) => e.stopPropagation()}
-            >
-              {/* Header */}
+            <FocusLock returnFocus>
+              <motion.div
+                initial={{ y: "100%", opacity: 0, borderRadius: "40px" }}
+                animate={{ y: 0, opacity: 1, borderRadius: "0px" }}
+                exit={{ y: "100%", opacity: 0, borderRadius: "40px" }}
+                transition={{ type: "spring", damping: 25, stiffness: 200 }}
+                className="absolute inset-0 z-[60] bg-[#FAF8F3] flex flex-col shadow-[0_-10px_30px_rgba(0,0,0,0.1)] pointer-events-auto"
+                onClick={(e) => e.stopPropagation()}
+                onWheel={(e) => e.stopPropagation()} // Stop scroll bubbling
+                onTouchMove={(e) => e.stopPropagation()}
+              >
+                {/* Header */}
               <div className="flex items-center justify-between px-5 py-4 border-b border-[#E8E4DC]">
                 <div className="flex items-center gap-2">
                   <BookOpen className="w-4 h-4 text-[#B5A48B]" />
@@ -280,6 +285,7 @@ const ThoughtAtom: React.FC<ThoughtAtomProps> = ({
                       e.stopPropagation();
                       handleCloseDeepDive();
                     }}
+                    aria-label="Close Deep Dive"
                     className="w-7 h-7 rounded-full bg-[#F0EDE6] hover:bg-[#E8E4DC] flex items-center justify-center text-[#1C1C1E] transition-all"
                   >
                     <X className="w-3.5 h-3.5" />
@@ -323,6 +329,7 @@ const ThoughtAtom: React.FC<ThoughtAtomProps> = ({
               </div>
 
             </motion.div>
+            </FocusLock>
           )}
         </AnimatePresence>,
         document.getElementById("phone-device-emulation") || document.body
