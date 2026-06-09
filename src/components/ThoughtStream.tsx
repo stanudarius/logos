@@ -12,6 +12,8 @@ interface ThoughtStreamProps {
   isCardSaved: (index: number) => boolean;
   onToggleSave: (index: number) => void;
   onTriggerToast: (msg: string) => void;
+  onOpenDeepDive?: (index: number) => void;
+  onOpenChat?: (index: number) => void;
 }
 
 /**
@@ -27,6 +29,8 @@ const ThoughtStream: React.FC<ThoughtStreamProps> = ({
   isCardSaved,
   onToggleSave,
   onTriggerToast,
+  onOpenDeepDive,
+  onOpenChat
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [activeIndex, setActiveIndex] = useState(0);
@@ -165,6 +169,8 @@ const ThoughtStream: React.FC<ThoughtStreamProps> = ({
           isSaved={isCardSaved(index)}
           onToggleSave={onToggleSave}
           onTriggerToast={onTriggerToast}
+          onOpenDeepDive={onOpenDeepDive}
+          onOpenChat={onOpenChat}
         />
       ))}
     </div>

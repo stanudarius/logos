@@ -14,6 +14,8 @@ interface ThoughtAtomProps {
   isSaved: boolean;
   onToggleSave: (index: number) => void;
   onTriggerToast: (msg: string) => void;
+  onOpenDeepDive?: (index: number) => void;
+  onOpenChat?: (index: number) => void;
 }
 
 /**
@@ -28,6 +30,8 @@ const ThoughtAtom: React.FC<ThoughtAtomProps> = ({
   isSaved,
   onToggleSave,
   onTriggerToast,
+  onOpenDeepDive,
+  onOpenChat
 }) => {
   const [isDeepDiveOpen, setIsDeepDiveOpen] = useState(false);
   const [isChatOpen, setIsChatOpen] = useState(false);
@@ -128,6 +132,7 @@ const ThoughtAtom: React.FC<ThoughtAtomProps> = ({
         onClick={(e) => {
           e.stopPropagation();
           setIsDeepDiveOpen(true);
+          onOpenDeepDive?.(index);
           onTriggerToast("Opening Deep Dive essay!");
         }}
       >
@@ -185,6 +190,7 @@ const ThoughtAtom: React.FC<ThoughtAtomProps> = ({
         <button 
           onClick={() => {
             setIsDeepDiveOpen(true);
+            onOpenDeepDive?.(index);
             onTriggerToast("Opening Deep Dive essay!");
           }}
           className="group flex flex-col items-center gap-1 active:scale-90 transition-transform"
@@ -196,7 +202,10 @@ const ThoughtAtom: React.FC<ThoughtAtomProps> = ({
         </button>
 
         <button 
-          onClick={() => setIsChatOpen(true)}
+          onClick={() => {
+            setIsChatOpen(true);
+            onOpenChat?.(index);
+          }}
           className="group flex flex-col items-center gap-1 active:scale-90 transition-transform"
         >
           <div className="w-10 h-10 rounded-full bg-[#FAF8F3] shadow-lg border border-[#D4CFC5] flex items-center justify-center">

@@ -135,7 +135,7 @@ const microlearningSchema = {
 // API Endpoint to transform raw material into the Content Stack JSON structure using Gemini
 app.post("/api/generate", async (req, res) => {
   try {
-    let { rawText } = req.body;
+    let { rawText, rabbitHoleContext } = req.body;
 
     // If rawText is not provided or specifically set to "RANDOM" for infinite scroll feeds, generate a random subject.
     if (!rawText || typeof rawText !== "string" || rawText.trim().length === 0 || rawText === "RANDOM") {
@@ -156,7 +156,7 @@ app.post("/api/generate", async (req, res) => {
       });
     }
 
-    const prompt = `
+    let prompt = `
     Transform the following raw textual concepts into an elite microlearning content stack JSON package.
     Ensure there are EXACTLY 4 sequential cards that tell a beautiful narrative arc about this subject (philosophy, arts, literature, or architecture).
     The reading_parts must contain a coherent essay broken down into 2 to 4 parts.
@@ -166,6 +166,15 @@ app.post("/api/generate", async (req, res) => {
     ${rawText}
     ---
     `;
+
+    if (rabbitHoleContext && Array.isArray(rabbitHoleContext) && rabbitHoleContext.length > 0) {
+      prompt += `
+      CRITICAL INSTRUCTION (RABBIT HOLE ALGORITHM):
+      The user is currently exploring and highly engaged in these themes: ${rabbitHoleContext.join(", ")}.
+      Instead of just outputting the raw concepts, blend the raw concepts with the user's current interests. 
+      Generate 2 cards that dive deeper into their exact interests, and 2 cards that introduce adjacent or opposing philosophical concepts (e.g. Absurdism vs Nihilism) to organically pull them down a rabbit hole of endless discovery.
+      `;
+    }
 
     // Query Gemini 2.5 Flash for high performance and structured accuracy
     const response = await generateWithFallback({

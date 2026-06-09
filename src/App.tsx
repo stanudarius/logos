@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import { AnimatePresence } from "motion/react";
 
 import { INITIAL_FEED_CARDS } from "./data/feedCards";
@@ -35,7 +35,27 @@ export default function App() {
 
   const [savedVaultCards, setSavedVaultCards] = useState<SavedVaultCard[]>([]);
 
+  // Rabbit Hole Algorithm: Ephemeral Session Tracking
+  const sessionInterests = useRef<Record<string, number>>({});
 
+  const trackCardInteraction = useCallback((index: number, weight: number) => {
+    setFeedCards(currentFeed => {
+      const card = currentFeed[index];
+      if (card) {
+        sessionInterests.current[card.philosopher] = (sessionInterests.current[card.philosopher] || 0) + weight;
+        sessionInterests.current[card.topic] = (sessionInterests.current[card.topic] || 0) + weight;
+      }
+      return currentFeed;
+    });
+  }, []);
+
+  const handleOpenDeepDive = useCallback((index: number) => {
+    trackCardInteraction(index, 2);
+  }, [trackCardInteraction]);
+
+  const handleOpenChat = useCallback((index: number) => {
+    trackCardInteraction(index, 2);
+  }, [trackCardInteraction]);
 
 
   useEffect(() => {
@@ -82,10 +102,19 @@ export default function App() {
     triggerToast("Discovering new ideas...");
 
     try {
+      // Calculate top 3 interests
+      const sortedInterests = Object.entries(sessionInterests.current)
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, 3)
+        .map(([topic]) => topic);
+
       const response = await fetch("/api/generate", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ rawText: "RANDOM" }),
+        body: JSON.stringify({ 
+          rawText: "RANDOM",
+          rabbitHoleContext: sortedInterests.length > 0 ? sortedInterests : undefined
+        }),
       });
       if (response.ok) {
         const data = await response.json();
@@ -127,6 +156,7 @@ export default function App() {
         date_added: new Date().toISOString()
       };
       setSavedVaultCards(prev => [...prev, vaultCard]);
+      trackCardInteraction(index, 3); // High signal for saving
       triggerToast("Saved to Corkboard.");
       await supabase.from('vault_cards').insert([{
         user_id: session.user.id,
@@ -236,6 +266,8 @@ export default function App() {
           onOpenZenMode={() => setIsZenModeOpen(true)}
           onUpdateVaultCardAnnotation={updateVaultCardAnnotation}
           onAssignToFolder={assignToFolder}
+          onOpenDeepDive={handleOpenDeepDive}
+          onOpenChat={handleOpenChat}
         />
       </div>
 

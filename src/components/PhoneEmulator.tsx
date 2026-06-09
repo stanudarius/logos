@@ -31,6 +31,8 @@ interface PhoneEmulatorProps {
   onUpdateVaultCardAnnotation: (cardId: string, text: string) => void;
   onAssignToFolder: (id: string, folderName: string | undefined) => void;
   onDeleteFromVault: (id: string) => void;
+  onOpenDeepDive?: (index: number) => void;
+  onOpenChat?: (index: number) => void;
 }
 
 const PhoneEmulator: React.FC<PhoneEmulatorProps> = ({
@@ -49,7 +51,9 @@ const PhoneEmulator: React.FC<PhoneEmulatorProps> = ({
   onOpenZenMode,
   onUpdateVaultCardAnnotation,
   onAssignToFolder,
-  onDeleteFromVault
+  onDeleteFromVault,
+  onOpenDeepDive,
+  onOpenChat
 }) => {
   const [currentTime, setCurrentTime] = useState<string>("9:41");
   const [isSharing, setIsSharing] = useState(false);
@@ -200,6 +204,8 @@ const PhoneEmulator: React.FC<PhoneEmulatorProps> = ({
               isCardSaved={isCardSavedInVault}
               onToggleSave={onToggleSaveToVault}
               onTriggerToast={onTriggerToast}
+              onOpenDeepDive={onOpenDeepDive}
+              onOpenChat={onOpenChat}
             />
           </>
         )}
