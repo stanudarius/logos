@@ -114,7 +114,7 @@ const CommonplaceBook: React.FC<CommonplaceBookProps> = ({
         </button>
       </div>
 
-      {/* Corkboard Scroll Area */}
+      {/* Vault Scroll Area */}
       <div 
         className="flex-1 overflow-y-auto p-4 pt-12 relative z-10"
       >

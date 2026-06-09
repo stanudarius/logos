@@ -192,7 +192,7 @@ export default function App() {
       };
       setSavedVaultCards(prev => [...prev, vaultCard]);
       trackCardInteraction(index, 3); // High signal for saving
-      triggerToast("Saved to Corkboard.");
+      triggerToast("Saved to Vault.");
       await supabase.from('vault_cards').insert([{
         user_id: session.user.id,
         card_id: vaultCard.id,

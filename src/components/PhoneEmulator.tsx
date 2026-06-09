@@ -210,7 +210,7 @@ const PhoneEmulator: React.FC<PhoneEmulatorProps> = ({
                     Your Vault is Vacant
                   </h4>
                   <p className="text-[11px] text-[#8A8A8E] font-light leading-relaxed max-w-[240px]">
-                    Save Thought Atoms from the Stream to begin collecting ideas in your Corkboard.
+                    Save Thought Atoms from the Stream to begin collecting ideas in your Vault.
                   </p>
                 </div>
 
@@ -287,7 +287,7 @@ const PhoneEmulator: React.FC<PhoneEmulatorProps> = ({
           id="phone-mode-vault-tab"
           onClick={() => {
             onSetPhoneTab("vault");
-            onTriggerToast("Opened Corkboard.");
+            onTriggerToast("Opened Vault.");
           }}
           className="flex flex-col items-center gap-1 active:scale-95 transition-all focus:outline-none"
         >
