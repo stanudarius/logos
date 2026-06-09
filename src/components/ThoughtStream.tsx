@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useCallback, useState } from "react";
+import React, { useRef, useEffect, useCallback, useState, memo } from "react";
 import type { FeedCard, LayoutVariant } from "../types";
 import ThoughtAtom from "./ThoughtAtom";
 
@@ -40,9 +40,12 @@ const ThoughtStream: React.FC<ThoughtStreamProps> = ({
   }, [onActiveCardChange]);
   
   const sentinelObserverRef = useRef<IntersectionObserver | null>(null);
+  const sentinelRef = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
     const container = containerRef.current;
-    if (!container || cards.length < 2) return;
+    const sentinel = sentinelRef.current;
+    if (!container || !sentinel) return;
 
     sentinelObserverRef.current = new IntersectionObserver(
       (entries) => {
@@ -58,16 +61,12 @@ const ThoughtStream: React.FC<ThoughtStreamProps> = ({
       }
     );
 
-    const atoms = container.querySelectorAll(".thought-atom");
-    const sentinel = atoms[atoms.length - 2]; // 2nd to last card
-    if (sentinel) {
-      sentinelObserverRef.current.observe(sentinel);
-    }
+    sentinelObserverRef.current.observe(sentinel);
 
     return () => {
       sentinelObserverRef.current?.disconnect();
     };
-  }, [cards.length, onFetchMore]);
+  }, [onFetchMore]);
 
   // Keyboard navigation for desktop (scroll by card height)
   const scrollToCard = useCallback(
@@ -144,8 +143,9 @@ const ThoughtStream: React.FC<ThoughtStreamProps> = ({
           onActiveCardChange={handleActiveCardChange}
         />
       ))}
+      <div ref={sentinelRef} className="h-4 w-full flex-shrink-0" aria-hidden="true" />
     </div>
   );
 };
 
-export default ThoughtStream;
+export default memo(ThoughtStream);

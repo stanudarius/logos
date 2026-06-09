@@ -2,7 +2,7 @@ import React, { useState, useCallback, useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
 import { motion, AnimatePresence, useTransform, Variants, useMotionValue, useSpring } from "motion/react";
 
-import { Bookmark, BookmarkCheck, BookOpen, X, MessageCircle, Heart } from "lucide-react";
+import { BookOpen, X, MessageCircle, Heart } from "lucide-react";
 import type { FeedCard, LayoutVariant, ReadingPart } from "../types";
 import { getInitials } from "../utils/aesthetics";
 import SocraticChat from "./SocraticChat";
@@ -388,12 +388,15 @@ const TypewriterText = ({ text, className, speed = 0.04, delay = 0.2 }: { text: 
       variants={container}
       initial="hidden"
       whileInView="visible"
-      viewport={{ once: false, amount: 0.5 }}
+      viewport={{ once: true, amount: 0.1 }}
     >
-      {text.split("").map((char, index) => (
-        <motion.span key={index} variants={child} style={{ willChange: "transform, opacity" }}>
-          {char}
-        </motion.span>
+      {text.split(" ").map((word, index, arr) => (
+        <React.Fragment key={index}>
+          <motion.span variants={child} style={{ willChange: "transform, opacity", display: "inline-block" }}>
+            {word}
+          </motion.span>
+          {index < arr.length - 1 && " "}
+        </React.Fragment>
       ))}
     </motion.span>
   );

@@ -46,16 +46,22 @@ export default function App() {
 
   // Rabbit Hole Algorithm: Ephemeral Session Tracking
   const sessionInterests = useRef<Record<string, number>>({});
+  const feedCardsRef = useRef<FeedCard[]>(feedCards);
+  useEffect(() => {
+    feedCardsRef.current = feedCards;
+  }, [feedCards]);
+
+  const savedVaultCardsRef = useRef<SavedVaultCard[]>(savedVaultCards);
+  useEffect(() => {
+    savedVaultCardsRef.current = savedVaultCards;
+  }, [savedVaultCards]);
 
   const trackCardInteraction = useCallback((index: number, weight: number) => {
-    setFeedCards(currentFeed => {
-      const card = currentFeed[index];
-      if (card) {
-        sessionInterests.current[card.philosopher] = (sessionInterests.current[card.philosopher] || 0) + weight;
-        sessionInterests.current[card.topic] = (sessionInterests.current[card.topic] || 0) + weight;
-      }
-      return currentFeed;
-    });
+    const card = feedCardsRef.current[index];
+    if (card) {
+      sessionInterests.current[card.philosopher] = (sessionInterests.current[card.philosopher] || 0) + weight;
+      sessionInterests.current[card.topic] = (sessionInterests.current[card.topic] || 0) + weight;
+    }
   }, []);
 
   const handleOpenDeepDive = useCallback((index: number) => {
@@ -148,8 +154,8 @@ export default function App() {
   const toggleSaveToVault = useCallback(async (index: number) => {
     if (!session?.user) return;
 
-    const card = feedCards[index] || INITIAL_FEED_CARDS[0];
-    const isSaved = savedVaultCards.some(c => c.id === card.id);
+    const card = feedCardsRef.current[index] || INITIAL_FEED_CARDS[0];
+    const isSaved = savedVaultCardsRef.current.some(c => c.id === card.id);
 
     if (isSaved) {
       setSavedVaultCards(prev => prev.filter(c => c.id !== card.id));
@@ -169,7 +175,7 @@ export default function App() {
         card_data: vaultCard
       }]);
     }
-  }, [feedCards, savedVaultCards, triggerToast, session]);
+  }, [triggerToast, session]);
 
   const deleteFromVault = useCallback(async (id: string) => {
     if (!session?.user) return;
@@ -229,6 +235,9 @@ export default function App() {
     triggerToast(`Filtered stream: ${thinkerName}`);
   }, [triggerToast]);
 
+  const handleOpenConstellation = useCallback(() => setIsConstellationOpen(true), []);
+  const handleOpenZenMode = useCallback(() => setIsZenModeOpen(true), []);
+
   const activeCard = feedCards[activeCardIndex] || INITIAL_FEED_CARDS[0];
   const activeAesthetic = getMoodAesthetic(activeCard?.visual_mood);
 
@@ -259,8 +268,8 @@ export default function App() {
           savedVaultCardIds={savedVaultCardIds}
           onDeleteFromVault={deleteFromVault}
           onTriggerToast={triggerToast}
-          onOpenConstellation={() => setIsConstellationOpen(true)}
-          onOpenZenMode={() => setIsZenModeOpen(true)}
+          onOpenConstellation={handleOpenConstellation}
+          onOpenZenMode={handleOpenZenMode}
           onUpdateVaultCardAnnotation={updateVaultCardAnnotation}
           onAssignToFolder={assignToFolder}
           onOpenDeepDive={handleOpenDeepDive}

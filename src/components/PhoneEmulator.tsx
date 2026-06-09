@@ -1,12 +1,30 @@
 import React, { useState, useEffect, useCallback } from "react";
 import {
-  BookOpen, Bookmark, BookmarkCheck, Network, ArrowLeft, Timer
+  BookOpen, Bookmark, Network, ArrowLeft, Timer
 } from "lucide-react";
 import { motion } from "motion/react";
 import type { FeedCard, MoodAesthetic, SavedVaultCard } from "../types";
 import { getInitials } from "../utils/aesthetics";
 import ThoughtStream from "./ThoughtStream";
 import CommonplaceBook from "./CommonplaceBook";
+
+const StatusBarTime = () => {
+  const [currentTime, setCurrentTime] = useState<string>("9:41");
+  useEffect(() => {
+    const updateTime = () => {
+      const now = new Date();
+      let hours = now.getHours();
+      const minutes = now.getMinutes();
+      hours = hours % 12 || 12; // 12-hour format
+      setCurrentTime(`${hours}:${minutes.toString().padStart(2, '0')}`);
+    };
+    updateTime(); // Initial set
+    const interval = setInterval(updateTime, 10000); // Check every 10 seconds
+    return () => clearInterval(interval);
+  }, []);
+  return <span className="opacity-45 text-[#1C1C1E] hidden sm:block">{currentTime}</span>;
+};
+
 
 interface PhoneEmulatorProps {
   // Display state
@@ -55,7 +73,6 @@ const PhoneEmulator: React.FC<PhoneEmulatorProps> = ({
   onOpenDeepDive,
   onOpenChat
 }) => {
-  const [currentTime, setCurrentTime] = useState<string>("9:41");
   const [isSharing, setIsSharing] = useState(false);
 
   const handleShareClick = useCallback(async () => {
@@ -95,9 +112,13 @@ const PhoneEmulator: React.FC<PhoneEmulatorProps> = ({
             files: [file]
           });
           onTriggerToast("Shared successfully!");
-        } catch (shareErr) {
-          // User might have cancelled share
-          console.log(shareErr);
+        } catch (shareErr: any) {
+          if (shareErr.name === 'AbortError') {
+            onTriggerToast("Share cancelled.");
+          } else {
+            console.error(shareErr);
+            onTriggerToast("Failed to share.");
+          }
         }
       } else {
         // Fallback to direct download
@@ -115,21 +136,6 @@ const PhoneEmulator: React.FC<PhoneEmulatorProps> = ({
     }
   }, [activeCardIndex, isSharing, currentDisplayCards, onTriggerToast]);
 
-  useEffect(() => {
-    const updateTime = () => {
-      const now = new Date();
-      let hours = now.getHours();
-      const minutes = now.getMinutes();
-      hours = hours % 12 || 12; // 12-hour format
-      setCurrentTime(`${hours}:${minutes.toString().padStart(2, '0')}`);
-    };
-    updateTime(); // Initial set
-    const interval = setInterval(updateTime, 10000); // Check every 10 seconds
-    return () => clearInterval(interval);
-  }, []);
-
-
-
   return (
     <div
       id="phone-device-emulation"
@@ -139,7 +145,7 @@ const PhoneEmulator: React.FC<PhoneEmulatorProps> = ({
       {/* Simulated top notch & Constellation Trigger */}
       <div className="relative z-50 flex justify-between items-center text-[10px] font-bold tracking-widest uppercase px-5 pt-4 pb-2 pointer-events-none">
         <div className="flex items-center gap-2">
-          <span className="opacity-45 text-[#1C1C1E] hidden sm:block">{currentTime}</span>
+          <StatusBarTime />
           
           {/* Generating Indicator (Status Bar) */}
           {isFetchingMore && (
