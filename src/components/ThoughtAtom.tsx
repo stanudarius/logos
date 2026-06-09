@@ -72,7 +72,7 @@ const ThoughtAtom: React.FC<ThoughtAtomProps> = ({
   const y = useTransform(scrollYProgress, [0, 0.3, 0.7, 1], [-50, 0, 0, 50]);
 
   return (
-    <div id={`thought-atom-${index}`} ref={containerRef} className="thought-atom relative overflow-hidden h-[100dvh] w-full snap-center" data-card-index={index}>
+    <div id={`thought-atom-${index}`} ref={containerRef} className="thought-atom relative overflow-hidden h-full w-full snap-center" data-card-index={index}>
       {/* Main Card Surface */}
       <motion.div
         className={`h-full w-full bg-[#FAF8F3] flex flex-col relative select-none layout-${layoutVariant}`}
@@ -111,10 +111,10 @@ const ThoughtAtom: React.FC<ThoughtAtomProps> = ({
           onClick={onToggleSave}
           className="group flex flex-col items-center gap-1 active:scale-90 transition-transform"
         >
-          <div className="w-10 h-10 rounded-full bg-white/80 backdrop-blur-md shadow-lg border border-white/50 flex items-center justify-center">
+          <div className="w-10 h-10 rounded-full bg-white/80 backdrop-blur-md shadow-lg border border-[#E8E4DC] flex items-center justify-center">
             {isSaved ? <Heart className="w-5 h-5 text-red-500 fill-current" /> : <Heart className="w-5 h-5 text-[#1C1C1E]" />}
           </div>
-          <span className="text-[9px] font-bold text-white drop-shadow-md">Save</span>
+          <span className="text-[9px] font-bold text-[#1C1C1E] drop-shadow-sm">Save</span>
         </button>
 
         <button 
@@ -127,7 +127,7 @@ const ThoughtAtom: React.FC<ThoughtAtomProps> = ({
           <div className="w-10 h-10 rounded-full bg-[#1C1C1E] shadow-lg border border-[#3A3A3E] flex items-center justify-center">
             <BookOpen className="w-4 h-4 text-[#FAF8F3]" />
           </div>
-          <span className="text-[9px] font-bold text-white drop-shadow-md">Read</span>
+          <span className="text-[9px] font-bold text-[#1C1C1E] drop-shadow-sm">Read</span>
         </button>
 
         <button 
@@ -137,7 +137,7 @@ const ThoughtAtom: React.FC<ThoughtAtomProps> = ({
           <div className="w-10 h-10 rounded-full bg-[#FAF8F3] shadow-lg border border-[#D4CFC5] flex items-center justify-center">
             <MessageCircle className="w-4 h-4 text-[#B5A48B]" />
           </div>
-          <span className="text-[9px] font-bold text-white drop-shadow-md">Debate</span>
+          <span className="text-[9px] font-bold text-[#1C1C1E] drop-shadow-sm">Debate</span>
         </button>
       </div>
 
