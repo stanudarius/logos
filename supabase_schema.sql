@@ -1,5 +1,4 @@
 -- Supabase SQL Schema for Logos App
--- Run this in your Supabase SQL Editor
 
 -- 1. Create Profiles Table
 CREATE TABLE profiles (

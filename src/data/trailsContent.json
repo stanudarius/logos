@@ -1,0 +1,1472 @@
+{
+  "stoic-control_epictetus": [
+    {
+      "id": "stoic-control_epictetus_card_0",
+      "stack_id": "stoic-control_epictetus",
+      "category": "philosophy",
+      "topic": "The Dichotomy of Control",
+      "philosopher": "Epictetus",
+      "visual_mood": "amber_glow",
+      "explore_title": "The Line in the Sand",
+      "explore_subtext": "Most of your misery comes from trying to master what was never yours to command. True freedom begins the moment you map the borders of your own mind.",
+      "layoutVariant": "thesis",
+      "presentation": {
+        "title": "Mapping the Internal Empire",
+        "reading_parts": [
+          {
+            "part_number": 1,
+            "text": "Epictetus splits the entire universe into two stark territories: things that belong to us, and things that do not. Your opinions, your impulses, your desires, and your aversions—these are your sovereign domain. The weather, the stock market, the opinions of your peers, and the inevitable decay of your physical body belong entirely to the world. To confuse the two is to invite an endless parade of anxiety and resentment."
+          },
+          {
+            "part_number": 2,
+            "text": "When you hitch your joy to external outcomes, you hand the keys of your well-being to luck, tragedy, and the whims of strangers. The Stoic architecture is built on a single, unyielding truth: you cannot control what happens to you, but you possess absolute ownership over how you interpret what happens. Freedom is not the absence of storms; it is the realization that you are the anchor."
+          }
+        ]
+      }
+    },
+    {
+      "id": "stoic-control_epictetus_card_1",
+      "stack_id": "stoic-control_epictetus",
+      "category": "philosophy",
+      "topic": "The Dichotomy of Control",
+      "philosopher": "Epictetus",
+      "visual_mood": "crimson_twilight",
+      "explore_title": "The Tyrant's Illusion",
+      "explore_subtext": "A tyrant can chain your leg, lock you away, or take your life—but they can never force their way into your judgment. Your consent is an unassailable fortress.",
+      "layoutVariant": "blockquote",
+      "presentation": {
+        "title": "The Unchainable Mind",
+        "reading_parts": [
+          {
+            "part_number": 1,
+            "text": "Born into slavery, Epictetus understood chains intimately. Yet, he observed that many literal masters were deeply enslaved to their fears, greeds, and reputations, while a penniless philosopher could be radically free. If a king commands you to do something under threat of death, he only controls the body. The decision to comply or resist, to yield to fear or stand in honor, remains entirely your own."
+          },
+          {
+            "part_number": 2,
+            "text": "This realization strips external threats of their psychological power. No one can make you feel degraded without your active participation. By detaching your self-worth from physical safety or social status, you become entirely immune to coercion. The tyrant only rules over dust; the mind remains an untouched kingdom."
+          }
+        ]
+      }
+    },
+    {
+      "id": "stoic-control_epictetus_card_2",
+      "stack_id": "stoic-control_epictetus",
+      "category": "philosophy",
+      "topic": "The Dichotomy of Control",
+      "philosopher": "Epictetus",
+      "visual_mood": "cosmic_void",
+      "explore_title": "Curating the Mental Gateway",
+      "explore_subtext": "Every day, thousands of raw impressions storm the gates of your awareness. If you do not test them at the border, they will burn down your inner peace.",
+      "layoutVariant": "fragment",
+      "presentation": {
+        "title": "Assault of the Impressions",
+        "reading_parts": [
+          {
+            "part_number": 1,
+            "text": "An impression is the raw, unedited sensory feedback of an event—a sudden loud noise, a sharp criticism from a colleague, a piece of bad news on a screen. Epictetus warns that we must never let these initial reactions sweep us away. Instead, we must pause at the threshold and demand of the impression: 'Show me your passport. Are you something within my power, or something outside it?'"
+          },
+          {
+            "part_number": 2,
+            "text": "If the event lies outside your control, the Stoic response is immediate, mechanical, and liberating: 'Then you are nothing to me.' This isn't cold apathy; it is high-efficiency emotional curation. By refusing to dramatize objective facts with subjective horror, you save your energy for the only arena where it actually matters: your own actions."
+          }
+        ]
+      }
+    },
+    {
+      "id": "stoic-control_epictetus_card_3",
+      "stack_id": "stoic-control_epictetus",
+      "category": "philosophy",
+      "topic": "The Dichotomy of Control",
+      "philosopher": "Epictetus",
+      "visual_mood": "emerald_mist",
+      "explore_title": "The Actor on the Cosmic Stage",
+      "explore_subtext": "You do not cast the play of existence, nor do you write the script. Your sole duty is to play your assigned role with flawless, unapologetic excellence.",
+      "layoutVariant": "epigraph",
+      "presentation": {
+        "title": "Mastering the Assigned Role",
+        "reading_parts": [
+          {
+            "part_number": 1,
+            "text": "Life frequently distributes its characters unevenly—some are born into wealth, others into chronic illness, some into positions of immense political power, and others into obscure poverty. Epictetus reminds us that complaining about our assigned hand is an exercise in futility. A great actor receives just as much honor for brilliantly playing a beggar as they do for playing a king."
+          },
+          {
+            "part_number": 2,
+            "text": "Excellence is decoupled from circumstance. If you are a parent, be a magnificent parent; if you are a student, be an intentional student. When we stop mourning the roles we weren't given, we can finally pour our full creative and moral weight into the life that is unfolding right in front of us."
+          }
+        ]
+      }
+    }
+  ],
+  "existential-absurd_camus": [
+    {
+      "id": "existential-absurd_camus_card_0",
+      "stack_id": "existential-absurd_camus",
+      "category": "philosophy",
+      "topic": "The Absurd",
+      "philosopher": "Albert Camus",
+      "visual_mood": "cosmic_void",
+      "explore_title": "The Silent Universe",
+      "explore_subtext": "Humans scream for cosmic meaning, but the universe replies with absolute, icy silence. The Absurd is born in the friction of this impossible collision.",
+      "layoutVariant": "thesis",
+      "presentation": {
+        "title": "The Fracture of Meaning",
+        "reading_parts": [
+          {
+            "part_number": 1,
+            "text": "The Absurd is not merely a statement that life is weird or nonsensical. For Camus, it is a dynamic, agonizing relationship. It is the definitive collision between the desperate human heart—which craves order, purpose, and eternal validation—and a cold, vast, indifferent universe that offers absolutely no answers, no gods, and no grand designs."
+          },
+          {
+            "part_number": 2,
+            "text": "We spend our lives building elaborate structures of career, religion, and legacy to convince ourselves that we matter. But occasionally, the stage set collapses. A sudden moment of clarity hits us on a routine commute: why are we doing this? In that split second, the comforting illusion evaporates, leaving us face-to-face with the raw, naked absurdity of existence."
+          }
+        ]
+      }
+    },
+    {
+      "id": "existential-absurd_camus_card_1",
+      "stack_id": "existential-absurd_camus",
+      "category": "philosophy",
+      "topic": "The Absurd",
+      "philosopher": "Albert Camus",
+      "visual_mood": "crimson_twilight",
+      "explore_title": "The Trap of Philosophical Suicide",
+      "explore_subtext": "Inventing a god or fleeing into comforting dogmas to escape the terrifying vacuum of life is an act of cowardice. It kills the very truth of our condition.",
+      "layoutVariant": "fragment",
+      "presentation": {
+        "title": "Evading the Easy Out",
+        "reading_parts": [
+          {
+            "part_number": 1,
+            "text": "When confronted with the paralyzing silence of the universe, Camus notes that humans usually try to cheat. We either commit literal suicide to end the confrontation, or we commit 'philosophical suicide' by inventing cosmic parents, grand historical destinies, or mystical rationalizations. We manufacture a fake meaning just to soothe the existential vertigo."
+          },
+          {
+            "part_number": 2,
+            "text": "To surrender to dogma is to kill the beautiful, tragic truth of human consciousness. Camus insists that we must refuse to look away from the void. Escaping into religion or metaphysical illusions is an act of intellectual surrender that trades the authentic, raw reality of your life for a comfortable, anesthetized lie."
+          }
+        ]
+      }
+    },
+    {
+      "id": "existential-absurd_camus_card_2",
+      "stack_id": "existential-absurd_camus",
+      "category": "philosophy",
+      "topic": "The Absurd",
+      "philosopher": "Albert Camus",
+      "visual_mood": "amber_glow",
+      "explore_title": "The Triumph of the Defiant Smile",
+      "explore_subtext": "Sisyphus is condemned to push a boulder up a mountain for eternity, only to watch it roll back down. Yet, in his defiance, he is completely free.",
+      "layoutVariant": "blockquote",
+      "presentation": {
+        "title": "Sisyphus Rejoices",
+        "reading_parts": [
+          {
+            "part_number": 1,
+            "text": "The gods thought they had devised the ultimate punishment for Sisyphus: a life of entirely meaningless, repetitive labor. He strains every muscle to heave the massive stone to the summit, knowing with absolute certainty that it will immediately plunge back to the valley floor. His entire existence is an endless loop of futile, exhausting exertion."
+          },
+          {
+            "part_number": 2,
+            "text": "But Camus draws our attention to the walk back down the mountain. In that brief, quiet descent, Sisyphus consciously owns his fate. He knows the boulder will fall, he knows the task is pointless, and yet he chooses to walk back down and lift it anyway. By embracing the absurdity without despair, his conscious choice morphs into a profound act of rebellion. One must imagine Sisyphus happy."
+          }
+        ]
+      }
+    },
+    {
+      "id": "existential-absurd_camus_card_3",
+      "stack_id": "existential-absurd_camus",
+      "category": "philosophy",
+      "topic": "The Absurd",
+      "philosopher": "Albert Camus",
+      "visual_mood": "emerald_mist",
+      "explore_title": "Living Without Appeal",
+      "explore_subtext": "True rebellion is living fully in a world devoid of permanent meaning. To create your own fire in the dark is the ultimate human masterpiece.",
+      "layoutVariant": "interstitial",
+      "presentation": {
+        "title": "The Ethics of Revolt",
+        "reading_parts": [
+          {
+            "part_number": 1,
+            "text": "Once you accept that life has no inherent purpose, you are finally, terrifyingly free. You no longer live with an appeal to some future reward, divine judgment, or historical vindication. The present moment expands to fill your entire horizon. Every breath, every cup of coffee, and every shared glance becomes an end in itself, valuable precisely because it is finite and fragile."
+          },
+          {
+            "part_number": 2,
+            "text": "Absurd freedom demands that we live with intense, unadulterated passion. We revolt against the meaninglessness of the cosmos by filling our lives with experiences, creativity, and solidarity with other conscious beings. We do not need a cosmic reason to love, to build, or to fight injustice. The defiance itself is the victory."
+          }
+        ]
+      }
+    }
+  ],
+  "will-to-power_nietzsche": [
+    {
+      "id": "will-to-power_nietzsche_card_0",
+      "stack_id": "will-to-power_nietzsche",
+      "category": "philosophy",
+      "topic": "Overcoming and Autonomy",
+      "philosopher": "Friedrich Nietzsche",
+      "visual_mood": "crimson_twilight",
+      "explore_title": "The Death of the Safety Net",
+      "explore_subtext": "The old gods are dead, and the grand cosmic canopies have shattered. You are stranded over a dizzying canyon, with no choice but to construct your own path.",
+      "layoutVariant": "epigraph",
+      "presentation": {
+        "title": "The Great Liberation",
+        "reading_parts": [
+          {
+            "part_number": 1,
+            "text": "When Nietzsche proclaimed that God is dead, he was not celebrating an easy victory for atheism. He was sounding an urgent, terrifying alarm. He recognized that Western civilization had built its entire moral, legal, and psychological framework upon a divine foundation. Removing that foundation meant that humanity was about to plunge into an unprecedented abyss of total nihilism."
+          },
+          {
+            "part_number": 2,
+            "text": "With the absolute moral code shattered, humanity can no longer out-source its purpose to a church or a cosmic plan. This brings an intense existential vertigo, but it also opens up an extraordinary historical clearing. We are no longer passive subjects in a divine script; we are suddenly thrust into the role of the ultimate creators."
+          }
+        ]
+      }
+    },
+    {
+      "id": "will-to-power_nietzsche_card_1",
+      "stack_id": "will-to-power_nietzsche",
+      "category": "philosophy",
+      "topic": "Overcoming and Autonomy",
+      "philosopher": "Friedrich Nietzsche",
+      "visual_mood": "cosmic_void",
+      "explore_title": "The Anatomy of the Herd",
+      "explore_subtext": "Society begs you to stay small, comfortable, and predictable. It calls your weakness 'virtue' because it is terrified of the lightning within you.",
+      "layoutVariant": "thesis",
+      "presentation": {
+        "title": "Smashing Slave Morality",
+        "reading_parts": [
+          {
+            "part_number": 1,
+            "text": "Nietzsche identified 'herd morality' as an intricate, psychological defense mechanism engineered by the weak to disarm the strong. It redefines passivity, humility, and obedience as sublime spiritual virtues, while branding ambition, physical vitality, and intellectual independence as dangerous sins. It is a systematic taming of the human animal."
+          },
+          {
+            "part_number": 2,
+            "text": "To break away from the herd requires a violent, internal revaluation of all values. It requires you to look at the consensus of your culture and ask whether it serves your growth or your stagnation. True psychological nobility belongs to the individual who refuses to let the mediocrity of the crowd dictate the boundaries of their soul."
+          }
+        ]
+      }
+    },
+    {
+      "id": "will-to-power_nietzsche_card_2",
+      "stack_id": "will-to-power_nietzsche",
+      "category": "philosophy",
+      "topic": "Overcoming and Autonomy",
+      "philosopher": "Friedrich Nietzsche",
+      "visual_mood": "amber_glow",
+      "explore_title": "The Alchemy of Suffering",
+      "explore_subtext": "Comfort is an existential narcotic that rots your potential. The things that hurt you are the very materials required to build your greatness.",
+      "layoutVariant": "fragment",
+      "presentation": {
+        "title": "Amor Fati: Loving the Fire",
+        "reading_parts": [
+          {
+            "part_number": 1,
+            "text": "Nietzsche despised the pursuit of mere happiness and comfort, viewing it as a recipe for a soft, hollow life. For him, a great human life is forged through intense resistance. Difficulty, grief, betrayal, and physical pain are not tragic design flaws of existence; they are the essential raw elements required for self-overcoming."
+          },
+          {
+            "part_number": 2,
+            "text": "This culminates in his concept of Amor Fati—the radical love of one's fate. You must not merely tolerate the horrific or painful parts of your history; you must enthusiastically embrace them as absolute prerequisites for your current strength. You cannot cultivate deep wisdom without wading through deep shadows."
+          }
+        ]
+      }
+    },
+    {
+      "id": "will-to-power_nietzsche_card_3",
+      "stack_id": "will-to-power_nietzsche",
+      "category": "philosophy",
+      "topic": "Overcoming and Autonomy",
+      "philosopher": "Friedrich Nietzsche",
+      "visual_mood": "emerald_mist",
+      "explore_title": "Becoming the Ubermensch",
+      "explore_subtext": "You are not a finished product; you are a rope stretched across a terrifying abyss. Your ultimate destiny is to transcend what you currently are.",
+      "layoutVariant": "blockquote",
+      "presentation": {
+        "title": "The Self-Generating Creator",
+        "reading_parts": [
+          {
+            "part_number": 1,
+            "text": "The Ubermensch (Overman) is Nietzsche's vision for a humanity that has successfully conquered nihilism. The Overman does not look up to the heavens for a map, nor back at tradition for a justification. They look inward, generating their own values, inventing their own meaning, and living with the intense artistic intensity of a self-contained star."
+          },
+          {
+            "part_number": 2,
+            "text": "This is not an invitation to cruelty or political tyranny, but an urgent call to supreme psychological self-mastery. It is the human being operating at their absolute highest creative, intellectual, and physical capacity. To move toward the Overman is to treat your life as an unfolding piece of magnificent artwork."
+          }
+        ]
+      }
+    }
+  ],
+  "cynic-bite_diogenes": [
+    {
+      "id": "cynic-bite_diogenes_card_0",
+      "stack_id": "cynic-bite_diogenes",
+      "category": "philosophy",
+      "topic": "Radical Authenticity",
+      "philosopher": "Diogenes of Sinope",
+      "visual_mood": "amber_glow",
+      "explore_title": "The Tub and the Lantern",
+      "explore_subtext": "When you strip away the pompous masks of civilization, you discover that most people are desperately chasing gold while starving their own souls.",
+      "layoutVariant": "interstitial",
+      "presentation": {
+        "title": "The Barefoot Provocateur",
+        "reading_parts": [
+          {
+            "part_number": 1,
+            "text": "Diogenes did not write philosophy in leather-bound volumes; he lived it in the dirt of the Athenian marketplace. Residing inside a discarded ceramic storage jar and owning nothing but a ragged cloak and a staff, he turned his entire life into a piece of confrontational performance art designed to expose the absurdity of polite society."
+          },
+          {
+            "part_number": 2,
+            "text": "He famously walked through Athens in broad daylight holding a lit lantern, thrusting it into the faces of wealthy citizens. When asked what he was doing, he remarked that he was simply looking for a single genuine human being. For Diogenes, society was a massive masquerade ball where authenticity had been entirely bartered away for reputation."
+          }
+        ]
+      }
+    },
+    {
+      "id": "cynic-bite_diogenes_card_1",
+      "stack_id": "cynic-bite_diogenes",
+      "category": "philosophy",
+      "topic": "Radical Authenticity",
+      "philosopher": "Diogenes of Sinope",
+      "visual_mood": "crimson_twilight",
+      "explore_title": "Eclipsing Alexander the Great",
+      "explore_subtext": "An emperor can conquer the entire known world, yet still remain a desperate beggar to his own desires. True power is wanting absolutely nothing.",
+      "layoutVariant": "blockquote",
+      "presentation": {
+        "title": "The Emperor and the Beggar",
+        "reading_parts": [
+          {
+            "part_number": 1,
+            "text": "Alexander the Great, at the absolute height of his military glory, sought out the famous philosopher who lived in a tub. Finding Diogenes sunning himself, the conqueror stood over him and magnanimously offered: 'Ask of me any favor you wish, and I shall grant it.' The crowd held its breath, expecting a request for immense wealth or a royal position."
+          },
+          {
+            "part_number": 2,
+            "text": "Diogenes didn't even blink. He simply looked up at the master of the world and said: 'Stand out of my sunlight.' In a single sentence, Diogenes demonstrated that the emperor's vast wealth and power were utterly worthless to a man who had already mastered himself. Alexander left muttering that if he were not Alexander, he would want to be Diogenes."
+          }
+        ]
+      }
+    },
+    {
+      "id": "cynic-bite_diogenes_card_2",
+      "stack_id": "cynic-bite_diogenes",
+      "category": "philosophy",
+      "topic": "Radical Authenticity",
+      "philosopher": "Diogenes of Sinope",
+      "visual_mood": "cosmic_void",
+      "explore_title": "The Defaced Currency",
+      "explore_subtext": "Culture is an artificial construct that manufactures fake needs. To find true sanity, you must deliberately deface the customs of your tribe.",
+      "layoutVariant": "thesis",
+      "presentation": {
+        "title": "Anarchy of the Soul",
+        "reading_parts": [
+          {
+            "part_number": 1,
+            "text": "Exiled from his homeland for allegedly defacing the literal currency, Diogenes took that crime as his ultimate philosophical metaphor. He argued that the most vital task of a thinker is to deface the cultural currency—to rigorously question, mock, and dismantle the artificial values of money, prestige, lineage, and national pride."
+          },
+          {
+            "part_number": 2,
+            "text": "By rejecting the arbitrary rules of social etiquette, Diogenes aligned his life entirely with the raw, uncompromising laws of nature. He ate, slept, and performed bodily functions wherever he pleased, proving that what is natural cannot be shameful, and what is conventional is almost always a golden cage."
+          }
+        ]
+      }
+    },
+    {
+      "id": "cynic-bite_diogenes_card_3",
+      "stack_id": "cynic-bite_diogenes",
+      "category": "philosophy",
+      "topic": "Radical Authenticity",
+      "philosopher": "Diogenes of Sinope",
+      "visual_mood": "emerald_mist",
+      "explore_title": "The Wisdom of the Stray Dog",
+      "explore_subtext": "Dogs don't care about philosophy degrees or expensive clothes. They bite their enemies, fawn over their friends, and live completely in the present.",
+      "layoutVariant": "fragment",
+      "presentation": {
+        "title": "Embracing the Canine Mind",
+        "reading_parts": [
+          {
+            "part_number": 1,
+            "text": "The word 'Cynic' derives directly from the Greek word for doglike. Diogenes proudly embraced this insult as his supreme badge of honor. He pointed out that dogs possess an instinctual wisdom that civilized humans have lost: they are completely honest, they survive effortlessly on scraps, and they recognize instantly who is a friend and who is a hypocrite."
+          },
+          {
+            "part_number": 2,
+            "text": "When elite citizens threw bones at him during a banquet to mock him like a dog, Diogenes simply lifted his leg and urinated on them. He proved that when you completely abandon your fear of social embarrassment, you gain a terrifying, exhilarating power over those who are still trapped by it."
+          }
+        ]
+      }
+    }
+  ],
+  "simulacra-desert_baudrillard": [
+    {
+      "id": "simulacra-desert_baudrillard_card_0",
+      "stack_id": "simulacra-desert_baudrillard",
+      "category": "philosophy",
+      "topic": "Hyperreality and Media",
+      "philosopher": "Jean Baudrillard",
+      "visual_mood": "cosmic_void",
+      "explore_title": "The Death of the Real",
+      "explore_subtext": "We no longer consume real things; we consume signs, symbols, and brand ecosystems. The physical world has been quietly replaced by a synthetic simulation.",
+      "layoutVariant": "thesis",
+      "presentation": {
+        "title": "The Murder of Reality",
+        "reading_parts": [
+          {
+            "part_number": 1,
+            "text": "Baudrillard argues that modern society has systematically replaced the real world with symbols, media images, and digital representations. We live in a hall of mirrors where copies no longer refer to any original reality. The map has not only expanded to cover the territory; it has completely swallowed the territory whole."
+          },
+          {
+            "part_number": 2,
+            "text": "Think of a contemporary theme park or a highly stylized digital feed. It doesn't represent real life; it represents an idealized, curated fantasy that we prefer over reality. Over time, our eyes adapt to the brilliant shine of the simulation, rendering the messy, unpredictable physical world drab, boring, and irrelevant."
+          }
+        ]
+      }
+    },
+    {
+      "id": "simulacra-desert_baudrillard_card_1",
+      "stack_id": "simulacra-desert_baudrillard",
+      "category": "philosophy",
+      "topic": "Hyperreality and Media",
+      "philosopher": "Jean Baudrillard",
+      "visual_mood": "crimson_twilight",
+      "explore_title": "The Desert of the Hyperreal",
+      "explore_subtext": "When everything is filtered through a screen, the distinction between true and false dissolves entirely. We are drowning in information but starving for reality.",
+      "layoutVariant": "fragment",
+      "presentation": {
+        "title": "Welcome to the Desert",
+        "reading_parts": [
+          {
+            "part_number": 1,
+            "text": "Hyperreality is the condition in which what is real and what is fiction are seamlessly blended together so that there is no clear distinction for the spectator. Media, news feeds, and advertising don't inform us about events; they construct the events themselves. A war or an election becomes a highly produced, carefully edited television series."
+          },
+          {
+            "part_number": 2,
+            "text": "We become entirely obsessed with the aesthetics of information rather than its truth value. We curate our digital avatars with meticulous precision, generating a flawless, hyper-visible lifestyle that exists solely in the cloud. The tragedy of hyperreality is that the copy becomes infinitely more seductive than the real thing."
+          }
+        ]
+      }
+    },
+    {
+      "id": "simulacra-desert_baudrillard_card_2",
+      "stack_id": "simulacra-desert_baudrillard",
+      "category": "philosophy",
+      "topic": "Hyperreality and Media",
+      "philosopher": "Jean Baudrillard",
+      "visual_mood": "amber_glow",
+      "explore_title": "The Illusion of Choice",
+      "explore_subtext": "Our political debates and consumer options are carefully engineered theater. We are given the freedom to choose, but only between identical twins.",
+      "layoutVariant": "blockquote",
+      "presentation": {
+        "title": "The Binary Trap",
+        "reading_parts": [
+          {
+            "part_number": 1,
+            "text": "Baudrillard claims that the modern consumer landscape offers a deeply deceptive illusion of diversity. We are presented with hundreds of brands of cereal, dozens of streaming apps, and polarized political factions. However, this hyper-differentiation is just a cosmetic surface layer hiding a profound, structural monotony."
+          },
+          {
+            "part_number": 2,
+            "text": "The opposing sides of a culture war rely completely on each other to sustain their identities. They are both necessary gears inside the exact same media apparatus. By participating in these pre-packaged, binary conflicts, we validate the system itself, trading radical systemic change for trivial, consumer-level choices."
+          }
+        ]
+      }
+    },
+    {
+      "id": "simulacra-desert_baudrillard_card_3",
+      "stack_id": "simulacra-desert_baudrillard",
+      "category": "philosophy",
+      "topic": "Hyperreality and Media",
+      "philosopher": "Jean Baudrillard",
+      "visual_mood": "emerald_mist",
+      "explore_title": "The Perfect Crime",
+      "explore_subtext": "The greatest mystery of our era is that reality disappeared, and nobody noticed. We are blissful hostages inside a perfect, digital utopia.",
+      "layoutVariant": "epigraph",
+      "presentation": {
+        "title": "The Total Disappearance",
+        "reading_parts": [
+          {
+            "part_number": 1,
+            "text": "Baudrillard calls the erasure of reality 'the perfect crime' because it left absolutely no clues behind. There was no cataclysmic explosion or sudden, dystopian takeover. Instead, we willingly, enthusiastically traded our physical, localized, and complex existences for the frictionless ease of digital connectivity and instant algorithmic gratification."
+          },
+          {
+            "part_number": 2,
+            "text": "We are no longer active subjects interacting with an objective world. We have become passive terminals processing a relentless, never-ending stream of data. To wake up from this condition requires more than just turning off your smartphone; it demands a radical, psychological re-attunement to the raw, un-simulated textures of life."
+          }
+        ]
+      }
+    }
+  ],
+  "cubist-fracture_picasso": [
+    {
+      "id": "cubist-fracture_picasso_card_0",
+      "stack_id": "cubist-fracture_picasso",
+      "category": "arts",
+      "topic": "Deconstruction of Perspective",
+      "philosopher": "Pablo Picasso",
+      "visual_mood": "crimson_twilight",
+      "explore_title": "Shattering the Single Lens",
+      "explore_subtext": "The human eye does not see the world through a frozen, static camera. We perceive existence through a frantic, shifting collage of memories and angles.",
+      "layoutVariant": "thesis",
+      "presentation": {
+        "title": "The End of Renaissance Illusion",
+        "reading_parts": [
+          {
+            "part_number": 1,
+            "text": "For nearly five centuries, Western painting was dominated by linear perspective—the clever artistic illusion of a three-dimensional world viewed from a single, static point in space. Picasso recognized this as an artificial, dishonest trick. He understood that human vision is dynamic, moving, and deeply temporal, constantly assembling a chaotic puzzle of impressions."
+          },
+          {
+            "part_number": 2,
+            "text": "By violently fracturing the canvas, Cubism rejects the tyranny of the single viewpoint. It flattens the space, dragging the back, sides, and front of an object forward simultaneously. Picasso doesn't paint what a subject looks like in a frozen second; he paints the total, multi-angled truth of what that subject actually is."
+          }
+        ]
+      }
+    },
+    {
+      "id": "cubist-fracture_picasso_card_1",
+      "stack_id": "cubist-fracture_picasso",
+      "category": "arts",
+      "topic": "Deconstruction of Perspective",
+      "philosopher": "Pablo Picasso",
+      "visual_mood": "amber_glow",
+      "explore_title": "The Demoiselles Rebellion",
+      "explore_subtext": "Art must cease to be a comforting cosmetic window. It must morph into a jagged, confrontational weapon that rips through cultural complacency.",
+      "layoutVariant": "fragment",
+      "presentation": {
+        "title": "The Shock of Avignon",
+        "reading_parts": [
+          {
+            "part_number": 1,
+            "text": "When Picasso unveiled 'Les Demoiselles d'Avignon' in 1907, his closest artistic peers were utterly horrified. The classical human form was violently hacked into sharp, geometric shards; faces were replaced with raw, menacing African masks. It was an outright declaration of war against traditional Western standards of beauty."
+          },
+          {
+            "part_number": 2,
+            "text": "This shock was calculated. Picasso realized that conventional art had become an anesthetized luxury commodity designed to soothe the wealthy. By infusing his work with raw, primitive, and non-Western aesthetic energies, he shattered the polished surface of European high culture, unleashing a visceral, untamed visual language."
+          }
+        ]
+      }
+    },
+    {
+      "id": "cubist-fracture_picasso_card_2",
+      "stack_id": "cubist-fracture_picasso",
+      "category": "arts",
+      "topic": "Deconstruction of Perspective",
+      "philosopher": "Pablo Picasso",
+      "visual_mood": "cosmic_void",
+      "explore_title": "Guernica: Painting the Scream",
+      "explore_subtext": "When modern bombs rain down on innocent civilians, realistic rendering fails completely. Only broken forms can truly express a broken world.",
+      "layoutVariant": "blockquote",
+      "presentation": {
+        "title": "Anatomy of a Massacre",
+        "reading_parts": [
+          {
+            "part_number": 1,
+            "text": "Faced with the horrific fascist aerial bombardment of a defenseless Basque town, Picasso did not create a heroic, historical battle scene. Instead, he painted a towering, monochromatic nightmare of fractured bodies, wailing mothers, and screaming animals. The Cubist fracturing of form became the perfect metaphor for a society torn to pieces by technological warfare."
+          },
+          {
+            "part_number": 2,
+            "text": "By stripping the canvas of color, he gives it the raw, urgent authority of a documentary photograph. The jagged lines and overlapping, distorted limbs refuse to let the viewer romanticize the violence. Picasso forces us to sit directly inside the pure, unmitigated terror of modern destruction."
+          }
+        ]
+      }
+    },
+    {
+      "id": "cubist-fracture_picasso_card_3",
+      "stack_id": "cubist-fracture_picasso",
+      "category": "arts",
+      "topic": "Deconstruction of Perspective",
+      "philosopher": "Pablo Picasso",
+      "visual_mood": "emerald_mist",
+      "explore_title": "The Lie That Reveals Truth",
+      "explore_subtext": "Art is not the literal truth. It is a calculated, intentional lie that teaches us to see the deep, underlying reality of our condition.",
+      "layoutVariant": "epigraph",
+      "presentation": {
+        "title": "The Creative Subversion",
+        "reading_parts": [
+          {
+            "part_number": 1,
+            "text": "Picasso famously observed that art is a lie that makes us realize the truth. A photorealistic painting might copy the exact surface details of a human face, yet completely miss the chaotic internal reality of their psychology, grief, or desire. True realism requires a deliberate distortion of the superficial facts."
+          },
+          {
+            "part_number": 2,
+            "text": "To spend your life painting exactly what you see is to act as a copyist rather than a creator. Picasso's genius lay in his absolute refusal to stop evolving. He proved that by constantly breaking your own styles, you can stay closer to the burning, shape-shifting core of human experience."
+          }
+        ]
+      }
+    }
+  ],
+  "surreal-dream_dali": [
+    {
+      "id": "surreal-dream_dali_card_0",
+      "stack_id": "surreal-dream_dali",
+      "category": "arts",
+      "topic": "The Paranoid-Critical Method",
+      "philosopher": "Salvador Dalí",
+      "visual_mood": "amber_glow",
+      "explore_title": "The Liquid Clockwork",
+      "explore_subtext": "Time is not a rigid, mechanical metronome. In the landscape of the human psyche, it softens, warps, and melts under the heat of desire.",
+      "layoutVariant": "thesis",
+      "presentation": {
+        "title": "Melting the Imperial Metric",
+        "reading_parts": [
+          {
+            "part_number": 1,
+            "text": "Dalí's masterpiece, 'The Persistence of Memory,' features limp, melting pocket watches draped over a desolate Catalan landscape. It is a direct assault on the cold, rationalist certainty of the industrial age. Dalí visualizes a psychological reality where time is deeply elastic, stretching during moments of intense terror and dissolving entirely during dreams."
+          },
+          {
+            "part_number": 2,
+            "text": "The paintings are rendered with a hyper-realistic, academic precision that Dalí described as 'hand-painted dream photographs.' By applying a flawless technique to an impossible, nightmare scenario, he creates a deep, unsettling uncanny valley that coaxes the viewer's subconscious into open revolt against rational waking life."
+          }
+        ]
+      }
+    },
+    {
+      "id": "surreal-dream_dali_card_1",
+      "stack_id": "surreal-dream_dali",
+      "category": "arts",
+      "topic": "The Paranoid-Critical Method",
+      "philosopher": "Salvador Dalí",
+      "visual_mood": "cosmic_void",
+      "explore_title": "The Paranoid-Critical Assault",
+      "explore_subtext": "Sanity is a fragile, collective fiction. True vision requires you to cultivate a controlled state of delirium to see the multiple realities hiding in plain sight.",
+      "layoutVariant": "fragment",
+      "presentation": {
+        "title": "The Deliberate Delirium",
+        "reading_parts": [
+          {
+            "part_number": 1,
+            "text": "Dalí invented the 'Paranoid-Critical Method' as a revolutionary technique for artistic creation. Unlike passive automatic writing, it was an active, conscious training of the mind to perceive double and triple images within a single configuration. A single shape could simultaneously be a rotting horse, a beautiful woman, and a landscape."
+          },
+          {
+            "part_number": 2,
+            "text": "This was not a mere optical trick; it was a profound philosophical critique of perception. Dalí wanted to prove that the meaning we assign to objects is entirely unstable and highly subjective. By systematically destabilizing the everyday world, he forces us to realize that reality is a fluid, open-ended interpretation."
+          }
+        ]
+      }
+    },
+    {
+      "id": "surreal-dream_dali_card_2",
+      "stack_id": "surreal-dream_dali",
+      "category": "arts",
+      "topic": "The Paranoid-Critical Method",
+      "philosopher": "Salvador Dalí",
+      "visual_mood": "crimson_twilight",
+      "explore_title": "The Architecture of the Drawer",
+      "explore_subtext": "The human body is an intricate cabinet of secrets. We walk through the world locked up, terrified of what will spill out if a drawer is pulled open.",
+      "layoutVariant": "blockquote",
+      "presentation": {
+        "title": "The Freudian Cabinet",
+        "reading_parts": [
+          {
+            "part_number": 1,
+            "text": "Deeply influenced by Sigmund Freud's pioneering theories of the unconscious mind, Dalí repeatedly painted human figures riddled with open, protruding drawers. These drawers symbolize the hidden, repressed impulses, sexual taboos, and primal anxieties that civilized society forces us to pack away in the dark."
+          },
+          {
+            "part_number": 2,
+            "text": "Art, for Dalí, acts as the ultimate master key. By visualizing these grotesque, surreal openings, he forces the viewer to confront the hidden interior architecture of their own mind. He reveals that we are not cohesive, rational entities, but fragmented containers filled with dangerous secrets."
+          }
+        ]
+      }
+    },
+    {
+      "id": "surreal-dream_dali_card_3",
+      "stack_id": "surreal-dream_dali",
+      "category": "arts",
+      "topic": "The Paranoid-Critical Method",
+      "philosopher": "Salvador Dalí",
+      "visual_mood": "emerald_mist",
+      "explore_title": "The Divine Eccentric",
+      "explore_subtext": "Do not just make art; transform your entire physical presence into a provocative, living myth that completely scrambles bourgeois reality.",
+      "layoutVariant": "interstitial",
+      "presentation": {
+        "title": "The Master of the Spectacle",
+        "reading_parts": [
+          {
+            "part_number": 1,
+            "text": "With his upturned mustache, cape, and pet ocelot, Dalí became an international media spectacle, blurring the boundaries between high art and absolute showmanship. Many critics accused him of commercialism, but his public persona was itself a deeply Surrealist subversion. He turned his life into a never-ending performance."
+          },
+          {
+            "part_number": 2,
+            "text": "By behaving with absolute, unapologetic eccentricity, Dalí exposed the deep conformism of modern society. He proved that the public is simultaneously fascinated and terrified by absolute freedom, creating a mirror that mocked the rigid, predictable structures of contemporary celebrity culture."
+          }
+        ]
+      }
+    }
+  ],
+  "abstract-abyss_rothko": [
+    {
+      "id": "abstract-abyss_rothko_card_0",
+      "stack_id": "abstract-abyss_rothko",
+      "category": "arts",
+      "topic": "Color Field and Transcendence",
+      "philosopher": "Mark Rothko",
+      "visual_mood": "cosmic_void",
+      "explore_title": "Drowning in the Field",
+      "explore_subtext": "These are not mere paintings of colored blocks. They are vast, breathing gateways designed to induce spiritual vertigo and confront your deepest loneliness.",
+      "layoutVariant": "thesis",
+      "presentation": {
+        "title": "The Erasure of the Object",
+        "reading_parts": [
+          {
+            "part_number": 1,
+            "text": "Rothko systematically stripped his paintings of everything recognizable—there are no figures, no landscapes, no narratives, and no visible brushstrokes. He left only massive, soft-edged rectangles of saturated color floating on a canvas. He wanted to remove any intellectual distraction so the viewer could have a pure, unmediated emotional encounter."
+          },
+          {
+            "part_number": 2,
+            "text": "He insisted that his large canvases be hung in dim lighting and viewed from a distance of only eighteen inches. This specific configuration forces the painting to fill your entire peripheral vision. You do not look at a Rothko; you are entirely swallowed up inside its atmospheric, luminous environment."
+          }
+        ]
+      }
+    },
+    {
+      "id": "abstract-abyss_rothko_card_1",
+      "stack_id": "abstract-abyss_rothko",
+      "category": "arts",
+      "topic": "Color Field and Transcendence",
+      "philosopher": "Mark Rothko",
+      "visual_mood": "crimson_twilight",
+      "explore_title": "The Tragedy in the Pigment",
+      "explore_subtext": "If you are only moved by the beautiful harmony of the colors, you have missed the entire point. These canvases are built out of pure human grief.",
+      "layoutVariant": "fragment",
+      "presentation": {
+        "title": "The Emotional Resonance",
+        "reading_parts": [
+          {
+            "part_number": 1,
+            "text": "Rothko grew deeply frustrated when critics praised his work as decorative or formally beautiful. He explicitly stated: 'I am interested only in expressing basic human emotions—tragedy, ecstasy, doom, and the like.' The deep, overlapping layers of paint create a vibrating surface that mimics the fragile, shifting nature of human consciousness."
+          },
+          {
+            "part_number": 2,
+            "text": "The glowing, pulsing interactions between the dark hues evoke a profound sense of the sublime—a beauty laced with terror. Many people famously weep when standing before his massive fields of color, responding to a deep, pre-verbal expression of human isolation and cosmic longing."
+          }
+        ]
+      }
+    },
+    {
+      "id": "abstract-abyss_rothko_card_2",
+      "stack_id": "abstract-abyss_rothko",
+      "category": "arts",
+      "topic": "Color Field and Transcendence",
+      "philosopher": "Mark Rothko",
+      "visual_mood": "amber_glow",
+      "explore_title": "The Chapel of Shadows",
+      "explore_subtext": "In a secular world stripped of myth, art must build its own dark temples. A room of black paintings can become the ultimate sanctuary.",
+      "layoutVariant": "blockquote",
+      "presentation": {
+        "title": "The Houston Sanctuary",
+        "reading_parts": [
+          {
+            "part_number": 1,
+            "text": "In his final years, Rothko created a series of fourteen massive, dark purple and black paintings for a non-denominational chapel in Houston, Texas. These works offer no easy visual entry points; they are heavy, somber, and deeply opaque surfaces that demand an intense, meditative patience from the viewer."
+          },
+          {
+            "part_number": 2,
+            "text": "The chapel functions as a modern temple of silence. In a culture of endless digital distraction and loud, flashing stimuli, Rothko’s dark fields offer a radical space for quiet, contemplative looking. It is an architecture designed specifically to let you sit with the shadow of your own mortality."
+          }
+        ]
+      }
+    },
+    {
+      "id": "abstract-abyss_rothko_card_3",
+      "stack_id": "abstract-abyss_rothko",
+      "category": "arts",
+      "topic": "Color Field and Transcendence",
+      "philosopher": "Mark Rothko",
+      "visual_mood": "emerald_mist",
+      "explore_title": "The Final Exit",
+      "explore_subtext": "To push art to its absolute limit is to stand at the edge of a sheer cliff. Eventually, the boundary between the creator and the void dissolves.",
+      "layoutVariant": "epigraph",
+      "presentation": {
+        "title": "The Ultimate Radicalism",
+        "reading_parts": [
+          {
+            "part_number": 1,
+            "text": "Rothko’s artistic journey was a relentless, uncompromising journey toward absolute silence. As his colors darkened into deep maroons, grays, and blacks, his paintings began to feel like walls closing in or infinite night skies opening up. He had successfully painted himself out of the material world completely."
+          },
+          {
+            "part_number": 2,
+            "text": "In 1970, isolated and battling severe illness, Rothko took his own life in his New York studio. His final paintings, rendered in stark black and cold gray, remain as profound, haunting monuments of a human soul that refused to compromise its pursuit of the absolute, transcendent sublime."
+          }
+        ]
+      }
+    }
+  ],
+  "pop-factory_warhol": [
+    {
+      "id": "pop-factory_warhol_card_0",
+      "stack_id": "pop-factory_warhol",
+      "category": "arts",
+      "topic": "Consumerism and Celebrity",
+      "philosopher": "Andy Warhol",
+      "visual_mood": "crimson_twilight",
+      "explore_title": "The Great Equalizer",
+      "explore_subtext": "A coke is a coke. No amount of money can buy you a better coke than the one the beggar is drinking on the corner. Capitalist mass production is the ultimate democracy.",
+      "layoutVariant": "thesis",
+      "presentation": {
+        "title": "The Zenith of the Product",
+        "reading_parts": [
+          {
+            "part_number": 1,
+            "text": "Warhol completely revolutionized high art by choosing his subjects directly from the aisles of the supermarket and the pages of tabloid magazines. By painting Campbell's soup cans and Coca-Cola bottles with mechanical precision, he forced the elitist gallery world to confront the vibrant, uniform reality of American commercial life."
+          },
+          {
+            "part_number": 2,
+            "text": "He recognized that mass production possessed a profound, leveling beauty. In a consumer culture, products are flawlessly identical across all social classes. Warhol didn't look down on this uniformity; he celebrated it as the definitive, authentic folklore of the twentieth century."
+          }
+        ]
+      }
+    },
+    {
+      "id": "pop-factory_warhol_card_1",
+      "stack_id": "pop-factory_warhol",
+      "category": "arts",
+      "topic": "Consumerism and Celebrity",
+      "philosopher": "Andy Warhol",
+      "visual_mood": "cosmic_void",
+      "explore_title": "The Mechanical Soul",
+      "explore_subtext": "I want to be a machine. If everyone looks, thinks, and acts the same, the agonizing burden of individuality finally evaporates.",
+      "layoutVariant": "fragment",
+      "presentation": {
+        "title": "The Factory Apparatus",
+        "reading_parts": [
+          {
+            "part_number": 1,
+            "text": "Warhol named his studio 'The Factory' and utilized silkscreen printing—a commercial mass-production technique—to manufacture his artworks. He systematically distanced himself from the traditional Romantic ideal of the artist as an expressive, tortured genius, opting instead to act as a cool, detached director of a production line."
+          },
+          {
+            "part_number": 2,
+            "text": "By repeating the exact same image of Marilyn Monroe or an electric chair dozens of times across a canvas, he demonstrated how media repetition completely numbs our emotional response. The tragic icon and the instrument of death are flattened out, transforming into interchangeable consumer icons."
+          }
+        ]
+      }
+    },
+    {
+      "id": "pop-factory_warhol_card_2",
+      "stack_id": "pop-factory_warhol",
+      "category": "arts",
+      "topic": "Consumerism and Celebrity",
+      "philosopher": "Andy Warhol",
+      "visual_mood": "amber_glow",
+      "explore_title": "The Fifteen-Minute Ledger",
+      "explore_subtext": "In the near future, mass media will expand until fame becomes a universal, fleeting commodity. Everyone will have their brief moment under the blinding lights.",
+      "layoutVariant": "blockquote",
+      "presentation": {
+        "title": "The Democratization of Visibility",
+        "reading_parts": [
+          {
+            "part_number": 1,
+            "text": "Warhol’s famous prediction that everyone will be world-famous for fifteen minutes has become the absolute structural reality of our digital world. He anticipated how electronic media would democratize attention, breaking down the old, gatekept hierarchies of Hollywood to turn ordinary people into fleeting, hyper-visible icons."
+          },
+          {
+            "part_number": 2,
+            "text": "But Warhol also understood that this hyper-visibility comes with a dark, disposal economy. When fame becomes fully automated and temporary, human beings are consumed and discarded just like soup cans, exposing the deep, hyperactive emptiness of a society addicted to the screen."
+          }
+        ]
+      }
+    },
+    {
+      "id": "pop-factory_warhol_card_3",
+      "stack_id": "pop-factory_warhol",
+      "category": "arts",
+      "topic": "Consumerism and Celebrity",
+      "philosopher": "Andy Warhol",
+      "visual_mood": "emerald_mist",
+      "explore_title": "The Surface is Everything",
+      "explore_subtext": "If you want to know all about Andy Warhol, just look at the surface of my paintings and my clothes. There is absolutely nothing behind it.",
+      "layoutVariant": "interstitial",
+      "presentation": {
+        "title": "The Strategy of the Mirror",
+        "reading_parts": [
+          {
+            "part_number": 1,
+            "text": "Throughout his life, Warhol wore a silver wig and maintained a hyper-detached, monosyllabic interview style. He consistently baffled journalists by refusing to offer deep, intellectual explanations for his work. By presenting himself as an empty, reflective surface, he forced society to look at its own image."
+          },
+          {
+            "part_number": 2,
+            "text": "This total commitment to the surface was his most profound philosophical maneuver. In a world increasingly dominated by advertising, image curation, and superficial branding, Warhol suggested that searching for a deep, authentic core is a nostalgic illusion. The style *is* the substance."
+          }
+        ]
+      }
+    }
+  ],
+  "performance-wound_abramovic": [
+    {
+      "id": "performance-wound_abramovic_card_0",
+      "stack_id": "performance-wound_abramovic",
+      "category": "arts",
+      "topic": "The Present Body",
+      "philosopher": "Marina Abramović",
+      "visual_mood": "crimson_twilight",
+      "explore_title": "Rhythm 0: The Hostage Canvas",
+      "explore_subtext": "If you hand the public a loaded gun and grant them absolute immunity, the polite veneer of civilization evaporates within hours, revealing a primal cruelty.",
+      "layoutVariant": "thesis",
+      "presentation": {
+        "title": "The Anatomy of Compulsion",
+        "reading_parts": [
+          {
+            "part_number": 1,
+            "text": "In her legendary 1974 performance 'Rhythm 0,' Abramović stood completely passive in a gallery for six hours, placing seventy-two objects on a table—ranging from a rose and honey to a whip, a razor blade, and a loaded gun—inviting the audience to use them on her body however they pleased. She surrendered her agency entirely."
+          },
+          {
+            "part_number": 2,
+            "text": "The performance escalated from tentative kindness to horrific violence. Her clothes were shredded, her skin was cut, and someone eventually loaded the gun and pointed it at her neck. Abramović transformed her physical form into an extreme psychological mirror, forcing humanity to witness how fast it devolves when social consequences are stripped away."
+          }
+        ]
+      }
+    },
+    {
+      "id": "performance-wound_abramovic_card_1",
+      "stack_id": "performance-wound_abramovic",
+      "category": "arts",
+      "topic": "The Present Body",
+      "philosopher": "Marina Abramović",
+      "visual_mood": "cosmic_void",
+      "explore_title": "The Limits of the Vessel",
+      "explore_subtext": "Art is not a representation painted on canvas. It is the literal, physical endurance of the human body testing the raw boundaries of exhaustion and pain.",
+      "layoutVariant": "fragment",
+      "presentation": {
+        "title": "The Ordeal as Medium",
+        "reading_parts": [
+          {
+            "part_number": 1,
+            "text": "Abramović’s early works involved intense, self-inflicted physical trials—screaming until she lost her voice, collapsing inside a burning wooden star, and consuming psychoactive drugs to document temporary madness. She used her own physiology as a laboratory to explore the exact boundary where the conscious ego shatters."
+          },
+          {
+            "part_number": 2,
+            "text": "This extreme performance art acts as a profound ritual of purification. By subjecting her body to public pain, she processes and transmutes collective human fears of vulnerability, mortality, and physical trauma, guiding the audience into an intense, empathetic space that traditional art cannot reach."
+          }
+        ]
+      }
+    },
+    {
+      "id": "performance-wound_abramovic_card_2",
+      "stack_id": "performance-wound_abramovic",
+      "category": "arts",
+      "topic": "The Present Body",
+      "philosopher": "Marina Abramović",
+      "visual_mood": "amber_glow",
+      "explore_title": "The Artist is Present",
+      "explore_subtext": "To sit completely still and look into the eyes of a stranger for eight hours a day is to unleash an emotional flood that modern life works desperately to suppress.",
+      "layoutVariant": "blockquote",
+      "presentation": {
+        "title": "The Geometry of Attention",
+        "reading_parts": [
+          {
+            "part_number": 1,
+            "text": "For her 2010 retrospective at MoMA, Abramović sat motionless in a chair for 736 hours over three months, inviting museum visitors to take turns sitting across from her in absolute silence. No words, no touching, no movement. Over 1,500 people participated, many weeping within seconds of making eye contact."
+          },
+          {
+            "part_number": 2,
+            "text": "In a hyper-connected, digital world that commodifies speed and constant distraction, this performance was a radical counter-cultural act. Abramović offered her unwavering, non-judgmental presence as an empty mirror, allowing participants to project and experience their own profound loneliness, grief, and longing."
+          }
+        ]
+      }
+    },
+    {
+      "id": "performance-wound_abramovic_card_3",
+      "stack_id": "performance-wound_abramovic",
+      "category": "arts",
+      "topic": "The Present Body",
+      "philosopher": "Marina Abramović",
+      "visual_mood": "emerald_mist",
+      "explore_title": "The Great Wall Separation",
+      "explore_subtext": "True love does not end with a quiet conversation in a room. It ends with a thousand-mile walk across a continent to say a final, permanent goodbye.",
+      "layoutVariant": "epigraph",
+      "presentation": {
+        "title": "The Ultimate Farewell",
+        "reading_parts": [
+          {
+            "part_number": 1,
+            "text": "To conclude their intense, twelve-year romantic and artistic partnership, Abramović and the artist Ulay conceived a monumental performance. They started at opposite ends of the Great Wall of China and walked for three months through rugged terrain, meeting in the center to embrace one last time before parting forever."
+          },
+          {
+            "part_number": 2,
+            "text": "By transforming an agonizing romantic breakup into a rigorous, epic physical pilgrimage, they elevated a private heartbreak into a timeless, mythic narrative. Abramović demonstrates that the ultimate masterpiece of an artist is not a physical object, but the conscious, intentional sculpting of life's most painful thresholds."
+          }
+        ]
+      }
+    }
+  ],
+  "modernist-void_kafka": [
+    {
+      "id": "modernist-void_kafka_card_0",
+      "stack_id": "modernist-void_kafka",
+      "category": "literature",
+      "topic": "The Bureaucratic Nightmare",
+      "philosopher": "Franz Kafka",
+      "visual_mood": "cosmic_void",
+      "explore_title": "The Metamorphosis of Guilt",
+      "explore_subtext": "You wake up to find yourself transformed into a monstrous, useless insect—and your very first thought is an anxious panic about missing the morning train.",
+      "layoutVariant": "thesis",
+      "presentation": {
+        "title": "The Dehumanizing Clockwork",
+        "reading_parts": [
+          {
+            "part_number": 1,
+            "text": "Gregor Samsa's bizarre transformation into a giant beetle is not a fairy tale curse; it is a brutal, material manifestation of economic exhaustion. Gregor has spent years crushing his own desires, serving as a desperate cog in an industrial machine to pay off his family's debts. His sudden, grotesque mutation simply brings his internal state of alienation into plain view."
+          },
+          {
+            "part_number": 2,
+            "text": "Kafka's horrifying genius lies in how mundane his characters act within surreal nightmares. Instead of mourning his lost humanity, Gregor is paralyzed by the fear of his manager's wrath. Kafka exposes how deeply modern labor trains us to internalize our own exploitation, prioritizing corporate efficiency over our very souls."
+          }
+        ]
+      }
+    },
+    {
+      "id": "modernist-void_kafka_card_1",
+      "stack_id": "modernist-void_kafka",
+      "category": "literature",
+      "topic": "The Bureaucratic Nightmare",
+      "philosopher": "Franz Kafka",
+      "visual_mood": "crimson_twilight",
+      "explore_title": "The Trial Without a Crime",
+      "explore_subtext": "You are arrested one morning by an invisible, omnipotent court. You will never be told what you are accused of, but you are expected to defend yourself anyway.",
+      "layoutVariant": "fragment",
+      "presentation": {
+        "title": "The Architecture of Absolution",
+        "reading_parts": [
+          {
+            "part_number": 1,
+            "text": "In 'The Trial,' Joseph K. is sucked into an endless, labyrinthine legal apparatus that operates in dark attics and smoky tenements. There are no clear laws, no logical procedures, and no accessible judges. The system functions on an unyielding, psychological axiom: the accusation itself is proof of guilt."
+          },
+          {
+            "part_number": 2,
+            "text": "This is the ultimate portrait of modern institutional anxiety. Kafka masterfully captures the modern sensation of being perpetually judged by an invisible, faceless power—be it the state, the algorithm, or an internalized family trauma. Defying the court is entirely impossible because the court exists inside your own mind."
+          }
+        ]
+      }
+    },
+    {
+      "id": "modernist-void_kafka_card_2",
+      "stack_id": "modernist-void_kafka",
+      "category": "literature",
+      "topic": "The Bureaucratic Nightmare",
+      "philosopher": "Franz Kafka",
+      "visual_mood": "amber_glow",
+      "explore_title": "Before the Law",
+      "explore_subtext": "A man spends his entire life begging a guard for entry through the open gates of the Law. On his deathbed, he learns the gate was built solely for him.",
+      "layoutVariant": "blockquote",
+      "presentation": {
+        "title": "The Doorway of the Damned",
+        "reading_parts": [
+          {
+            "part_number": 1,
+            "text": "Kafka's famous parable describes a man from the country who waits for decades outside the open door of the Law, terrified of the fierce doorkeeper. He wastes his youth, barters away his possessions, and shrivels into old age, continually begging for permission to pass. The door remains open, yet entirely impassable."
+          },
+          {
+            "part_number": 2,
+            "text": "This is a profound commentary on human passivity. We spend our lives waiting for an external authority—a church, a institution, a guru, or a credential—to grant us permission to live authentically. Kafka reveals that the barriers keeping us from our true potential are constructed out of our own compliance."
+          }
+        ]
+      }
+    },
+    {
+      "id": "modernist-void_kafka_card_3",
+      "stack_id": "modernist-void_kafka",
+      "category": "literature",
+      "topic": "The Bureaucratic Nightmare",
+      "philosopher": "Franz Kafka",
+      "visual_mood": "emerald_mist",
+      "explore_title": "The Castle: The Unreachable Goal",
+      "explore_subtext": "You arrive in a village to take up a job, but the authorities who hired you reside in a distant castle that recedes further with every step you take toward it.",
+      "layoutVariant": "epigraph",
+      "presentation": {
+        "title": "The Horizon of Exclusion",
+        "reading_parts": [
+          {
+            "part_number": 1,
+            "text": "In Kafka's final, unfinished novel, 'The Castle,' the protagonist K. struggles to establish his legitimate status in a bizarre, snow-covered community. The village is ruled by an inaccessible, highly erratic administrative elite who communicate through garbled phone lines and contradictory memos. Every attempt to achieve clarity only creates deeper confusion."
+          },
+          {
+            "part_number": 2,
+            "text": "The Castle stands as a chilling monument to the modern search for belonging and meaning. Kafka presents an existential landscape where human beings are permanently exiled, forced to wander through an endless, cold bureaucracy that promises inclusion but delivers nothing but a slow, exhausting alienation."
+          }
+        ]
+      }
+    }
+  ],
+  "hyperborean-ice_dostoevsky": [
+    {
+      "id": "hyperborean-ice_dostoevsky_card_0",
+      "stack_id": "hyperborean-ice_dostoevsky",
+      "category": "literature",
+      "topic": "The Underground Man",
+      "philosopher": "Fyodor Dostoevsky",
+      "visual_mood": "cosmic_void",
+      "explore_title": "The Spiteful Underground",
+      "explore_subtext": "I am a sick man... I am a spiteful man. To live in an era of absolute scientific rationality is to realize that you are nothing but a piano key.",
+      "layoutVariant": "thesis",
+      "presentation": {
+        "title": "The Revolt Against Reason",
+        "reading_parts": [
+          {
+            "part_number": 1,
+            "text": "In 'Notes from Underground,' Dostoevsky introduces a bitter, isolated narrator who lives beneath the floorboards of St. Petersburg society. This character serves as a furious, direct attack on the Enlightenment belief that human beings can be fully mapped, cured, and perfected by science, logic, and self-interest."
+          },
+          {
+            "part_number": 2,
+            "text": "The Underground Man argues that humans are inherently irrational and destructive. If you build a flawless, utopian paradise of crystal palaces and perfect comfort, a human will deliberately smash it just to prove that they are still a free agent, not a predictable mathematical equation. We cherish our right to be mad."
+          }
+        ]
+      }
+    },
+    {
+      "id": "hyperborean-ice_dostoevsky_card_1",
+      "stack_id": "hyperborean-ice_dostoevsky",
+      "category": "literature",
+      "topic": "The Underground Man",
+      "philosopher": "Fyodor Dostoevsky",
+      "visual_mood": "crimson_twilight",
+      "explore_title": "The Geometry of the Axe",
+      "explore_subtext": "You believe you are a superior man, an extraordinary spirit exempt from common morality. Then you hear the wet thud of the axe against blood.",
+      "layoutVariant": "fragment",
+      "presentation": {
+        "title": "The Collapse of Ideology",
+        "reading_parts": [
+          {
+            "part_number": 1,
+            "text": "In 'Crime and Punishment,' Raskolnikov rationalizes the brutal murder of an old pawnbroker by convincing himself that he is a Napoleon-like figure—an extraordinary human who has the moral right to step over conventional laws for a higher good. He views morality as a simple math problem: one bad life traded for a hundred good deeds."
+          },
+          {
+            "part_number": 2,
+            "text": "But the physical reality of the murder completely destroys his abstract philosophy. The human soul cannot withstand the horrific, bloody weight of taking a life. Dostoevsky demonstrates that intellectual theories hatched in isolation shatter instantly when they collide with the sacred, unalterable reality of human life."
+          }
+        ]
+      }
+    },
+    {
+      "id": "hyperborean-ice_dostoevsky_card_2",
+      "stack_id": "hyperborean-ice_dostoevsky",
+      "category": "literature",
+      "topic": "The Underground Man",
+      "philosopher": "Fyodor Dostoevsky",
+      "visual_mood": "amber_glow",
+      "explore_title": "The Grand Inquisitor’s Trap",
+      "explore_subtext": "Humanity cannot bear the terrifying burden of true Christian freedom. We desperately prefer bread, miracles, and authority over liberty.",
+      "layoutVariant": "blockquote",
+      "presentation": {
+        "title": "The Price of Freedom",
+        "reading_parts": [
+          {
+            "part_number": 1,
+            "text": "Inside 'The Brothers Karamazov,' Ivan narrates a fierce prose poem where Jesus returns to Earth during the Spanish Inquisition. The Grand Inquisitor arrests him, explaining that the Church has corrected his work. He tells Christ that true freedom is an agonizing curse for mankind; people want to be ruled, fed, and comforted by an absolute power."
+          },
+          {
+            "part_number": 2,
+            "text": "The Inquisitor claims that the Church loves humanity more than Christ did because they give them a comfortable, pacifying illusion instead of a demanding, spiritual freedom. This is Dostoevsky’s most terrifying insight: human beings will gladly barter away their conscience to any authority that promises to guarantee their safety."
+          }
+        ]
+      }
+    },
+    {
+      "id": "hyperborean-ice_dostoevsky_card_3",
+      "stack_id": "hyperborean-ice_dostoevsky",
+      "category": "literature",
+      "topic": "The Underground Man",
+      "philosopher": "Fyodor Dostoevsky",
+      "visual_mood": "emerald_mist",
+      "explore_title": "The Beauty That Saves the World",
+      "explore_subtext": "To remain completely innocent, compassionate, and transparent in a world of wolves is to invite everyone to label you an idiot.",
+      "layoutVariant": "epigraph",
+      "presentation": {
+        "title": "The Idiot’s Rebellion",
+        "reading_parts": [
+          {
+            "part_number": 1,
+            "text": "In 'The Idiot,' Dostoevsky attempted his most difficult literary experiment: to portray a genuinely good, Christ-like soul in modern, cynical high society. Prince Myshkin is transparently honest, entirely devoid of malice, and radiating radical empathy. Yet, his pure virtue acts as a volatile catalyst, exposing the greed and vanity of everyone around him."
+          },
+          {
+            "part_number": 2,
+            "text": "Myshkin's kindness is repeatedly mistaken for intellectual deficiency. Dostoevsky reveals that an authentic, uncompromised spiritual love cannot survive intact within a corrupt social hierarchy. It is a beautiful, tragic warning: true goodness is a radical, explosive force that will break the vessel that contains it."
+          }
+        ]
+      }
+    }
+  ],
+  "lost-time_proust": [
+    {
+      "id": "lost-time_proust_card_0",
+      "stack_id": "lost-time_proust",
+      "category": "literature",
+      "topic": "Involuntary Memory",
+      "philosopher": "Marcel Proust",
+      "visual_mood": "amber_glow",
+      "explore_title": "The Alchemy of the Madeleine",
+      "explore_subtext": "A single bite of a cake dipped in lime-blossom tea causes the heavy dam of your adult amnesia to burst, unleashing an entire forgotten childhood landscape.",
+      "layoutVariant": "thesis",
+      "presentation": {
+        "title": "The Senses as Time Machines",
+        "reading_parts": [
+          {
+            "part_number": 1,
+            "text": "In 'In Search of Lost Time,' the narrator dips a small madeleine cake into tea, and a sudden, inexplicable wave of intense joy washes over him. He realizes that the taste has unlocked a memory deeply buried under decades of routine: his Sunday mornings in Combray with his Aunt Léonie. The past wasn't dead; it was simply hiding inside a flavor."
+          },
+          {
+            "part_number": 2,
+            "text": "Proust distinguishes between voluntary memory—the dry, intellectual recall of dates and events—and involuntary memory. Voluntary memory only keeps a sterile record of our history. Involuntary memory, triggered by a scent, a touch, or a taste, bypasses our intellect to resurrect the raw, emotional atmosphere of the past."
+          }
+        ]
+      }
+    },
+    {
+      "id": "lost-time_proust_card_1",
+      "stack_id": "lost-time_proust",
+      "category": "literature",
+      "topic": "Involuntary Memory",
+      "philosopher": "Marcel Proust",
+      "visual_mood": "emerald_mist",
+      "explore_title": "The Illusion of the Social Salon",
+      "explore_subtext": "We spend our entire youth climbing the slippery ladders of high society, only to discover that the gods we worshipped are shallow, cruel, and profoundly boring.",
+      "layoutVariant": "fragment",
+      "presentation": {
+        "title": "Dismantling the Aristocracy",
+        "reading_parts": [
+          {
+            "part_number": 1,
+            "text": "The narrator spends years obsessed with entering the exclusive aristocratic circle of the Guermantes family, viewing them as romantic figures step out of historical myths. When he finally gains access to their golden salons, he finds that their sparkling wit is merely a polished cruelty, and their lives are utterly devoid of spiritual depth."
+          },
+          {
+            "part_number": 2,
+            "text": "Proust acts as a ruthless social anatomist. He exposes how human desire is fundamentally mimetic—we want things simply because others want them. True nobility does not exist in historic titles or expensive dinner parties; it is a quality manufactured solely within the creative, attentive mind of the observer."
+          }
+        ]
+      }
+    },
+    {
+      "id": "lost-time_proust_card_2",
+      "stack_id": "lost-time_proust",
+      "category": "literature",
+      "topic": "Involuntary Memory",
+      "philosopher": "Marcel Proust",
+      "visual_mood": "crimson_twilight",
+      "explore_title": "The Geometry of Jealousy",
+      "explore_subtext": "Love is not a peaceful communion between two souls. It is an agonizing detective game where you try to imprison a flighty being who will always elude you.",
+      "layoutVariant": "blockquote",
+      "presentation": {
+        "title": "The Captive Soul",
+        "reading_parts": [
+          {
+            "part_number": 1,
+            "text": "In his obsessive relationship with Albertine, the narrator transforms love into a high-stakes psychological siege. He imprisons her in his apartment, tracking her glances, parsing her lies, and attempting to map every second of her history. His love is not driven by affection, but by an insatiable, painful curiosity."
+          },
+          {
+            "part_number": 2,
+            "text": "Proust shows that we do not love real people; we love our own imaginative fabrications of them. The moment Albertine becomes completely safe and predictable, his love evaporates. The moment she escapes his grasp, his agonizing passion returns, proving that jealousy is a frantic search for absolute possession."
+          }
+        ]
+      }
+    },
+    {
+      "id": "lost-time_proust_card_3",
+      "stack_id": "lost-time_proust",
+      "category": "literature",
+      "topic": "Involuntary Memory",
+      "philosopher": "Marcel Proust",
+      "visual_mood": "cosmic_void",
+      "explore_title": "Art as the Ultimate Resurrection",
+      "explore_subtext": "Time is an absolute tyrant that erases our lives like chalk on a blackboard. Only the rigorous architecture of literature can rescue our existence from the void.",
+      "layoutVariant": "epigraph",
+      "presentation": {
+        "title": "The Conquest of Death",
+        "reading_parts": [
+          {
+            "part_number": 1,
+            "text": "At the end of his massive novel, old age and death are rapidly closing in on the narrator. He looks at his friends, now transformed into fragile, white-haired ruins by the relentless gears of time. He realizes that his entire life has been a frantic drift toward nothingness—unless he can translate his memories into a work of art."
+          },
+          {
+            "part_number": 2,
+            "text": "Writing is not a trivial entertainment; it is the ultimate spiritual duty. By capturing the complex, multi-layered textures of experience in prose, the writer rescues fragile moments from the river of time. Art is the only place where lost time is permanently found, transformed into an eternal, living monument."
+          }
+        ]
+      }
+    }
+  ],
+  "magical-solitude_marquez": [
+    {
+      "id": "magical-solitude_marquez_card_0",
+      "stack_id": "magical-solitude_marquez",
+      "category": "literature",
+      "topic": "Magical Realism and History",
+      "philosopher": "Gabriel García Márquez",
+      "visual_mood": "emerald_mist",
+      "explore_title": "The Macondo Illusion",
+      "explore_subtext": "A village is founded in the swamp where the dead refuse to die, and a plague of insomnia erases all human memory until the names of things must be written on labels.",
+      "layoutVariant": "thesis",
+      "presentation": {
+        "title": "The Geography of Myth",
+        "reading_parts": [
+          {
+            "part_number": 1,
+            "text": "In 'One Hundred Years of Solitude,' García Márquez constructs Macondo as a mythic micro-cosmos of Latin American history. In this isolated landscape, the supernatural and the mundane coexist without friction. Ghosts wander through kitchens, a beautiful girl floats to heaven while hanging up laundry, and a yellow butterfly swarm precedes a lover."
+          },
+          {
+            "part_number": 2,
+            "text": "This is not mere fantasy; it is a profound strategy of historical realism. For a continent shaped by violent conquest, indigenous myth, and political instability, a flat, dry Eurocentric rationalism fails to capture the true texture of reality. The magic is an essential vehicle for expressing historical trauma."
+          }
+        ]
+      }
+    },
+    {
+      "id": "magical-solitude_marquez_card_1",
+      "stack_id": "magical-solitude_marquez",
+      "category": "literature",
+      "topic": "Magical Realism and History",
+      "philosopher": "Gabriel García Márquez",
+      "visual_mood": "amber_glow",
+      "explore_title": "The Incurable Sentence of Solitude",
+      "explore_subtext": "Seven generations of a single family are condemned to repeat the exact same tragic patterns of pride and war, because they cannot love.",
+      "layoutVariant": "fragment",
+      "presentation": {
+        "title": "The Circular Prison",
+        "reading_parts": [
+          {
+            "part_number": 1,
+            "text": "The Buendía dynasty is plagued by an intense, psychological isolation. Despite their numerous political revolutions, obsessive artistic hobbies, and passionate affairs, every family member remains locked within their own private ego. They walk through Macondo as ghosts, incapable of achieving authentic, vulnerable intimacy."
+          },
+          {
+            "part_number": 2,
+            "text": "This solitude is an historical curse born out of an inability to learn from the past. Time in Macondo does not march forward cleanly; it spins in a repetitive loop. Characters share the same names and inherit the same moral failures, proving that without genuine empathy and memory, history remains a cruel, repeating wheel."
+          }
+        ]
+      }
+    },
+    {
+      "id": "magical-solitude_marquez_card_2",
+      "stack_id": "magical-solitude_marquez",
+      "category": "literature",
+      "topic": "Magical Realism and History",
+      "philosopher": "Gabriel García Márquez",
+      "visual_mood": "crimson_twilight",
+      "explore_title": "The Banana Massacre Amnesia",
+      "explore_subtext": "Three thousand workers are machine-gunned by the state and thrown into the sea. By morning, the government declares that no one died, and the rain washes the memory away.",
+      "layoutVariant": "blockquote",
+      "presentation": {
+        "title": "The Erasure of the Slain",
+        "reading_parts": [
+          {
+            "part_number": 1,
+            "text": "One of the most horrifying chapters in the novel depicts a labor strike at a massive American banana plantation. The imperial military traps the workers in a square and opens fire. The sole survivor escapes on a train loaded with corpses, but when he returns to Macondo, he finds that the official news has completely rewritten history."
+          },
+          {
+            "part_number": 2,
+            "text": "García Márquez brilliantly highlights the terrifying weaponization of official narrative. The state uses media censorship and corporate coercion to induce a total collective amnesia. The magical elements of the book take a dark turn, illustrating how modern political power can erase real human slaughter from existence."
+          }
+        ]
+      }
+    },
+    {
+      "id": "magical-solitude_marquez_card_3",
+      "stack_id": "magical-solitude_marquez",
+      "category": "literature",
+      "topic": "Magical Realism and History",
+      "philosopher": "Gabriel García Márquez",
+      "visual_mood": "cosmic_void",
+      "explore_title": "The Parchments of Melquíades",
+      "explore_subtext": "The entire history of your lineage was written down a century ago in a dead tongue. You decipher the final sentence at the exact second a windstorm erases your city.",
+      "layoutVariant": "epigraph",
+      "presentation": {
+        "title": "The Prophecy Fulfilled",
+        "reading_parts": [
+          {
+            "part_number": 1,
+            "text": "In the novel's breathtaking climax, Aureliano Babilonia finally deciphers the ancient Sanskrit manuscripts left behind by a nomadic gypsy. He reads the text with a racing heart, realizing that it is a minute-by-minute chronicle of his family's entire existence, predicting every triumph, every betrayal, and his current act of reading."
+          },
+          {
+            "part_number": 2,
+            "text": "As he hits the final line, a cataclysmic hurricane rips Macondo from the earth. García Márquez delivers a staggering, meta-fictional reminder that civilizations are fragile constructs made of story. A culture that cannot love or remember its true history is permanently written out of the book of life."
+          }
+        ]
+      }
+    }
+  ],
+  "postmodern-maze_borges": [
+    {
+      "id": "postmodern-maze_borges_card_0",
+      "stack_id": "postmodern-maze_borges",
+      "category": "literature",
+      "topic": "The Infinite Library",
+      "philosopher": "Jorge Luis Borges",
+      "visual_mood": "cosmic_void",
+      "explore_title": "The Library of Babel",
+      "explore_subtext": "The universe is an endless maze of hexagonal galleries containing every single combination of the alphabet. Every true book is buried under mountains of gibberish.",
+      "layoutVariant": "thesis",
+      "presentation": {
+        "title": "The Architecture of Excess",
+        "reading_parts": [
+          {
+            "part_number": 1,
+            "text": "Borges imagines a universe that takes the form of an infinite, identical library containing every book that could ever possibly be written. This includes the true history of the future, your own autobiography, and the cure for all diseases, alongside millions of volumes filled with random, senseless letters. It is a monument of total information."
+          },
+          {
+            "part_number": 2,
+            "text": "Instead of a paradise of wisdom, the library becomes a hell of deep existential despair. The librarians wander through the halls driven mad by the impossibility of finding a single meaningful sentence. Borges brilliantly anticipates the digital age: when all information is available, meaning itself becomes an impossible needle in a haystack."
+          }
+        ]
+      }
+    },
+    {
+      "id": "postmodern-maze_borges_card_1",
+      "stack_id": "postmodern-maze_borges",
+      "category": "literature",
+      "topic": "The Infinite Library",
+      "philosopher": "Jorge Luis Borges",
+      "visual_mood": "amber_glow",
+      "explore_title": "Funes the Memorious",
+      "explore_subtext": "To remember absolutely everything—every vein on every leaf, every cloud configuration from three years ago—is to be completely paralyzed, unable to think a single abstract thought.",
+      "layoutVariant": "fragment",
+      "presentation": {
+        "title": "The Curse of Perfect Recall",
+        "reading_parts": [
+          {
+            "part_number": 1,
+            "text": "Following a severe horse-riding accident, a young man named Ireneo Funes acquires a terrifying neurological gift: a flawless, infinite memory. He registers every single sensory impression in real-time. He can reconstruct an entire day of his life down to the second, but the process of recall takes him a full twenty-four hours to execute."
+          },
+          {
+            "part_number": 2,
+            "text": "Borges uses this bizarre scenario to deliver a profound philosophical insight: to think is to forget. Human intelligence relies on our ability to abstract, generalize, and discard thousands of irrelevant details. Funes' mind is a chaotic garbage dump of raw data, proving that absolute memory is a suffocating form of madness."
+          }
+        ]
+      }
+    },
+    {
+      "id": "postmodern-maze_borges_card_2",
+      "stack_id": "postmodern-maze_borges",
+      "category": "literature",
+      "topic": "The Infinite Library",
+      "philosopher": "Jorge Luis Borges",
+      "visual_mood": "crimson_twilight",
+      "explore_title": "The Garden of Forking Paths",
+      "explore_subtext": "Time is not a straight, unbending arrow. It is an infinite, labyrinthine network of divergent futures where you choose all paths simultaneously.",
+      "layoutVariant": "blockquote",
+      "presentation": {
+        "title": "The Labyrinth of Time",
+        "reading_parts": [
+          {
+            "part_number": 1,
+            "text": "In this brilliant philosophical spy story, Borges describes a massive novel written by a Chinese scholar that everyone assumed was a chaotic piece of nonsense because characters die in one chapter and are alive and well in the next. It is revealed that the book is actually a literal model of a labyrinthine universe."
+          },
+          {
+            "part_number": 2,
+            "text": "In Borges’ universe, whenever a human is faced with an important decision, they do not choose one option to the exclusion of others; they choose all options simultaneously, creating a sprawling web of parallel worlds. It is an extraordinary premonition of quantum mechanics and multi-verse theory, rendered through literature."
+          }
+        ]
+      }
+    },
+    {
+      "id": "postmodern-maze_borges_card_3",
+      "stack_id": "postmodern-maze_borges",
+      "category": "literature",
+      "topic": "The Infinite Library",
+      "philosopher": "Jorge Luis Borges",
+      "visual_mood": "emerald_mist",
+      "explore_title": "The Map and the Kingdom",
+      "explore_subtext": "A guild of cartographers creates a map so meticulous that its scale is exactly one-to-one with the Empire. Eventually, the citizens live inside the map.",
+      "layoutVariant": "interstitial",
+      "presentation": {
+        "title": "The Tyranny of the Replica",
+        "reading_parts": [
+          {
+            "part_number": 1,
+            "text": "In this short, one-paragraph allegory, Borges outlines a historical society that became so completely obsessed with precision that their cartography department constructed a map that exactly matched the geography of the empire. Succeeding generations realized that this massive document was entirely useless and abandoned it to rot in the desert."
+          },
+          {
+            "part_number": 2,
+            "text": "This parable serves as the definitive foundational text for postmodern theories of simulation. It warns against our human tendency to confuse our representations of reality—our metrics, profiles, and digital models—with the raw, unmappable landscape of existence itself. When we worship the map, we lose the country."
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -5,7 +5,7 @@ const createInterstitial = (id: string, title: string, subtext: string): FeedCar
   category: "interstitial",
   topic: "Paradoxes & Parables",
   philosopher: "The Void",
-  visual_mood: "cosmic_void", // Will be overridden by the interstitial layout, but good for type safety
+  visual_mood: "cosmic_void",
   explore_title: title,
   explore_subtext: subtext,
   layoutVariant: "interstitial",
@@ -80,10 +80,10 @@ export const getRandomInterstitial = (): FeedCard => {
     // Refill and shuffle the deck
     interstitialDeck = [...INTERSTITIAL_CARDS].sort(() => Math.random() - 0.5);
   }
-  
+
   // Pop a card from the deck so it doesn't repeat until the deck is empty
   const card = { ...interstitialDeck.pop()! };
-  
+
   // Ensure unique ID for React keys
   card.id = `${card.id}_${Date.now()}_${Math.floor(Math.random() * 1000)}`;
   return card;

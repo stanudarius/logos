@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useCallback } from "react";
 import {
-  BookOpen, Bookmark, Network, ArrowLeft, Timer
+  BookOpen, Bookmark, Network, ArrowLeft, Timer, Waypoints
 } from "lucide-react";
 import { motion } from "motion/react";
 import type { FeedCard, SavedVaultCard } from "../types";
 import ThoughtStream from "./ThoughtStream";
 import CommonplaceBook from "./CommonplaceBook";
+import ReadingTrailsDashboard from "./ReadingTrailsDashboard";
 
 const StatusBarTime = () => {
   const [currentTime, setCurrentTime] = useState<string>("9:41");
@@ -27,7 +28,7 @@ const StatusBarTime = () => {
 
 interface PhoneEmulatorProps {
   // Display state
-  phoneTab: "explore" | "vault";
+  phoneTab: "explore" | "vault" | "trails";
   currentDisplayCards: FeedCard[];
   activeCardIndex: number;
 
@@ -50,6 +51,7 @@ interface PhoneEmulatorProps {
   onDeleteFromVault: (id: string) => void;
   onOpenDeepDive?: (index: number) => void;
   onOpenChat?: (index: number) => void;
+  onStartTrail: (trailId: string) => void;
 }
 
 const PhoneEmulator: React.FC<PhoneEmulatorProps> = ({
@@ -70,7 +72,8 @@ const PhoneEmulator: React.FC<PhoneEmulatorProps> = ({
   onAssignToFolder,
   onDeleteFromVault,
   onOpenDeepDive,
-  onOpenChat
+  onOpenChat,
+  onStartTrail
 }) => {
   const [isSharing, setIsSharing] = useState(false);
 
@@ -83,9 +86,9 @@ const PhoneEmulator: React.FC<PhoneEmulatorProps> = ({
       if (!node) throw new Error("Card node not found");
 
       onTriggerToast("Generating shareable image...");
-      
+
       // Temporarily hide the deep dive drawer and buttons if they exist
-      const dataUrl = await toPng(node, { 
+      const dataUrl = await toPng(node, {
         quality: 0.95,
         pixelRatio: 2,
         filter: (el) => {
@@ -106,8 +109,6 @@ const PhoneEmulator: React.FC<PhoneEmulatorProps> = ({
         const file = new File([blob], filename, { type: blob.type });
         try {
           await navigator.share({
-            title: 'Logos Philosophy Stack',
-            text: `Check out this insight from ${philosopher}!`,
             files: [file]
           });
           onTriggerToast("Shared successfully!");
@@ -145,26 +146,6 @@ const PhoneEmulator: React.FC<PhoneEmulatorProps> = ({
       <div className="relative z-50 flex justify-between items-center text-[10px] font-bold tracking-widest uppercase px-5 pt-4 pb-2 pointer-events-none">
         <div className="flex items-center gap-2">
           <StatusBarTime />
-          
-          {/* Generating Indicator (Status Bar) */}
-          {isFetchingMore && (
-            <div className="flex items-center gap-1 px-2 py-0.5 bg-white/40 backdrop-blur-md border border-[#1C1C1E]/10 rounded-full animate-in fade-in zoom-in duration-300">
-              <div className="flex items-center gap-0.5">
-                {[0, 1, 2].map((i) => (
-                  <div
-                    key={i}
-                    className="w-[3px] h-[3px] rounded-full bg-[#B5A48B]"
-                    style={{
-                      animation: `pulse 1.4s ease-in-out ${i * 0.2}s infinite`,
-                    }}
-                  />
-                ))}
-              </div>
-              <span className="text-[7px] font-mono uppercase tracking-widest text-[#1C1C1E] font-medium leading-none">
-                Gen
-              </span>
-            </div>
-          )}
         </div>
 
         {phoneTab === "explore" && (
@@ -182,7 +163,7 @@ const PhoneEmulator: React.FC<PhoneEmulatorProps> = ({
               className="p-1.5 rounded-full backdrop-blur-md bg-[#1C1C1E]/5 hover:bg-[#1C1C1E]/15 transition-all text-[#1C1C1E] disabled:opacity-50"
               title="Share Snapshot"
             >
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" x2="12" y1="2" y2="15"/></svg>
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8" /><polyline points="16 6 12 2 8 6" /><line x1="12" x2="12" y1="2" y2="15" /></svg>
             </button>
             <button
               onClick={onOpenConstellation}
@@ -199,7 +180,7 @@ const PhoneEmulator: React.FC<PhoneEmulatorProps> = ({
       <div className="relative z-10 flex-1 flex flex-col overflow-hidden">
 
         {/* EXPLORE FEED — THOUGHT STREAM */}
-        {phoneTab === "explore" && (
+        {(phoneTab === "explore" || phoneTab === "trail-view") && (
           <>
             <ThoughtStream
               cards={currentDisplayCards}
@@ -248,7 +229,7 @@ const PhoneEmulator: React.FC<PhoneEmulatorProps> = ({
                 </button>
               </div>
             ) : (
-              <CommonplaceBook 
+              <CommonplaceBook
                 cards={savedVaultCards}
                 onUpdateAnnotation={onUpdateVaultCardAnnotation}
                 onAssignToFolder={onAssignToFolder}
@@ -257,6 +238,11 @@ const PhoneEmulator: React.FC<PhoneEmulatorProps> = ({
               />
             )}
           </div>
+        )}
+
+        {/* READING TRAILS */}
+        {phoneTab === "trails" && (
+          <ReadingTrailsDashboard onStartTrail={onStartTrail} />
         )}
 
       </div>
@@ -271,14 +257,30 @@ const PhoneEmulator: React.FC<PhoneEmulatorProps> = ({
           }}
           className="flex flex-col items-center gap-1 group active:scale-95 transition-all focus:outline-none"
         >
-          <div className={`w-9 h-9 rounded-xl border flex items-center justify-center shadow-xs transition-all ${
-            phoneTab === "explore"
+          <div className={`w-9 h-9 rounded-xl border flex items-center justify-center shadow-xs transition-all ${phoneTab === "explore"
               ? "bg-[#1C1C1E] border-[#1C1C1E] text-[#FAF8F3]"
               : "border-[#E8E4DC] bg-white hover:border-[#D4CFC5] text-[#1C1C1E] shadow-2xs"
-          }`}>
+            }`}>
             <BookOpen className="w-3.5 h-3.5 stroke-[1.5]" />
           </div>
           <span className={`text-[8px] font-bold uppercase tracking-tight ${phoneTab === 'explore' ? 'text-[#1C1C1E]' : 'text-[#B5A48B]'}`}>Stream</span>
+        </button>
+
+        <button
+          id="phone-mode-trails-tab"
+          onClick={() => {
+            onSetPhoneTab("trails");
+            onTriggerToast("Opened Trails.");
+          }}
+          className="flex flex-col items-center gap-1 group active:scale-95 transition-all focus:outline-none"
+        >
+          <div className={`w-9 h-9 rounded-xl border flex items-center justify-center shadow-xs transition-all ${(phoneTab === "trails" || phoneTab === "trail-view")
+              ? "bg-[#1C1C1E] border-[#1C1C1E] text-[#FAF8F3]"
+              : "border-[#E8E4DC] bg-white hover:border-[#D4CFC5] text-[#1C1C1E] shadow-2xs"
+            }`}>
+            <Waypoints className="w-3.5 h-3.5 stroke-[1.5]" />
+          </div>
+          <span className={`text-[8px] font-bold uppercase tracking-tight ${(phoneTab === 'trails' || phoneTab === 'trail-view') ? 'text-[#1C1C1E]' : 'text-[#B5A48B]'}`}>Trails</span>
         </button>
 
         <button
@@ -289,11 +291,10 @@ const PhoneEmulator: React.FC<PhoneEmulatorProps> = ({
           }}
           className="flex flex-col items-center gap-1 active:scale-95 transition-all focus:outline-none"
         >
-          <div className={`w-9 h-9 rounded-xl border flex items-center justify-center shadow-xs transition-all relative ${
-            phoneTab === "vault"
+          <div className={`w-9 h-9 rounded-xl border flex items-center justify-center shadow-xs transition-all relative ${phoneTab === "vault"
               ? "bg-[#1C1C1E] border-[#1C1C1E] text-[#FAF8F3]"
               : "border-[#E8E4DC] bg-white hover:border-[#D4CFC5] text-[#1C1C1E] shadow-2xs"
-          }`}>
+            }`}>
             <Bookmark className="w-3.5 h-3.5 fill-current stroke-[1.5]" />
             {savedVaultCards.length > 0 && (
               <span className="absolute -top-1 -right-1 bg-[#B5A48B] text-white font-mono text-[7px] w-3.5 h-3.5 rounded-full flex items-center justify-center font-bold">

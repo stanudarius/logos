@@ -13,13 +13,16 @@
   width: 6px;
   height: 6px;
 }
+
 ::-webkit-scrollbar-track {
   background: rgba(181, 164, 139, 0.05);
 }
+
 ::-webkit-scrollbar-thumb {
   background: rgba(26, 26, 26, 0.15);
   border-radius: 99px;
 }
+
 ::-webkit-scrollbar-thumb:hover {
   background: rgba(26, 26, 26, 0.3);
 }
@@ -257,6 +260,7 @@ body {
     opacity: 0;
     transform: translateY(8px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -272,9 +276,11 @@ body {
     transform: scale(0.8);
     opacity: 0;
   }
+
   60% {
     transform: scale(1.08);
   }
+
   100% {
     transform: scale(1);
     opacity: 1;
@@ -292,6 +298,7 @@ body {
   0% {
     transform: translateX(-100%);
   }
+
   100% {
     transform: translateX(350%);
   }

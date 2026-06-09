@@ -13,6 +13,8 @@ import { ConstellationMap } from "./components/ConstellationMap";
 import ZenMode from "./components/ZenMode";
 import { supabase } from "./lib/supabase";
 import type { Session } from "@supabase/supabase-js";
+import { READING_TRAILS } from "./data/trailsData";
+import trailsContentJson from "./data/trailsContent.json";
 
 export default function App() {
   const [toastMessage, setToastMessage] = useState<string | null>(null);
@@ -24,7 +26,7 @@ export default function App() {
       groups[card.philosopher].push(card);
     });
     const shuffledPhilosophers = Object.keys(groups).sort(() => Math.random() - 0.5);
-    
+
     const initialFeed: FeedCard[] = [];
     shuffledPhilosophers.forEach((p, idx) => {
       initialFeed.push(...groups[p]);
@@ -35,10 +37,12 @@ export default function App() {
     return initialFeed;
   });
   const [activeCardIndex, setActiveCardIndex] = useState(0);
-  const [phoneTab, setPhoneTab] = useState<"explore" | "vault">("explore");
+  const [phoneTab, setPhoneTab] = useState<"explore" | "vault" | "trails" | "trail-view">("explore");
   const [isFetchingInfinite, setIsFetchingInfinite] = useState(false);
   const [isConstellationOpen, setIsConstellationOpen] = useState(false);
   const [isZenModeOpen, setIsZenModeOpen] = useState(false);
+
+  const [activeTrailCards, setActiveTrailCards] = useState<FeedCard[]>([]);
 
   const [session, setSession] = useState<Session | null>(null);
 
@@ -46,23 +50,22 @@ export default function App() {
 
   // Rabbit Hole Algorithm: Ephemeral Session Tracking
   const sessionInterests = useRef<Record<string, number>>({});
+  
   const feedCardsRef = useRef<FeedCard[]>(feedCards);
-  useEffect(() => {
-    feedCardsRef.current = feedCards;
-  }, [feedCards]);
+  feedCardsRef.current = feedCards; // Sync during render for O(1) instantaneous access
 
   const savedVaultCardsRef = useRef<SavedVaultCard[]>(savedVaultCards);
-  useEffect(() => {
-    savedVaultCardsRef.current = savedVaultCards;
-  }, [savedVaultCards]);
+  savedVaultCardsRef.current = savedVaultCards;
 
   const trackCardInteraction = useCallback((index: number, weight: number) => {
-    const card = feedCardsRef.current[index];
+    // Track from the current visible deck
+    const currentDeck = phoneTab === "trail-view" ? activeTrailCards : feedCardsRef.current;
+    const card = currentDeck[index];
     if (card) {
       sessionInterests.current[card.philosopher] = (sessionInterests.current[card.philosopher] || 0) + weight;
       sessionInterests.current[card.topic] = (sessionInterests.current[card.topic] || 0) + weight;
     }
-  }, []);
+  }, [phoneTab, activeTrailCards]);
 
   const handleOpenDeepDive = useCallback((index: number) => {
     trackCardInteraction(index, 2);
@@ -74,21 +77,26 @@ export default function App() {
 
 
   useEffect(() => {
+    let isMounted = true;
     supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
+      if (isMounted) setSession(session);
     });
 
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, session) => {
-      setSession(session);
+      if (isMounted) setSession(session);
     });
 
-    return () => subscription.unsubscribe();
+    return () => {
+      isMounted = false;
+      subscription.unsubscribe();
+    };
   }, []);
 
   useEffect(() => {
     if (!session?.user) return;
+    let isMounted = true;
 
     const fetchData = async () => {
       const { data: profile } = await supabase.from('profiles').select('id').eq('id', session.user.id).single();
@@ -97,12 +105,13 @@ export default function App() {
       }
 
       const { data: vault } = await supabase.from('vault_cards').select('*').eq('user_id', session.user.id);
-      if (vault) {
+      if (vault && isMounted) {
         setSavedVaultCards(vault.map(row => row.card_data as SavedVaultCard));
       }
     };
 
     fetchData();
+    return () => { isMounted = false; };
   }, [session]);
 
 
@@ -111,8 +120,13 @@ export default function App() {
     setTimeout(() => setToastMessage(null), 2800);
   }, []);
 
+  const isFetchingInfiniteRef = useRef(false);
+
   const fetchInfiniteFeed = useCallback(async () => {
-    if (isFetchingInfinite) return;
+    // Disable infinite fetch on trails
+    if (isFetchingInfiniteRef.current || phoneTab === "trail-view") return;
+    
+    isFetchingInfiniteRef.current = true;
     setIsFetchingInfinite(true);
     triggerToast("Discovering new ideas...");
 
@@ -126,23 +140,32 @@ export default function App() {
       const response = await fetch("/api/generate", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ 
+        body: JSON.stringify({
           rawText: "RANDOM",
           rabbitHoleContext: sortedInterests.length > 0 ? sortedInterests : undefined
         }),
       });
       if (!response.ok) throw new Error(`Backend error: ${response.status}`);
-      
+
       const data = await response.json();
       const newFeedItems = mapStackToFeedCards(data);
-      setFeedCards(prev => [...prev, getRandomInterstitial(), ...newFeedItems]);
+      
+      setFeedCards(prev => {
+        // Prevent back-to-back interstitials if the last card is already an interstitial
+        const lastCard = prev[prev.length - 1];
+        if (lastCard && lastCard.layoutVariant === "interstitial") {
+          return [...prev, ...newFeedItems];
+        }
+        return [...prev, getRandomInterstitial(), ...newFeedItems];
+      });
     } catch (err: unknown) {
       console.error(err);
       triggerToast("Failed to fetch next sequence.");
     } finally {
+      isFetchingInfiniteRef.current = false;
       setIsFetchingInfinite(false);
     }
-  }, [isFetchingInfinite, triggerToast]);
+  }, [triggerToast, phoneTab]);
 
   /** Active card tracking — driven by ThoughtStream's IntersectionObserver */
   const handleActiveCardChange = useCallback((index: number) => {
@@ -154,7 +177,8 @@ export default function App() {
   const toggleSaveToVault = useCallback(async (index: number) => {
     if (!session?.user) return;
 
-    const card = feedCardsRef.current[index] || INITIAL_FEED_CARDS[0];
+    const currentDeck = phoneTab === "trail-view" ? activeTrailCards : feedCardsRef.current;
+    const card = currentDeck[index] || INITIAL_FEED_CARDS[0];
     const isSaved = savedVaultCardsRef.current.some(c => c.id === card.id);
 
     if (isSaved) {
@@ -175,7 +199,7 @@ export default function App() {
         card_data: vaultCard
       }]);
     }
-  }, [triggerToast, session]);
+  }, [triggerToast, session, phoneTab, activeTrailCards, trackCardInteraction]);
 
   const deleteFromVault = useCallback(async (id: string) => {
     if (!session?.user) return;
@@ -189,10 +213,10 @@ export default function App() {
   const updateVaultCardAnnotation = useCallback(async (id: string, annotation: string) => {
     const cardToUpdate = savedVaultCards.find(c => c.id === id);
     if (!cardToUpdate) return;
-    
+
     const newCardData = { ...cardToUpdate, annotation };
     setSavedVaultCards(prev => prev.map(c => c.id === id ? newCardData : c));
-    
+
     if (session?.user) {
       await supabase.from('vault_cards').update({ card_data: newCardData }).eq('user_id', session.user.id).eq('card_id', id);
     }
@@ -201,14 +225,14 @@ export default function App() {
   const assignToFolder = useCallback(async (id: string, folderName: string | undefined) => {
     const cardToUpdate = savedVaultCards.find(c => c.id === id);
     if (!cardToUpdate) return;
-    
+
     const newCardData = { ...cardToUpdate, user_folder: folderName };
     setSavedVaultCards(prev => prev.map(c => c.id === id ? newCardData : c));
-    
+
     if (session?.user) {
       await supabase.from('vault_cards').update({ card_data: newCardData }).eq('user_id', session.user.id).eq('card_id', id);
     }
-    
+
     triggerToast(folderName ? `Moved to ${folderName}` : "Removed from folder");
   }, [savedVaultCards, session, triggerToast]);
 
@@ -216,23 +240,60 @@ export default function App() {
     triggerToast("Zen session complete!");
   }, [triggerToast]);
 
-  /**
-   * Filter-by-Thinker: Re-sort feedCards so that cards matching
-   * the selected philosopher bubble to the top. Non-matching cards
-   * are preserved below for continued discovery.
-   */
   const filterByThinker = useCallback((thinkerName: string) => {
     setFeedCards(prev => {
-      const matching = prev.filter(c =>
+      let matching = prev.filter(c =>
         c.philosopher.toLowerCase().includes(thinkerName.toLowerCase())
       );
+      
+      // If the thinker isn't in the base feed, look for their curated Trail
+      if (matching.length === 0) {
+        const trail = READING_TRAILS.find(t => 
+          t.thinkerIds.some(tid => 
+            tid.toLowerCase() === thinkerName.toLowerCase() || 
+            thinkerName.toLowerCase().includes(tid.toLowerCase()) ||
+            tid.toLowerCase().includes(thinkerName.toLowerCase())
+          )
+        );
+        if (trail) {
+          const trailsContentMap = trailsContentJson as Record<string, FeedCard[]>;
+          const trailCards = trailsContentMap[trail.id] || [];
+          if (trailCards.length > 0) {
+            matching = trailCards;
+          }
+        }
+      }
+
       const rest = prev.filter(c =>
         !c.philosopher.toLowerCase().includes(thinkerName.toLowerCase())
       );
-      return [...matching, ...rest];
+      
+      // Prevent duplicates if they were just injected
+      const restCleaned = rest.filter(c => !matching.some(m => m.id === c.id));
+      
+      return [...matching, ...restCleaned];
     });
     setPhoneTab("explore");
+    setActiveCardIndex(0);
     triggerToast(`Filtered stream: ${thinkerName}`);
+  }, [triggerToast]);
+
+  const handleStartTrail = useCallback((trailId: string) => {
+    const trail = READING_TRAILS.find(t => t.id === trailId);
+    if (!trail) return;
+
+    const trailsContentMap = trailsContentJson as Record<string, FeedCard[]>;
+    const trailCards = trailsContentMap[trailId] || [];
+
+    if (trailCards.length === 0) {
+      triggerToast(`Content not yet generated for ${trail.title}.`);
+      return;
+    }
+
+    setActiveTrailCards(trailCards);
+    setActiveCardIndex(0); 
+    setPhoneTab("trail-view");
+    triggerToast(`Started Trail: ${trail.title}`);
   }, [triggerToast]);
 
   const handleOpenConstellation = useCallback(() => setIsConstellationOpen(true), []);
@@ -256,7 +317,7 @@ export default function App() {
 
         <PhoneEmulator
           phoneTab={phoneTab}
-          currentDisplayCards={feedCards}
+          currentDisplayCards={phoneTab === "trail-view" ? activeTrailCards : feedCards}
           activeCardIndex={activeCardIndex}
 
           isFetchingMore={isFetchingInfinite}
@@ -274,6 +335,7 @@ export default function App() {
           onAssignToFolder={assignToFolder}
           onOpenDeepDive={handleOpenDeepDive}
           onOpenChat={handleOpenChat}
+          onStartTrail={handleStartTrail}
         />
       </div>
 
