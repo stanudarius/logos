@@ -17,8 +17,9 @@ interface ThoughtAtomProps {
   onTriggerToast: (msg: string) => void;
   onOpenDeepDive?: (index: number) => void;
   onOpenChat?: (index: number) => void;
-  onActiveCardChange?: (index: number) => void;
   isActive?: boolean;
+  mouseX?: number;
+  mouseY?: number;
 }
 
 /**
@@ -35,8 +36,9 @@ const ThoughtAtom: React.FC<ThoughtAtomProps> = ({
   onTriggerToast,
   onOpenDeepDive,
   onOpenChat,
-  onActiveCardChange,
-  isActive
+  isActive,
+  mouseX = 0,
+  mouseY = 0
 }) => {
   const [isDeepDiveOpen, setIsDeepDiveOpen] = useState(false);
   const [isChatOpen, setIsChatOpen] = useState(false);
@@ -80,63 +82,18 @@ const ThoughtAtom: React.FC<ThoughtAtomProps> = ({
 
   const containerRef = useRef<HTMLDivElement>(null);
 
-  // O(1) Intersection Observer for Active Card tracking
-  useEffect(() => {
-    const el = containerRef.current;
-    if (!el || !onActiveCardChange) return;
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting && entry.intersectionRatio >= 0.5) {
-          onActiveCardChange(index);
-        }
-      },
-      { threshold: 0.5 }
-    );
-
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, [index, onActiveCardChange]);
-  
-  // Ambient Parallax (Mouse + Mobile Gyroscope)
-  const mouseX = useMotionValue(0);
-  const mouseY = useMotionValue(0);
-  const smoothX = useSpring(mouseX, { damping: 40, stiffness: 150 });
-  const smoothY = useSpring(mouseY, { damping: 40, stiffness: 150 });
+  // Ambient Parallax (Driven by parent)
+  const motionX = useMotionValue(0);
+  const motionY = useMotionValue(0);
+  const smoothX = useSpring(motionX, { damping: 40, stiffness: 150 });
+  const smoothY = useSpring(motionY, { damping: 40, stiffness: 150 });
   
   useEffect(() => {
-    const el = containerRef.current;
-    if (!el || !isActive) return;
-
-    const handleNativeMouseMove = (e: MouseEvent) => {
-      const x = (e.clientX / window.innerWidth - 0.5) * 20;
-      const y = (e.clientY / window.innerHeight - 0.5) * 20;
-      mouseX.set(x);
-      mouseY.set(y);
-    };
-
-    el.addEventListener("mousemove", handleNativeMouseMove);
-    return () => el.removeEventListener("mousemove", handleNativeMouseMove);
-  }, [isActive, mouseX, mouseY]);
-
-  useEffect(() => {
-    if (!isActive) return;
-    
-    const handleDeviceOrientation = (e: DeviceOrientationEvent) => {
-      if (e.gamma === null || e.beta === null) return;
-      // gamma is left-to-right tilt in degrees, where right is positive
-      // beta is front-to-back tilt in degrees, where front is positive
-      const x = Math.min(Math.max(e.gamma / 4.5, -10), 10);
-      const y = Math.min(Math.max((e.beta - 45) / 4.5, -10), 10);
-      mouseX.set(x);
-      mouseY.set(y);
-    };
-
-    if (typeof window !== 'undefined' && window.DeviceOrientationEvent) {
-      window.addEventListener('deviceorientation', handleDeviceOrientation);
-      return () => window.removeEventListener('deviceorientation', handleDeviceOrientation);
+    if (isActive) {
+      motionX.set(mouseX);
+      motionY.set(mouseY);
     }
-  }, [isActive, mouseX, mouseY]);
+  }, [isActive, mouseX, mouseY, motionX, motionY]);
 
   return (
     <div 
@@ -370,38 +327,17 @@ const ThoughtAtom: React.FC<ThoughtAtomProps> = ({
   );
 };
 
-/**
- * Typewriter text component for kinetic typography
- */
 const TypewriterText = ({ text, className, speed = 0.04, delay = 0.2 }: { text: string; className?: string; speed?: number; delay?: number }) => {
-  const container: Variants = {
-    hidden: { opacity: 1 },
-    visible: {
-      opacity: 1,
-      transition: { staggerChildren: speed, delayChildren: delay },
-    },
-  };
-  const child: Variants = {
-    hidden: { opacity: 0, y: 5 },
-    visible: { opacity: 1, y: 0 },
-  };
-
   return (
     <motion.span
       className={className}
-      variants={container}
-      initial="hidden"
-      whileInView="visible"
+      initial={{ opacity: 0, y: 5 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.6, delay: delay, ease: "easeOut" }}
       viewport={{ once: true, amount: 0.1 }}
+      style={{ display: "inline-block", willChange: "transform, opacity" }}
     >
-      {text.split(" ").map((word, index, arr) => (
-        <React.Fragment key={index}>
-          <motion.span variants={child} style={{ willChange: "transform, opacity", display: "inline-block" }}>
-            {word}
-          </motion.span>
-          {index < arr.length - 1 && " "}
-        </React.Fragment>
-      ))}
+      {text}
     </motion.span>
   );
 };

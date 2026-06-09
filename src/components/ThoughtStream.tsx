@@ -18,8 +18,7 @@ interface ThoughtStreamProps {
 
 /**
  * ThoughtStream — CSS scroll-snap container for the vertical "TikTok" feed.
- * Uses IntersectionObserver for tracking the active card and triggering
- * infinite scroll at the bottom. Hardware-accelerated via native scrolling.
+ * Tracks active card via scroll events and infinite scroll at the bottom.
  */
 const ThoughtStream: React.FC<ThoughtStreamProps> = ({
   cards,
@@ -34,13 +33,70 @@ const ThoughtStream: React.FC<ThoughtStreamProps> = ({
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [activeIndex, setActiveIndex] = useState(0);
-  const handleActiveCardChange = useCallback((index: number) => {
-    setActiveIndex(index);
-    onActiveCardChange(index);
-  }, [onActiveCardChange]);
-  
+  const [mouseX, setMouseX] = useState(0);
+  const [mouseY, setMouseY] = useState(0);
+
   const sentinelObserverRef = useRef<IntersectionObserver | null>(null);
   const sentinelRef = useRef<HTMLDivElement>(null);
+
+  // Global Parallax tracking
+  useEffect(() => {
+    let ticking = false;
+
+    const handleMouseMove = (e: MouseEvent) => {
+      if (!ticking) {
+        requestAnimationFrame(() => {
+          const x = (e.clientX / window.innerWidth - 0.5) * 20;
+          const y = (e.clientY / window.innerHeight - 0.5) * 20;
+          setMouseX(x);
+          setMouseY(y);
+          ticking = false;
+        });
+        ticking = true;
+      }
+    };
+
+    const handleDeviceOrientation = (e: DeviceOrientationEvent) => {
+      if (e.gamma === null || e.beta === null) return;
+      if (!ticking) {
+        requestAnimationFrame(() => {
+          const x = Math.min(Math.max(e.gamma! / 4.5, -10), 10);
+          const y = Math.min(Math.max((e.beta! - 45) / 4.5, -10), 10);
+          setMouseX(x);
+          setMouseY(y);
+          ticking = false;
+        });
+        ticking = true;
+      }
+    };
+
+    window.addEventListener("mousemove", handleMouseMove, { passive: true });
+    if (typeof window !== 'undefined' && window.DeviceOrientationEvent) {
+      window.addEventListener("deviceorientation", handleDeviceOrientation, { passive: true });
+    }
+
+    return () => {
+      window.removeEventListener("mousemove", handleMouseMove);
+      if (typeof window !== 'undefined' && window.DeviceOrientationEvent) {
+        window.removeEventListener("deviceorientation", handleDeviceOrientation);
+      }
+    };
+  }, []);
+
+  // Calculate active index on scroll
+  const handleScroll = useCallback(() => {
+    const container = containerRef.current;
+    if (!container) return;
+    
+    const cardHeight = container.clientHeight;
+    if (cardHeight === 0) return;
+    
+    const newIndex = Math.round(container.scrollTop / cardHeight);
+    if (newIndex !== activeIndex && newIndex >= 0 && newIndex < cards.length) {
+      setActiveIndex(newIndex);
+      onActiveCardChange(newIndex);
+    }
+  }, [activeIndex, cards.length, onActiveCardChange]);
 
   useEffect(() => {
     const container = containerRef.current;
@@ -105,8 +161,6 @@ const ThoughtStream: React.FC<ThoughtStreamProps> = ({
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [scrollToCard]);
 
-
-
   useEffect(() => {
     // Reset scroll position when cards array is re-ordered (filter by thinker)
     const container = containerRef.current;
@@ -118,6 +172,7 @@ const ThoughtStream: React.FC<ThoughtStreamProps> = ({
   return (
     <div
       ref={containerRef}
+      onScroll={handleScroll}
       className="thought-stream h-full w-full overflow-y-auto snap-y snap-mandatory scroll-smooth"
       style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }} // Hide scrollbar for a cleaner look
     >
@@ -129,11 +184,12 @@ const ThoughtStream: React.FC<ThoughtStreamProps> = ({
           index={index}
           isSaved={savedVaultCardIds.has(card.id)}
           isActive={index === activeIndex}
+          mouseX={mouseX}
+          mouseY={mouseY}
           onToggleSave={onToggleSave}
           onTriggerToast={onTriggerToast}
           onOpenDeepDive={onOpenDeepDive}
           onOpenChat={onOpenChat}
-          onActiveCardChange={handleActiveCardChange}
         />
       ))}
       <div ref={sentinelRef} className="h-4 w-full flex-shrink-0" aria-hidden="true" />
