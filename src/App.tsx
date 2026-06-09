@@ -116,11 +116,11 @@ export default function App() {
           rabbitHoleContext: sortedInterests.length > 0 ? sortedInterests : undefined
         }),
       });
-      if (response.ok) {
-        const data = await response.json();
-        const newFeedItems = mapStackToFeedCards(data);
-        setFeedCards(prev => [...prev, ...newFeedItems]);
-      }
+      if (!response.ok) throw new Error(`Backend error: ${response.status}`);
+      
+      const data = await response.json();
+      const newFeedItems = mapStackToFeedCards(data);
+      setFeedCards(prev => [...prev, ...newFeedItems]);
     } catch (err: unknown) {
       console.error(err);
       triggerToast("Failed to fetch next sequence.");
@@ -176,38 +176,30 @@ export default function App() {
   }, [triggerToast, savedVaultCards.length, session]);
 
   const updateVaultCardAnnotation = useCallback(async (id: string, annotation: string) => {
-    setSavedVaultCards(prev => prev.map(c => c.id === id ? { ...c, annotation } : c));
+    const cardToUpdate = savedVaultCards.find(c => c.id === id);
+    if (!cardToUpdate) return;
+    
+    const newCardData = { ...cardToUpdate, annotation };
+    setSavedVaultCards(prev => prev.map(c => c.id === id ? newCardData : c));
     
     if (session?.user) {
-      // Find the updated card to sync to supabase
-      const updatedCard = savedVaultCards.find(c => c.id === id);
-      if (updatedCard) {
-        const newCardData = { ...updatedCard, annotation };
-        await supabase.from('vault_cards').update({ card_data: newCardData }).eq('user_id', session.user.id).eq('card_id', id);
-      }
+      await supabase.from('vault_cards').update({ card_data: newCardData }).eq('user_id', session.user.id).eq('card_id', id);
     }
   }, [savedVaultCards, session]);
 
   const assignToFolder = useCallback(async (id: string, folderName: string | undefined) => {
-    let newCardData: SavedVaultCard | undefined;
+    const cardToUpdate = savedVaultCards.find(c => c.id === id);
+    if (!cardToUpdate) return;
     
-    setSavedVaultCards(prev => prev.map(c => {
-      if (c.id === id) {
-        newCardData = { ...c, user_folder: folderName };
-        return newCardData;
-      }
-      return c;
-    }));
+    const newCardData = { ...cardToUpdate, user_folder: folderName };
+    setSavedVaultCards(prev => prev.map(c => c.id === id ? newCardData : c));
     
-    // We defer the Supabase call slightly to ensure the local state map created the object
-    setTimeout(async () => {
-      if (session?.user && newCardData) {
-        await supabase.from('vault_cards').update({ card_data: newCardData }).eq('user_id', session.user.id).eq('card_id', id);
-      }
-    }, 0);
+    if (session?.user) {
+      await supabase.from('vault_cards').update({ card_data: newCardData }).eq('user_id', session.user.id).eq('card_id', id);
+    }
     
     triggerToast(folderName ? `Moved to ${folderName}` : "Removed from folder");
-  }, [session, triggerToast]);
+  }, [savedVaultCards, session, triggerToast]);
 
   const handleZenSessionComplete = useCallback(() => {
     triggerToast("Zen session complete!");
