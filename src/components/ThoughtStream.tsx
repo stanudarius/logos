@@ -37,38 +37,24 @@ const ThoughtStream: React.FC<ThoughtStreamProps> = ({
   const sentinelObserverRef = useRef<IntersectionObserver | null>(null);
   const sentinelRef = useRef<HTMLDivElement>(null);
 
-  const tickingRef = useRef(false);
-
   // Calculate active index on scroll
   const handleScroll = useCallback(() => {
-    if (tickingRef.current) return;
-    tickingRef.current = true;
-
-    requestAnimationFrame(() => {
-      const container = containerRef.current;
-      if (!container) {
-        tickingRef.current = false;
-        return;
-      }
+    const container = containerRef.current;
+    if (!container) return;
+    
+    const cardHeight = container.clientHeight;
+    if (cardHeight === 0) return;
+    
+    const newIndex = Math.round(container.scrollTop / cardHeight);
+    if (newIndex !== activeIndex && newIndex >= 0 && newIndex < cards.length) {
+      setActiveIndex(newIndex);
+      onActiveCardChange(newIndex);
       
-      const cardHeight = container.clientHeight;
-      if (cardHeight === 0) {
-        tickingRef.current = false;
-        return;
+      // Bulletproof backup trigger: if we hit the second-to-last card, force a fetch
+      if (newIndex >= cards.length - 2 && !isLoading) {
+        onFetchMore();
       }
-      
-      const newIndex = Math.round(container.scrollTop / cardHeight);
-      if (newIndex !== activeIndex && newIndex >= 0 && newIndex < cards.length) {
-        setActiveIndex(newIndex);
-        onActiveCardChange(newIndex);
-        
-        // Bulletproof backup trigger: if we hit the second-to-last card, force a fetch
-        if (newIndex >= cards.length - 2 && !isLoading) {
-          onFetchMore();
-        }
-      }
-      tickingRef.current = false;
-    });
+    }
   }, [activeIndex, cards.length, onActiveCardChange, isLoading, onFetchMore]);
 
   const onFetchMoreRef = useRef(onFetchMore);
@@ -92,7 +78,7 @@ const ThoughtStream: React.FC<ThoughtStreamProps> = ({
       {
         root: container,
         threshold: 0,
-        rootMargin: "0px 0px 300% 0px", // Deep prefetching 3 viewports ahead
+        rootMargin: "0px 0px 100% 0px", // Trigger fetch 1 full viewport height before hitting bottom
       }
     );
 
@@ -155,26 +141,20 @@ const ThoughtStream: React.FC<ThoughtStreamProps> = ({
       className="thought-stream h-full w-full overflow-y-auto snap-y snap-mandatory scroll-smooth"
       style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }} // Hide scrollbar for a cleaner look
     >
-      {cards.map((card, index) => {
-        if (Math.abs(index - activeIndex) > 3) {
-          // Virtualization: unmount cards outside the active window to save RAM and DOM nodes
-          return <div key={card.id} className="h-full w-full snap-center flex-shrink-0" />;
-        }
-        return (
-          <ThoughtAtom
-            key={card.id}
-            card={card}
-            layoutVariant={card.layoutVariant || LAYOUT_CYCLE[index % LAYOUT_CYCLE.length]}
-            index={index}
-            isSaved={savedVaultCardIds.has(card.id)}
-            isActive={index === activeIndex}
-            onToggleSave={onToggleSave}
-            onTriggerToast={onTriggerToast}
-            onOpenDeepDive={onOpenDeepDive}
-            onOpenChat={onOpenChat}
-          />
-        );
-      })}
+      {cards.map((card, index) => (
+        <ThoughtAtom
+          key={card.id}
+          card={card}
+          layoutVariant={card.layoutVariant || LAYOUT_CYCLE[index % LAYOUT_CYCLE.length]}
+          index={index}
+          isSaved={savedVaultCardIds.has(card.id)}
+          isActive={index === activeIndex}
+          onToggleSave={onToggleSave}
+          onTriggerToast={onTriggerToast}
+          onOpenDeepDive={onOpenDeepDive}
+          onOpenChat={onOpenChat}
+        />
+      ))}
       <div ref={sentinelRef} className="h-4 w-full flex-shrink-0" aria-hidden="true" />
     </div>
   );
