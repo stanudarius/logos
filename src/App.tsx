@@ -104,7 +104,7 @@ export default function App() {
     try {
       // Calculate top 3 interests
       const sortedInterests = Object.entries(sessionInterests.current)
-        .sort((a, b) => b[1] - a[1])
+        .sort((a, b) => (b[1] as number) - (a[1] as number))
         .slice(0, 3)
         .map(([topic]) => topic);
 
