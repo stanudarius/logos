@@ -16,7 +16,7 @@ export interface CardData {
 }
 
 /** Typographic layout variants for the Thought Stream poster cards */
-export type LayoutVariant = "thesis" | "blockquote" | "fragment" | "epigraph";
+export type LayoutVariant = "thesis" | "blockquote" | "fragment" | "epigraph" | "interstitial";
 
 export interface FeedCard {
   id: string;

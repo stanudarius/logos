@@ -133,7 +133,7 @@ const ThoughtStream: React.FC<ThoughtStreamProps> = ({
         <ThoughtAtom
           key={card.id}
           card={card}
-          layoutVariant={LAYOUT_CYCLE[index % LAYOUT_CYCLE.length]}
+          layoutVariant={card.layoutVariant || LAYOUT_CYCLE[index % LAYOUT_CYCLE.length]}
           index={index}
           isSaved={isCardSaved(index)}
           isActive={index === activeIndex}

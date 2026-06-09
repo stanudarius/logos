@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback, useRef, useMemo } from "react"
 import { AnimatePresence } from "motion/react";
 
 import { INITIAL_FEED_CARDS } from "./data/feedCards";
+import { getRandomInterstitial } from "./data/interstitials";
 import type { FeedCard, SavedVaultCard } from "./types";
 import { getMoodAesthetic } from "./utils/aesthetics";
 import { mapStackToFeedCards } from "./utils/cardMapper";
@@ -23,7 +24,15 @@ export default function App() {
       groups[card.philosopher].push(card);
     });
     const shuffledPhilosophers = Object.keys(groups).sort(() => Math.random() - 0.5);
-    return shuffledPhilosophers.flatMap(p => groups[p]);
+    
+    const initialFeed: FeedCard[] = [];
+    shuffledPhilosophers.forEach((p, idx) => {
+      initialFeed.push(...groups[p]);
+      if (idx < shuffledPhilosophers.length - 1) {
+        initialFeed.push(getRandomInterstitial());
+      }
+    });
+    return initialFeed;
   });
   const [activeCardIndex, setActiveCardIndex] = useState(0);
   const [phoneTab, setPhoneTab] = useState<"explore" | "vault">("explore");
@@ -120,7 +129,7 @@ export default function App() {
       
       const data = await response.json();
       const newFeedItems = mapStackToFeedCards(data);
-      setFeedCards(prev => [...prev, ...newFeedItems]);
+      setFeedCards(prev => [...prev, getRandomInterstitial(), ...newFeedItems]);
     } catch (err: unknown) {
       console.error(err);
       triggerToast("Failed to fetch next sequence.");
