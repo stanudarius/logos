@@ -212,13 +212,6 @@ const ThoughtAtom: React.FC<ThoughtAtomProps> = ({
                 </div>
                 <div className="flex items-center gap-2">
                   <button
-                    onClick={(e) => { e.stopPropagation(); e.preventDefault(); setIsChatOpen(true); }}
-                    className="flex items-center gap-1 px-2.5 py-1.5 rounded-xl bg-[#1C1C1E] text-[#FAF8F3] hover:bg-[#2C2C2E] text-[9px] font-bold transition-all active:scale-95"
-                  >
-                    <MessageCircle className="w-3 h-3" />
-                    <span>Debate</span>
-                  </button>
-                  <button
                     onClick={(e) => {
                       e.stopPropagation();
                       handleCloseDeepDive();
