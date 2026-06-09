@@ -104,13 +104,20 @@ const ThoughtAtom: React.FC<ThoughtAtomProps> = ({
   const smoothX = useSpring(mouseX, { damping: 40, stiffness: 150 });
   const smoothY = useSpring(mouseY, { damping: 40, stiffness: 150 });
   
-  const handleMouseMove = useCallback((e: React.MouseEvent) => {
-    // Calculate subtle mouse offset mapped from -10px to +10px
-    const x = (e.clientX / window.innerWidth - 0.5) * 20;
-    const y = (e.clientY / window.innerHeight - 0.5) * 20;
-    mouseX.set(x);
-    mouseY.set(y);
-  }, [mouseX, mouseY]);
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el || !isActive) return;
+
+    const handleNativeMouseMove = (e: MouseEvent) => {
+      const x = (e.clientX / window.innerWidth - 0.5) * 20;
+      const y = (e.clientY / window.innerHeight - 0.5) * 20;
+      mouseX.set(x);
+      mouseY.set(y);
+    };
+
+    el.addEventListener("mousemove", handleNativeMouseMove);
+    return () => el.removeEventListener("mousemove", handleNativeMouseMove);
+  }, [isActive, mouseX, mouseY]);
 
   useEffect(() => {
     if (!isActive) return;
@@ -137,7 +144,6 @@ const ThoughtAtom: React.FC<ThoughtAtomProps> = ({
       ref={containerRef} 
       className="thought-atom relative overflow-hidden h-full w-full snap-center" 
       data-card-index={index}
-      onMouseMove={handleMouseMove}
     >
       {/* Main Card Surface */}
       <motion.div
@@ -268,8 +274,7 @@ const ThoughtAtom: React.FC<ThoughtAtomProps> = ({
       </div>
       )}
 
-      {/* Deep Dive Drawer */}
-      {createPortal(
+      {isActive && createPortal(
         <AnimatePresence>
           {isDeepDiveOpen && (
               <motion.div
@@ -348,8 +353,7 @@ const ThoughtAtom: React.FC<ThoughtAtomProps> = ({
         document.getElementById("phone-device-emulation") || document.body
       )}
 
-      {/* Socratic Chat Overlay */}
-      {createPortal(
+      {isActive && createPortal(
         <AnimatePresence>
           {isChatOpen && (
             <SocraticChat

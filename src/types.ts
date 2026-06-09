@@ -57,18 +57,6 @@ export interface SavedVaultCard {
   user_folder?: string;
 }
 
-export interface MoodAesthetic {
-  bg: string;
-  text: string;
-  sub: string;
-  accent: string;
-  border: string;
-  glow: string;
-  cardBg: string;
-  btnColor: string;
-  badgeColor: string;
-  display: string;
-}
 
 /** Relationship types for Knowledge Constellation edges */
 export type EdgeRelationship = "Influenced" | "Critiqued" | "Contradicts" | "Contemporaries" | "Inspired";

@@ -3,8 +3,7 @@ import {
   BookOpen, Bookmark, Network, ArrowLeft, Timer
 } from "lucide-react";
 import { motion } from "motion/react";
-import type { FeedCard, MoodAesthetic, SavedVaultCard } from "../types";
-import { getInitials } from "../utils/aesthetics";
+import type { FeedCard, SavedVaultCard } from "../types";
 import ThoughtStream from "./ThoughtStream";
 import CommonplaceBook from "./CommonplaceBook";
 
@@ -31,7 +30,7 @@ interface PhoneEmulatorProps {
   phoneTab: "explore" | "vault";
   currentDisplayCards: FeedCard[];
   activeCardIndex: number;
-  activeAesthetic: MoodAesthetic;
+
   isFetchingMore: boolean;
 
   // Vault state

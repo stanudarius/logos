@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { X, Play, Pause, RotateCcw } from "lucide-react";
-import type { MoodAesthetic } from "../types";
+
 
 interface ZenModeProps {
-  aesthetic: MoodAesthetic;
+
   onClose: () => void;
   onSessionComplete: () => void;
 }
@@ -113,7 +113,7 @@ function createSoundscape(type: string, volume: number): (() => void) | null {
   }
 }
 
-const ZenMode: React.FC<ZenModeProps> = ({ aesthetic, onClose, onSessionComplete }) => {
+const ZenMode: React.FC<ZenModeProps> = ({ onClose, onSessionComplete }) => {
   const [selectedDuration, setSelectedDuration] = useState(DURATION_PRESETS[2].seconds);
   const [timeRemaining, setTimeRemaining] = useState(DURATION_PRESETS[2].seconds);
   const [isRunning, setIsRunning] = useState(false);

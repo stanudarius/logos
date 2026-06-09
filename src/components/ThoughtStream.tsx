@@ -105,15 +105,8 @@ const ThoughtStream: React.FC<ThoughtStreamProps> = ({
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [scrollToCard]);
 
-  /** Programmatically scroll to first card (used after filter) */
-  const scrollToTop = useCallback(() => {
-    const container = containerRef.current;
-    if (!container) return;
-    container.scrollTo({ top: 0, behavior: "smooth" });
-  }, []);
 
-  // Expose scrollToTop via ref-based imperative handle
-  // (parent can also just re-render with new cards which resets scroll)
+
   useEffect(() => {
     // Reset scroll position when cards array is re-ordered (filter by thinker)
     const container = containerRef.current;

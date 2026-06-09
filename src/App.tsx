@@ -4,7 +4,7 @@ import { AnimatePresence } from "motion/react";
 import { INITIAL_FEED_CARDS } from "./data/feedCards";
 import { getRandomInterstitial } from "./data/interstitials";
 import type { FeedCard, SavedVaultCard } from "./types";
-import { getMoodAesthetic } from "./utils/aesthetics";
+
 import { mapStackToFeedCards } from "./utils/cardMapper";
 import Toast from "./components/Toast";
 import PhoneEmulator from "./components/PhoneEmulator";
@@ -239,7 +239,7 @@ export default function App() {
   const handleOpenZenMode = useCallback(() => setIsZenModeOpen(true), []);
 
   const activeCard = feedCards[activeCardIndex] || INITIAL_FEED_CARDS[0];
-  const activeAesthetic = getMoodAesthetic(activeCard?.visual_mood);
+
 
   if (!session) {
     return (
@@ -258,7 +258,7 @@ export default function App() {
           phoneTab={phoneTab}
           currentDisplayCards={feedCards}
           activeCardIndex={activeCardIndex}
-          activeAesthetic={activeAesthetic}
+
           isFetchingMore={isFetchingInfinite}
           savedVaultCards={savedVaultCards}
           onActiveCardChange={handleActiveCardChange}
@@ -286,7 +286,7 @@ export default function App() {
         )}
         {isZenModeOpen && (
           <ZenMode
-            aesthetic={activeAesthetic}
+
             onClose={() => setIsZenModeOpen(false)}
             onSessionComplete={handleZenSessionComplete}
           />
