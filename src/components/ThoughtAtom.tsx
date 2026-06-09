@@ -260,7 +260,6 @@ const ThoughtAtom: React.FC<ThoughtAtomProps> = ({
       {createPortal(
         <AnimatePresence>
           {isDeepDiveOpen && (
-            <FocusLock returnFocus>
               <motion.div
                 initial={{ y: "100%", opacity: 0, borderRadius: "40px" }}
                 animate={{ y: 0, opacity: 1, borderRadius: "0px" }}
@@ -271,6 +270,7 @@ const ThoughtAtom: React.FC<ThoughtAtomProps> = ({
                 onWheel={(e) => e.stopPropagation()} // Stop scroll bubbling
                 onTouchMove={(e) => e.stopPropagation()}
               >
+              <FocusLock returnFocus>
                 {/* Header */}
               <div className="flex items-center justify-between px-5 py-4 border-b border-[#E8E4DC]">
                 <div className="flex items-center gap-2">
@@ -328,8 +328,8 @@ const ThoughtAtom: React.FC<ThoughtAtomProps> = ({
                 End of Essay
               </div>
 
+              </FocusLock>
             </motion.div>
-            </FocusLock>
           )}
         </AnimatePresence>,
         document.getElementById("phone-device-emulation") || document.body

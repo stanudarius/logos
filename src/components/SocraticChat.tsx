@@ -105,7 +105,6 @@ const SocraticChat: React.FC<SocraticChatProps> = ({
   const initials = getInitials(philosopher);
 
   return (
-    <FocusLock returnFocus>
       <motion.div
         initial={{ y: "100%" }}
         animate={{ y: 0 }}
@@ -113,6 +112,7 @@ const SocraticChat: React.FC<SocraticChatProps> = ({
         transition={{ type: "spring", damping: 28, stiffness: 280 }}
         className="absolute inset-x-0 bottom-0 top-[4%] bg-[#0F0F11] z-[60] flex flex-col rounded-t-[28px] shadow-[0_-8px_40px_rgba(0,0,0,0.4)] border-t border-[#2A2A2E]"
       >
+    <FocusLock returnFocus className="flex flex-col h-full w-full">
         {/* Handle */}
         <div className="flex justify-center pt-3 pb-1">
         <div className="w-10 h-1 rounded-full bg-[#3A3A3E]" />
@@ -236,8 +236,8 @@ const SocraticChat: React.FC<SocraticChatProps> = ({
           AI persona · Not the actual philosopher
         </p>
       </div>
-      </motion.div>
     </FocusLock>
+      </motion.div>
   );
 };
 
