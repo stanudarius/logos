@@ -31,6 +31,13 @@ const SocraticChat: React.FC<SocraticChatProps> = ({
   const [isLoading, setIsLoading] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
+  const abortControllerRef = useRef<AbortController | null>(null);
+
+  useEffect(() => {
+    return () => {
+      abortControllerRef.current?.abort();
+    };
+  }, []);
 
   useEffect(() => {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
@@ -51,8 +58,8 @@ const SocraticChat: React.FC<SocraticChatProps> = ({
     setIsLoading(true);
 
     try {
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 30000); // 30s timeout
+      abortControllerRef.current = new AbortController();
+      const timeoutId = setTimeout(() => abortControllerRef.current?.abort(), 30000); // 30s timeout
 
       const res = await fetch("/api/chat", {
         method: "POST",
@@ -63,7 +70,7 @@ const SocraticChat: React.FC<SocraticChatProps> = ({
           essayContext,
           messages: updatedMessages,
         }),
-        signal: controller.signal,
+        signal: abortControllerRef.current.signal,
       });
 
       clearTimeout(timeoutId);
@@ -72,7 +79,8 @@ const SocraticChat: React.FC<SocraticChatProps> = ({
 
       const data = await res.json();
       setMessages(prev => [...prev, { role: "model", text: data.reply }]);
-    } catch (err) {
+    } catch (err: any) {
+      if (err.name === 'AbortError') return;
       setMessages(prev => [
         ...prev,
         { role: "model", text: "Forgive me — my thoughts were interrupted. Ask again." },

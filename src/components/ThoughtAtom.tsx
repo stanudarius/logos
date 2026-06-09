@@ -1,7 +1,7 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
 import { motion, AnimatePresence, useScroll, useTransform, Variants } from "motion/react";
-import { useRef } from "react";
+
 import { Bookmark, BookmarkCheck, BookOpen, X, MessageCircle, Heart } from "lucide-react";
 import type { FeedCard, LayoutVariant, ReadingPart } from "../types";
 import { getInitials } from "../utils/aesthetics";
@@ -16,6 +16,7 @@ interface ThoughtAtomProps {
   onTriggerToast: (msg: string) => void;
   onOpenDeepDive?: (index: number) => void;
   onOpenChat?: (index: number) => void;
+  onActiveCardChange?: (index: number) => void;
 }
 
 /**
@@ -31,7 +32,8 @@ const ThoughtAtom: React.FC<ThoughtAtomProps> = ({
   onToggleSave,
   onTriggerToast,
   onOpenDeepDive,
-  onOpenChat
+  onOpenChat,
+  onActiveCardChange
 }) => {
   const [isDeepDiveOpen, setIsDeepDiveOpen] = useState(false);
   const [isChatOpen, setIsChatOpen] = useState(false);
@@ -65,6 +67,24 @@ const ThoughtAtom: React.FC<ThoughtAtomProps> = ({
   }, [onTriggerToast]);
 
   const containerRef = useRef<HTMLDivElement>(null);
+
+  // O(1) Intersection Observer for Active Card tracking
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el || !onActiveCardChange) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting && entry.intersectionRatio >= 0.5) {
+          onActiveCardChange(index);
+        }
+      },
+      { threshold: 0.5 }
+    );
+
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [index, onActiveCardChange]);
   
   // Fling Physics based on vertical scroll
   const { scrollYProgress } = useScroll({
@@ -75,13 +95,30 @@ const ThoughtAtom: React.FC<ThoughtAtomProps> = ({
   const scale = useTransform(scrollYProgress, [0, 0.3, 0.7, 1], [0.85, 1, 1, 0.85]);
   const y = useTransform(scrollYProgress, [0, 0.3, 0.7, 1], [-50, 0, 0, 50]);
 
-  // Ambient Parallax
+  // Ambient Parallax (Mouse + Mobile Gyroscope)
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+  
   const handleMouseMove = useCallback((e: React.MouseEvent) => {
     // Calculate subtle mouse offset mapped from -10px to +10px
     const x = (e.clientX / window.innerWidth - 0.5) * 20;
     const y = (e.clientY / window.innerHeight - 0.5) * 20;
     setMousePos({ x, y });
+  }, []);
+
+  useEffect(() => {
+    const handleDeviceOrientation = (e: DeviceOrientationEvent) => {
+      if (e.gamma === null || e.beta === null) return;
+      // gamma is left-to-right tilt in degrees, where right is positive
+      // beta is front-to-back tilt in degrees, where front is positive
+      const x = Math.min(Math.max(e.gamma / 4.5, -10), 10);
+      const y = Math.min(Math.max((e.beta - 45) / 4.5, -10), 10);
+      setMousePos({ x, y });
+    };
+
+    if (typeof window !== 'undefined' && window.DeviceOrientationEvent) {
+      window.addEventListener('deviceorientation', handleDeviceOrientation);
+      return () => window.removeEventListener('deviceorientation', handleDeviceOrientation);
+    }
   }, []);
 
   return (

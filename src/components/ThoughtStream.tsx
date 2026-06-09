@@ -34,43 +34,12 @@ const ThoughtStream: React.FC<ThoughtStreamProps> = ({
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [activeIndex, setActiveIndex] = useState(0);
-  const observerRef = useRef<IntersectionObserver | null>(null);
+  const handleActiveCardChange = useCallback((index: number) => {
+    setActiveIndex(index);
+    onActiveCardChange(index);
+  }, [onActiveCardChange]);
+  
   const sentinelObserverRef = useRef<IntersectionObserver | null>(null);
-
-  // Track which card is centered via IntersectionObserver
-  useEffect(() => {
-    const container = containerRef.current;
-    if (!container) return;
-
-    observerRef.current = new IntersectionObserver(
-      (entries) => {
-        for (const entry of entries) {
-          if (entry.isIntersecting && entry.intersectionRatio >= 0.5) {
-            const idx = Number(
-              (entry.target as HTMLElement).dataset.cardIndex
-            );
-            if (!isNaN(idx)) {
-              setActiveIndex(idx);
-              onActiveCardChange(idx);
-            }
-          }
-        }
-      },
-      {
-        root: container,
-        threshold: 0.5,
-      }
-    );
-
-    const atoms = container.querySelectorAll(".thought-atom");
-    atoms.forEach((atom) => observerRef.current?.observe(atom));
-
-    return () => {
-      observerRef.current?.disconnect();
-    };
-  }, [cards.length, onActiveCardChange]);
-
-  // Infinite scroll sentinel — observe the last 2 cards
   useEffect(() => {
     const container = containerRef.current;
     if (!container || cards.length < 2) return;
@@ -171,6 +140,7 @@ const ThoughtStream: React.FC<ThoughtStreamProps> = ({
           onTriggerToast={onTriggerToast}
           onOpenDeepDive={onOpenDeepDive}
           onOpenChat={onOpenChat}
+          onActiveCardChange={handleActiveCardChange}
         />
       ))}
     </div>
