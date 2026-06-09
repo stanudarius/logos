@@ -173,10 +173,10 @@ export const ConstellationMap: React.FC<ConstellationMapProps> = React.memo(({ o
                   strokeWidth={isHovered ? 2 : 1}
                   strokeDasharray={edge.dashed ? "4 4" : "none"}
                   className="transition-all duration-500"
-                  style={{ opacity: isFaded ? 0.05 : 1 }}
+                  style={{ opacity: isFaded ? 0.05 : 1, willChange: "opacity" }}
                   initial={{ pathLength: 0, opacity: 0 }}
                   animate={{ pathLength: 1, opacity: isFaded ? 0.05 : 1 }}
-                  transition={{ duration: 1.5, delay: 0.5 + idx * 0.05 }}
+                  transition={{ duration: 1.5, delay: 0.5 + idx * 0.05, ease: "easeOut" }}
                 />
 
                 {/* Edge relationship label — visible on hover */}
@@ -236,9 +236,9 @@ export const ConstellationMap: React.FC<ConstellationMapProps> = React.memo(({ o
               key={node.id}
               initial={{ scale: 0, opacity: 0 }}
               animate={{ scale: 1, opacity: isFaded ? 0.2 : 1 }}
-              transition={{ duration: 0.5, delay: 0.2 + idx * 0.05 }}
+              transition={{ type: "spring", stiffness: 250, damping: 20, mass: 0.8, delay: 0.2 + idx * 0.05 }}
               className="absolute transform -translate-x-1/2 -translate-y-1/2 cursor-pointer z-10"
-              style={{ left: `${node.x}%`, top: `${node.y}%` }}
+              style={{ left: `${node.x}%`, top: `${node.y}%`, willChange: "transform, opacity" }}
               onMouseEnter={() => setHoveredNode(node.id)}
               onMouseLeave={() => setHoveredNode(null)}
               onClick={() => handleNodeClick(node.label)}

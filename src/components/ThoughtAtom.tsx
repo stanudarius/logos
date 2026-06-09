@@ -268,8 +268,9 @@ const ThoughtAtom: React.FC<ThoughtAtomProps> = ({
                 initial={{ y: "100%", opacity: 0, borderRadius: "40px" }}
                 animate={{ y: 0, opacity: 1, borderRadius: "0px" }}
                 exit={{ y: "100%", opacity: 0, borderRadius: "40px" }}
-                transition={{ type: "spring", damping: 25, stiffness: 200 }}
+                transition={{ type: "spring", damping: 25, stiffness: 200, mass: 0.8 }}
                 className="absolute inset-0 z-[60] bg-[#FAF8F3] flex flex-col shadow-[0_-10px_30px_rgba(0,0,0,0.1)] pointer-events-auto"
+                style={{ willChange: "transform, opacity, border-radius" }}
                 onClick={(e) => e.stopPropagation()}
                 onWheel={(e) => e.stopPropagation()} // Stop scroll bubbling
                 onTouchMove={(e) => e.stopPropagation()}
@@ -382,7 +383,7 @@ const TypewriterText = ({ text, className, speed = 0.04, delay = 0.2 }: { text: 
       viewport={{ once: false, amount: 0.5 }}
     >
       {text.split("").map((char, index) => (
-        <motion.span key={index} variants={child}>
+        <motion.span key={index} variants={child} style={{ willChange: "transform, opacity" }}>
           {char}
         </motion.span>
       ))}
@@ -399,6 +400,7 @@ const Monogram = ({ philosopher }: { philosopher: string }) => (
     whileInView={{ scale: 1, opacity: 0.07 }}
     transition={{ duration: 1.2, ease: "easeOut" }}
     viewport={{ once: false, amount: 0.2 }}
+    style={{ willChange: "transform, opacity" }}
     className="atom-monogram absolute left-[-1.5rem] top-1/2 -translate-y-1/2 font-[var(--font-literary)] text-[14rem] font-semibold text-[#1C1C1E] leading-none pointer-events-none select-none z-0"
   >
     {getInitials(philosopher).charAt(0)}
@@ -418,7 +420,7 @@ const titleAnim = {
 
 const descAnim = {
   hidden: { opacity: 0, y: 10 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.8, delay: 0.8 } }
+  visible: { opacity: 1, y: 0, transition: { duration: 0.8, delay: 0.8, ease: "easeOut" } }
 };
 
 /**

@@ -125,8 +125,14 @@ const CommonplaceBook: React.FC<CommonplaceBookProps> = ({
                 key={card.id} 
                 value={card}
                 id={`sticky-${card.id}`}
-                className="bg-[#FFFCE8] p-3 rounded shadow-md border border-[#E8E4DC] cursor-grab active:cursor-grabbing relative"
-                style={{ rotate: `${rot}deg` }}
+                layout
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.9 }}
+                transition={{ type: "spring", stiffness: 350, damping: 25 }}
+                whileDrag={{ scale: 1.05, zIndex: 50, rotate: 0, cursor: "grabbing" }}
+                className="bg-[#FFFCE8] p-3 rounded shadow-md border border-[#E8E4DC] cursor-grab relative"
+                style={{ rotate: `${rot}deg`, willChange: "transform" }}
               >
                 <div className="absolute top-1 right-1/2 translate-x-1/2 w-8 h-2 bg-red-400/20 rounded-full" />
                 
