@@ -12,7 +12,7 @@ interface ThoughtAtomProps {
   layoutVariant: LayoutVariant;
   index: number;
   isSaved: boolean;
-  onToggleSave: () => void;
+  onToggleSave: (index: number) => void;
   onTriggerToast: (msg: string) => void;
 }
 
@@ -155,7 +155,8 @@ const ThoughtAtom: React.FC<ThoughtAtomProps> = ({
       {/* Vertical Action Bar (TikTok Style) */}
       <div className="absolute right-3 bottom-24 z-40 flex flex-col gap-5 pointer-events-auto">
         <button 
-          onClick={onToggleSave}
+          id={`bookmark-toggle-btn-${index}`}
+          onClick={() => onToggleSave(index)}
           className="group flex flex-col items-center gap-1 active:scale-90 transition-transform"
         >
           <div className="w-10 h-10 rounded-full bg-white/80 backdrop-blur-md shadow-lg border border-[#E8E4DC] flex items-center justify-center">
@@ -444,4 +445,4 @@ function renderLayout(card: FeedCard, variant: LayoutVariant) {
   }
 }
 
-export default ThoughtAtom;
+export default React.memo(ThoughtAtom);

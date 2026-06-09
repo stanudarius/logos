@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, useCallback } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { AnimatePresence } from "motion/react";
 
 import { INITIAL_FEED_CARDS } from "./data/feedCards";
@@ -71,10 +71,6 @@ export default function App() {
   }, [session]);
 
 
-
-  useEffect(() => { localStorage.setItem("logos_vault_cards", JSON.stringify(savedVaultCards)); }, [savedVaultCards]);
-
-
   const triggerToast = useCallback((msg: string) => {
     setToastMessage(msg);
     setTimeout(() => setToastMessage(null), 2800);
@@ -144,8 +140,6 @@ export default function App() {
     if (!session?.user) return;
 
     setSavedVaultCards(prev => prev.filter(c => c.id !== id));
-    triggerToast("Card removed from vault.");
-
     triggerToast("Card removed from vault.");
 
     await supabase.from('vault_cards').delete().eq('user_id', session.user.id).eq('card_id', id);
