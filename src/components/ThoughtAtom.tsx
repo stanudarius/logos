@@ -179,7 +179,6 @@ const ThoughtAtom: React.FC<ThoughtAtomProps> = ({
             e.stopPropagation();
             setIsDeepDiveOpen(true);
             onOpenDeepDive?.(index);
-            onTriggerToast("Opening Deep Dive essay!");
           }}
         >
           <div className="flex items-center justify-between border-t border-[#E8E4DC] pt-3 w-full cursor-pointer group">
@@ -241,7 +240,6 @@ const ThoughtAtom: React.FC<ThoughtAtomProps> = ({
             onClick={() => {
               setIsDeepDiveOpen(true);
               onOpenDeepDive?.(index);
-              onTriggerToast("Opening Deep Dive essay!");
             }}
             aria-label="Read Deep Dive Essay"
             className="group flex flex-col items-center gap-1 active:scale-90 transition-transform"
