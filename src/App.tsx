@@ -54,18 +54,21 @@ export default function App() {
   const feedCardsRef = useRef<FeedCard[]>(feedCards);
   feedCardsRef.current = feedCards; // Sync during render for O(1) instantaneous access
 
+  const activeTrailCardsRef = useRef<FeedCard[]>(activeTrailCards);
+  activeTrailCardsRef.current = activeTrailCards;
+
   const savedVaultCardsRef = useRef<SavedVaultCard[]>(savedVaultCards);
   savedVaultCardsRef.current = savedVaultCards;
 
   const trackCardInteraction = useCallback((index: number, weight: number) => {
     // Track from the current visible deck
-    const currentDeck = phoneTab === "trail-view" ? activeTrailCards : feedCardsRef.current;
+    const currentDeck = phoneTab === "trail-view" ? activeTrailCardsRef.current : feedCardsRef.current;
     const card = currentDeck[index];
     if (card) {
       sessionInterests.current[card.philosopher] = (sessionInterests.current[card.philosopher] || 0) + weight;
       sessionInterests.current[card.topic] = (sessionInterests.current[card.topic] || 0) + weight;
     }
-  }, [phoneTab, activeTrailCards]);
+  }, [phoneTab]);
 
   const handleOpenDeepDive = useCallback((index: number) => {
     trackCardInteraction(index, 2);
@@ -177,7 +180,7 @@ export default function App() {
   const toggleSaveToVault = useCallback(async (index: number) => {
     if (!session?.user) return;
 
-    const currentDeck = phoneTab === "trail-view" ? activeTrailCards : feedCardsRef.current;
+    const currentDeck = phoneTab === "trail-view" ? activeTrailCardsRef.current : feedCardsRef.current;
     const card = currentDeck[index] || INITIAL_FEED_CARDS[0];
     const isSaved = savedVaultCardsRef.current.some(c => c.id === card.id);
 
@@ -212,7 +215,7 @@ export default function App() {
         triggerToast("Failed to save. Try again.");
       }
     }
-  }, [triggerToast, session, phoneTab, activeTrailCards, trackCardInteraction]);
+  }, [triggerToast, session, phoneTab, trackCardInteraction]);
 
   const deleteFromVault = useCallback(async (id: string) => {
     if (!session?.user) return;
@@ -300,7 +303,8 @@ export default function App() {
       );
       
       // Prevent duplicates if they were just injected
-      const restCleaned = rest.filter(c => !matching.some(m => m.id === c.id));
+      const matchingIds = new Set(matching.map(m => m.id));
+      const restCleaned = rest.filter(c => !matchingIds.has(c.id));
       
       return [...matching, ...restCleaned];
     });

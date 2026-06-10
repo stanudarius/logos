@@ -39,6 +39,11 @@ const ThoughtStream: React.FC<ThoughtStreamProps> = ({
 
   const cardObserverRef = useRef<IntersectionObserver | null>(null);
 
+  const isLoadingRef = useRef(isLoading);
+  useEffect(() => {
+    isLoadingRef.current = isLoading;
+  }, [isLoading]);
+
   // Active card tracking via IntersectionObserver (O(1) performance instead of onScroll reflows)
   useEffect(() => {
     const container = containerRef.current;
@@ -60,7 +65,7 @@ const ThoughtStream: React.FC<ThoughtStreamProps> = ({
                   onActiveCardChange(newIndex);
                   
                   // Backup trigger
-                  if (newIndex >= cards.length - 2 && !isLoading) {
+                  if (newIndex >= cards.length - 2 && !isLoadingRef.current) {
                     onFetchMoreRef.current();
                   }
                   return newIndex;
@@ -78,7 +83,7 @@ const ThoughtStream: React.FC<ThoughtStreamProps> = ({
     atoms.forEach((atom) => cardObserverRef.current?.observe(atom));
 
     return () => cardObserverRef.current?.disconnect();
-  }, [cards.length, isLoading, onActiveCardChange]);
+  }, [cards.length, onActiveCardChange]);
 
   const onFetchMoreRef = useRef(onFetchMore);
   useEffect(() => {
