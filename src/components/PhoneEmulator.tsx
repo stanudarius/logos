@@ -165,7 +165,6 @@ const PhoneEmulator: React.FC<PhoneEmulatorProps> = ({
       className={`relative rounded-none sm:rounded-[40px] h-[100dvh] sm:h-[90vh] sm:max-h-[850px] sm:min-h-[600px] w-full border-0 sm:border-[10px] sm:border-[#1A1A1A] bg-[#FAF8F3] shadow-none sm:shadow-[0_15px_40px_rgba(0,0,0,0.08)] flex flex-col justify-between overflow-hidden transition-all duration-700 ease-out`}
     >
 
-      {/* Simulated top notch & Constellation Trigger */}
       <div className="relative z-50 flex justify-between items-center text-[10px] font-bold tracking-widest uppercase px-5 pt-4 pb-2 pointer-events-none">
         <div className="flex items-center gap-2">
           <StatusBarTime />
@@ -199,10 +198,7 @@ const PhoneEmulator: React.FC<PhoneEmulatorProps> = ({
         )}
       </div>
 
-      {/* Animated Body Display */}
       <div className="relative z-10 flex-1 flex flex-col overflow-hidden">
-
-        {/* EXPLORE FEED — THOUGHT STREAM */}
         <div id="thought-stream-explore" className={`h-full w-full ${phoneTab === "explore" ? "block" : "hidden"}`}>
           <ThoughtStream
             cards={feedCards}
@@ -217,7 +213,6 @@ const PhoneEmulator: React.FC<PhoneEmulatorProps> = ({
           />
         </div>
 
-        {/* TRAIL VIEW — THOUGHT STREAM */}
         <div id="thought-stream-trail-view" className={`h-full w-full ${phoneTab === "trail-view" ? "block" : "hidden"}`}>
           <ThoughtStream
             cards={activeTrailCards}
@@ -232,11 +227,9 @@ const PhoneEmulator: React.FC<PhoneEmulatorProps> = ({
           />
         </div>
 
-        {/* THE VAULT */}
         {phoneTab === "vault" && (
           <div id="vault-dashboard-emulation" className="h-full flex flex-col justify-between px-4 py-2 pt-4">
             {savedVaultCards.length === 0 ? (
-              /* ===== EMPTY STATE CTA ===== */
               <div className="flex-1 flex flex-col items-center justify-center text-center p-4 space-y-5">
                 <div className="w-14 h-14 rounded-full bg-[#F5F3ED] flex items-center justify-center">
                   <Bookmark className="w-7 h-7 text-[#D4CFC5]" />
@@ -250,7 +243,6 @@ const PhoneEmulator: React.FC<PhoneEmulatorProps> = ({
                   </p>
                 </div>
 
-                {/* Interactive CTA */}
                 <button
                   onClick={() => {
                     onSetPhoneTab("explore");
@@ -276,14 +268,12 @@ const PhoneEmulator: React.FC<PhoneEmulatorProps> = ({
           </div>
         )}
 
-        {/* READING TRAILS */}
         {phoneTab === "trails" && (
           <ReadingTrailsDashboard onStartTrail={onStartTrail} />
         )}
 
       </div>
 
-      {/* Bottom tab bar */}
       <div className="p-1 flex items-center justify-around border-t border-[#E8E4DC]/60 pt-3 pb-2 relative z-10 bg-[#FAF8F3]/90 backdrop-blur-sm">
         <button
           id="phone-mode-explore-tab"
@@ -342,7 +332,6 @@ const PhoneEmulator: React.FC<PhoneEmulatorProps> = ({
         </button>
       </div>
 
-      {/* Home Indicator */}
       <div className="absolute bottom-1 left-1/2 -translate-x-1/2 w-32 h-1 bg-[#D4CFC5]/60 rounded-full select-none pointer-events-none hidden sm:block" />
 
     </div>

@@ -5,7 +5,6 @@ import type { GraphEdge, EdgeRelationship, Node } from "../types";
 
 import { NODES, EDGES } from "../data/constellationData";
 
-/** Color mapping for relationship types */
 function getRelationshipColor(rel: EdgeRelationship): string {
   switch (rel) {
     case "Influenced": return "rgba(181, 164, 139, 0.8)";
@@ -16,9 +15,6 @@ function getRelationshipColor(rel: EdgeRelationship): string {
   }
 }
 
-// ------------------------------------------------------------------
-// Memoized Edge Component
-// ------------------------------------------------------------------
 const ConstellationEdge = React.memo(({ 
   edge, 
   fromNode, 
@@ -89,9 +85,6 @@ const ConstellationEdge = React.memo(({
   );
 });
 
-// ------------------------------------------------------------------
-// Memoized Node Component
-// ------------------------------------------------------------------
 const ConstellationNode = React.memo(({ 
   node, 
   isHovered, 
@@ -169,9 +162,6 @@ const ConstellationNode = React.memo(({
   );
 });
 
-// ------------------------------------------------------------------
-// Main Component
-// ------------------------------------------------------------------
 interface ConstellationMapProps {
   onClose: () => void;
   onFilterByThinker?: (thinkerName: string) => void;

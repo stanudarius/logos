@@ -80,9 +80,6 @@ function shuffleArray(array: any[]) {
   return newArr;
 }
 
-// ------------------------------------------------------------------
-// FEED GENERATION (Unified DB + Weighted Randomness)
-// ------------------------------------------------------------------
 app.post("/api/generate", (req, res) => {
   try {
     const parsed = generateSchema.safeParse(req.body);
@@ -137,7 +134,6 @@ app.post("/api/generate", (req, res) => {
       } else if (validAll.length > 0) {
         chosenStack = validAll[Math.floor(Math.random() * validAll.length)];
       } else {
-        // Fallback if all valid arrays are empty (e.g. only 1 philosopher exists)
         chosenStack = stacksArray[Math.floor(Math.random() * stacksArray.length)];
       }
 
@@ -148,7 +144,6 @@ app.post("/api/generate", (req, res) => {
       }
     }
 
-    // Assign unique runtime IDs so React handles duplicate stacks gracefully
     const uniqueStack = returnedCards.map(card => ({
         ...card,
         id: `${card.id}_${Date.now()}_${Math.floor(Math.random() * 10000)}`
@@ -161,9 +156,6 @@ app.post("/api/generate", (req, res) => {
   }
 });
 
-// ------------------------------------------------------------------
-// READING TRAILS API (Direct fetch from unified DB)
-// ------------------------------------------------------------------
 app.get("/api/trail/:trailId", (req, res) => {
    const { trailId } = req.params;
    const trailCards = cardsDatabase[trailId];
@@ -180,9 +172,6 @@ app.get("/api/trail/:trailId", (req, res) => {
    res.json(uniqueTrail);
 });
 
-// ------------------------------------------------------------------
-// SOCRATIC AI TUTOR (Keeps Gemini API)
-// ------------------------------------------------------------------
 app.post("/api/chat", async (req, res) => {
   try {
     const parsed = chatSchema.safeParse(req.body);

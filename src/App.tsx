@@ -71,7 +71,6 @@ export default function App() {
     return () => { isAppMounted.current = false; };
   }, []);
 
-  // Rabbit Hole Algorithm: Ephemeral Session Tracking
   const sessionInterests = useRef<Record<string, number>>({});
 
   const feedCardsRef = useRef<FeedCard[]>(feedCards);
@@ -84,7 +83,6 @@ export default function App() {
   savedVaultCardsRef.current = savedVaultCards;
 
   const trackCardInteraction = useCallback((index: number, weight: number) => {
-    // Track from the current visible deck
     const currentDeck = phoneTab === "trail-view" ? activeTrailCardsRef.current : feedCardsRef.current;
     const card = currentDeck[index];
     if (card) {
@@ -157,7 +155,6 @@ export default function App() {
     setIsFetchingInfinite(true);
 
     try {
-      // Calculate top 3 interests
       const sortedInterests = Object.entries(sessionInterests.current)
         .sort((a, b) => (b[1] as number) - (a[1] as number))
         .slice(0, 3)
@@ -211,7 +208,6 @@ export default function App() {
     }
   }, [triggerToast, phoneTab]);
 
-  /** Active card tracking — driven by ThoughtStream's IntersectionObserver */
   const handleActiveCardChange = useCallback((index: number) => {
     if (phoneTab === "trail-view") {
       setActiveTrailIndex(index);
