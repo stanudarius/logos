@@ -182,9 +182,16 @@ export default function App() {
     const isSaved = savedVaultCardsRef.current.some(c => c.id === card.id);
 
     if (isSaved) {
+      const cardToRemove = savedVaultCardsRef.current.find(c => c.id === card.id);
       setSavedVaultCards(prev => prev.filter(c => c.id !== card.id));
       triggerToast("Removed from Vault");
-      await supabase.from('vault_cards').delete().eq('user_id', session.user.id).eq('card_id', card.id);
+      try {
+        const { error } = await supabase.from('vault_cards').delete().eq('user_id', session.user.id).eq('card_id', card.id);
+        if (error) throw error;
+      } catch (err) {
+        if (cardToRemove) setSavedVaultCards(prev => [...prev, cardToRemove]);
+        triggerToast("Failed to remove. Try again.");
+      }
     } else {
       const vaultCard: SavedVaultCard = {
         ...card,
@@ -193,22 +200,35 @@ export default function App() {
       setSavedVaultCards(prev => [...prev, vaultCard]);
       trackCardInteraction(index, 3); // High signal for saving
       triggerToast("Saved to Vault.");
-      await supabase.from('vault_cards').insert([{
-        user_id: session.user.id,
-        card_id: vaultCard.id,
-        card_data: vaultCard
-      }]);
+      try {
+        const { error } = await supabase.from('vault_cards').insert([{
+          user_id: session.user.id,
+          card_id: vaultCard.id,
+          card_data: vaultCard
+        }]);
+        if (error) throw error;
+      } catch (err) {
+        setSavedVaultCards(prev => prev.filter(c => c.id !== vaultCard.id));
+        triggerToast("Failed to save. Try again.");
+      }
     }
   }, [triggerToast, session, phoneTab, activeTrailCards, trackCardInteraction]);
 
   const deleteFromVault = useCallback(async (id: string) => {
     if (!session?.user) return;
 
+    const cardToDelete = savedVaultCards.find(c => c.id === id);
     setSavedVaultCards(prev => prev.filter(c => c.id !== id));
     triggerToast("Card removed from vault.");
 
-    await supabase.from('vault_cards').delete().eq('user_id', session.user.id).eq('card_id', id);
-  }, [triggerToast, session]);
+    try {
+      const { error } = await supabase.from('vault_cards').delete().eq('user_id', session.user.id).eq('card_id', id);
+      if (error) throw error;
+    } catch (err) {
+      if (cardToDelete) setSavedVaultCards(prev => [...prev, cardToDelete]);
+      triggerToast("Failed to remove. Try again.");
+    }
+  }, [triggerToast, session, savedVaultCards]);
 
   const updateVaultCardAnnotation = useCallback(async (id: string, annotation: string) => {
     const cardToUpdate = savedVaultCards.find(c => c.id === id);
@@ -218,9 +238,15 @@ export default function App() {
     setSavedVaultCards(prev => prev.map(c => c.id === id ? newCardData : c));
 
     if (session?.user) {
-      await supabase.from('vault_cards').update({ card_data: newCardData }).eq('user_id', session.user.id).eq('card_id', id);
+      try {
+        const { error } = await supabase.from('vault_cards').update({ card_data: newCardData }).eq('user_id', session.user.id).eq('card_id', id);
+        if (error) throw error;
+      } catch (err) {
+        setSavedVaultCards(prev => prev.map(c => c.id === id ? cardToUpdate : c));
+        triggerToast("Failed to update annotation.");
+      }
     }
-  }, [savedVaultCards, session]);
+  }, [savedVaultCards, session, triggerToast]);
 
   const assignToFolder = useCallback(async (id: string, folderName: string | undefined) => {
     const cardToUpdate = savedVaultCards.find(c => c.id === id);
@@ -228,12 +254,17 @@ export default function App() {
 
     const newCardData = { ...cardToUpdate, user_folder: folderName };
     setSavedVaultCards(prev => prev.map(c => c.id === id ? newCardData : c));
+    triggerToast(folderName ? `Moved to ${folderName}` : "Removed from folder");
 
     if (session?.user) {
-      await supabase.from('vault_cards').update({ card_data: newCardData }).eq('user_id', session.user.id).eq('card_id', id);
+      try {
+        const { error } = await supabase.from('vault_cards').update({ card_data: newCardData }).eq('user_id', session.user.id).eq('card_id', id);
+        if (error) throw error;
+      } catch (err) {
+        setSavedVaultCards(prev => prev.map(c => c.id === id ? cardToUpdate : c));
+        triggerToast("Failed to move folder.");
+      }
     }
-
-    triggerToast(folderName ? `Moved to ${folderName}` : "Removed from folder");
   }, [savedVaultCards, session, triggerToast]);
 
   const handleZenSessionComplete = useCallback(() => {
@@ -305,7 +336,8 @@ export default function App() {
   if (!session) {
     return (
       <div className="w-full h-[100dvh] bg-[#0A0A0A] flex items-center justify-center overflow-hidden p-4 sm:p-8">
-        <AuthScreen onLoginSuccess={() => { }} />
+        <Toast message={toastMessage} />
+        <AuthScreen onLoginSuccess={() => { }} onTriggerToast={triggerToast} />
       </div>
     );
   }

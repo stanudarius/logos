@@ -15,7 +15,18 @@ const app = express();
 const PORT = 3000;
 
 // Middleware
-app.use(helmet({ contentSecurityPolicy: false })); // Disabled CSP for Vite dev server compatibility
+app.use(helmet({
+  contentSecurityPolicy: {
+    directives: {
+      defaultSrc: ["'self'"],
+      scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'"],
+      styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
+      fontSrc: ["'self'", "https://fonts.gstatic.com"],
+      imgSrc: ["'self'", "data:", "blob:", "https://cdn-icons-png.flaticon.com"],
+      connectSrc: ["'self'", "ws:", "wss:", "https://api.pwnedpasswords.com", "https://*.supabase.co"],
+    },
+  },
+}));
 app.use(express.json());
 
 // Rate Limiting

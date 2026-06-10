@@ -37,25 +37,48 @@ const ThoughtStream: React.FC<ThoughtStreamProps> = ({
   const sentinelObserverRef = useRef<IntersectionObserver | null>(null);
   const sentinelRef = useRef<HTMLDivElement>(null);
 
-  // Calculate active index on scroll
-  const handleScroll = useCallback(() => {
+  const cardObserverRef = useRef<IntersectionObserver | null>(null);
+
+  // Active card tracking via IntersectionObserver (O(1) performance instead of onScroll reflows)
+  useEffect(() => {
     const container = containerRef.current;
     if (!container) return;
-    
-    const cardHeight = container.clientHeight;
-    if (cardHeight === 0) return;
-    
-    const newIndex = Math.round(container.scrollTop / cardHeight);
-    if (newIndex !== activeIndex && newIndex >= 0 && newIndex < cards.length) {
-      setActiveIndex(newIndex);
-      onActiveCardChange(newIndex);
-      
-      // Bulletproof backup trigger: if we hit the second-to-last card, force a fetch
-      if (newIndex >= cards.length - 2 && !isLoading) {
-        onFetchMore();
-      }
+
+    if (cardObserverRef.current) {
+      cardObserverRef.current.disconnect();
     }
-  }, [activeIndex, cards.length, onActiveCardChange, isLoading, onFetchMore]);
+
+    cardObserverRef.current = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) {
+            const indexStr = entry.target.getAttribute("data-card-index");
+            if (indexStr !== null) {
+              const newIndex = parseInt(indexStr, 10);
+              setActiveIndex((prev) => {
+                if (prev !== newIndex) {
+                  onActiveCardChange(newIndex);
+                  
+                  // Backup trigger
+                  if (newIndex >= cards.length - 2 && !isLoading) {
+                    onFetchMoreRef.current();
+                  }
+                  return newIndex;
+                }
+                return prev;
+              });
+            }
+          }
+        }
+      },
+      { root: container, threshold: 0.6 } // Card is considered active when 60% visible
+    );
+
+    const atoms = container.querySelectorAll(".thought-atom");
+    atoms.forEach((atom) => cardObserverRef.current?.observe(atom));
+
+    return () => cardObserverRef.current?.disconnect();
+  }, [cards.length, isLoading, onActiveCardChange]);
 
   const onFetchMoreRef = useRef(onFetchMore);
   useEffect(() => {
@@ -137,7 +160,6 @@ const ThoughtStream: React.FC<ThoughtStreamProps> = ({
   return (
     <div
       ref={containerRef}
-      onScroll={handleScroll}
       className="thought-stream h-full w-full overflow-y-auto snap-y snap-mandatory scroll-smooth"
       style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }} // Hide scrollbar for a cleaner look
     >
