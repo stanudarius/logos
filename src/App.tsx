@@ -5,7 +5,6 @@ import { INITIAL_FEED_CARDS } from "./data/feedCards";
 import { getRandomInterstitial } from "./data/interstitials";
 import type { FeedCard, SavedVaultCard } from "./types";
 
-import { mapStackToFeedCards } from "./utils/cardMapper";
 import Toast from "./components/Toast";
 import PhoneEmulator from "./components/PhoneEmulator";
 import { AuthScreen } from "./components/AuthScreen";
@@ -14,7 +13,6 @@ import ZenMode from "./components/ZenMode";
 import { supabase } from "./lib/supabase";
 import type { Session } from "@supabase/supabase-js";
 import { READING_TRAILS } from "./data/trailsData";
-import trailsContentJson from "./data/trailsContent.json";
 
 export default function App() {
   const [toastMessage, setToastMessage] = useState<string | null>(null);
@@ -48,9 +46,15 @@ export default function App() {
 
   const [savedVaultCards, setSavedVaultCards] = useState<SavedVaultCard[]>([]);
 
+  const isAppMounted = useRef(true);
+  useEffect(() => {
+    isAppMounted.current = true;
+    return () => { isAppMounted.current = false; };
+  }, []);
+
   // Rabbit Hole Algorithm: Ephemeral Session Tracking
   const sessionInterests = useRef<Record<string, number>>({});
-  
+
   const feedCardsRef = useRef<FeedCard[]>(feedCards);
   feedCardsRef.current = feedCards; // Sync during render for O(1) instantaneous access
 
@@ -124,11 +128,12 @@ export default function App() {
   }, []);
 
   const isFetchingInfiniteRef = useRef(false);
+  const feedExhaustedRef = useRef(false);
 
   const fetchInfiniteFeed = useCallback(async () => {
-    // Disable infinite fetch on trails
-    if (isFetchingInfiniteRef.current || phoneTab === "trail-view") return;
-    
+    // Disable infinite fetch on trails or if feed is exhausted
+    if (isFetchingInfiniteRef.current || phoneTab === "trail-view" || feedExhaustedRef.current) return;
+
     isFetchingInfiniteRef.current = true;
     setIsFetchingInfinite(true);
     triggerToast("Discovering new ideas...");
@@ -144,15 +149,26 @@ export default function App() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          rawText: "RANDOM",
           rabbitHoleContext: sortedInterests.length > 0 ? sortedInterests : undefined
         }),
       });
+      
+      if (response.status === 404) {
+         const data = await response.json();
+         if (data.feed_exhausted) {
+             feedExhaustedRef.current = true;
+             triggerToast("You've reached the end of the feed! Check back later.");
+             return;
+         }
+      }
+      
       if (!response.ok) throw new Error(`Backend error: ${response.status}`);
 
-      const data = await response.json();
-      const newFeedItems = mapStackToFeedCards(data);
-      
+      // The backend now returns a FeedCard[] array directly from the unified database
+      const newFeedItems: FeedCard[] = await response.json();
+
+      if (!isAppMounted.current) return;
+
       setFeedCards(prev => {
         // Prevent back-to-back interstitials if the last card is already an interstitial
         const lastCard = prev[prev.length - 1];
@@ -163,10 +179,12 @@ export default function App() {
       });
     } catch (err: unknown) {
       console.error(err);
-      triggerToast("Failed to fetch next sequence.");
+      if (isAppMounted.current) triggerToast("Failed to fetch next sequence.");
     } finally {
-      isFetchingInfiniteRef.current = false;
-      setIsFetchingInfinite(false);
+      if (isAppMounted.current) {
+        isFetchingInfiniteRef.current = false;
+        setIsFetchingInfinite(false);
+      }
     }
   }, [triggerToast, phoneTab]);
 
@@ -185,15 +203,22 @@ export default function App() {
     const isSaved = savedVaultCardsRef.current.some(c => c.id === card.id);
 
     if (isSaved) {
-      const cardToRemove = savedVaultCardsRef.current.find(c => c.id === card.id);
+      const indexInVault = savedVaultCardsRef.current.findIndex(c => c.id === card.id);
+      const cardToRemove = savedVaultCardsRef.current[indexInVault];
       setSavedVaultCards(prev => prev.filter(c => c.id !== card.id));
       triggerToast("Removed from Vault");
       try {
         const { error } = await supabase.from('vault_cards').delete().eq('user_id', session.user.id).eq('card_id', card.id);
         if (error) throw error;
       } catch (err) {
-        if (cardToRemove) setSavedVaultCards(prev => [...prev, cardToRemove]);
-        triggerToast("Failed to remove. Try again.");
+        if (cardToRemove && isAppMounted.current) {
+          setSavedVaultCards(prev => {
+            const next = [...prev];
+            next.splice(indexInVault, 0, cardToRemove);
+            return next;
+          });
+        }
+        if (isAppMounted.current) triggerToast("Failed to remove. Try again.");
       }
     } else {
       const vaultCard: SavedVaultCard = {
@@ -212,7 +237,7 @@ export default function App() {
         if (error) throw error;
       } catch (err) {
         setSavedVaultCards(prev => prev.filter(c => c.id !== vaultCard.id));
-        triggerToast("Failed to save. Try again.");
+        triggerToast(`Failed to save: ${err?.message || JSON.stringify(err)}`);
       }
     }
   }, [triggerToast, session, phoneTab, trackCardInteraction]);
@@ -220,7 +245,8 @@ export default function App() {
   const deleteFromVault = useCallback(async (id: string) => {
     if (!session?.user) return;
 
-    const cardToDelete = savedVaultCards.find(c => c.id === id);
+    const indexInVault = savedVaultCards.findIndex(c => c.id === id);
+    const cardToDelete = savedVaultCards[indexInVault];
     setSavedVaultCards(prev => prev.filter(c => c.id !== id));
     triggerToast("Card removed from vault.");
 
@@ -228,8 +254,14 @@ export default function App() {
       const { error } = await supabase.from('vault_cards').delete().eq('user_id', session.user.id).eq('card_id', id);
       if (error) throw error;
     } catch (err) {
-      if (cardToDelete) setSavedVaultCards(prev => [...prev, cardToDelete]);
-      triggerToast("Failed to remove. Try again.");
+      if (cardToDelete && isAppMounted.current) {
+        setSavedVaultCards(prev => {
+          const next = [...prev];
+          next.splice(indexInVault, 0, cardToDelete);
+          return next;
+        });
+      }
+      if (isAppMounted.current) triggerToast("Failed to remove. Try again.");
     }
   }, [triggerToast, session, savedVaultCards]);
 
@@ -274,61 +306,77 @@ export default function App() {
     triggerToast("Zen session complete!");
   }, [triggerToast]);
 
-  const filterByThinker = useCallback((thinkerName: string) => {
-    setFeedCards(prev => {
-      let matching = prev.filter(c =>
+  const filterByThinker = useCallback(async (thinkerName: string) => {
+    // 1. Try to filter the local feed first
+    const matching = feedCards.filter(c =>
         c.philosopher.toLowerCase().includes(thinkerName.toLowerCase())
-      );
-      
-      // If the thinker isn't in the base feed, look for their curated Trail
-      if (matching.length === 0) {
-        const trail = READING_TRAILS.find(t => 
-          t.thinkerIds.some(tid => 
-            tid.toLowerCase() === thinkerName.toLowerCase() || 
-            thinkerName.toLowerCase().includes(tid.toLowerCase()) ||
-            tid.toLowerCase().includes(thinkerName.toLowerCase())
-          )
-        );
-        if (trail) {
-          const trailsContentMap = trailsContentJson as Record<string, FeedCard[]>;
-          const trailCards = trailsContentMap[trail.id] || [];
-          if (trailCards.length > 0) {
-            matching = trailCards;
-          }
-        }
-      }
+    );
 
-      const rest = prev.filter(c =>
+    if (matching.length > 0) {
+      const rest = feedCards.filter(c =>
         !c.philosopher.toLowerCase().includes(thinkerName.toLowerCase())
       );
-      
-      // Prevent duplicates if they were just injected
-      const matchingIds = new Set(matching.map(m => m.id));
-      const restCleaned = rest.filter(c => !matchingIds.has(c.id));
-      
-      return [...matching, ...restCleaned];
-    });
-    setPhoneTab("explore");
-    setActiveCardIndex(0);
-    triggerToast(`Filtered stream: ${thinkerName}`);
-  }, [triggerToast]);
-
-  const handleStartTrail = useCallback((trailId: string) => {
-    const trail = READING_TRAILS.find(t => t.id === trailId);
-    if (!trail) return;
-
-    const trailsContentMap = trailsContentJson as Record<string, FeedCard[]>;
-    const trailCards = trailsContentMap[trailId] || [];
-
-    if (trailCards.length === 0) {
-      triggerToast(`Content not yet generated for ${trail.title}.`);
+      setFeedCards([...matching, ...rest]);
+      setPhoneTab("explore");
+      setActiveCardIndex(0);
+      triggerToast(`Filtered stream: ${thinkerName}`);
       return;
     }
 
-    setActiveTrailCards(trailCards);
-    setActiveCardIndex(0); 
-    setPhoneTab("trail-view");
-    triggerToast(`Started Trail: ${trail.title}`);
+    // 2. If not in local feed, check if it's a Trail and fetch it from the unified backend
+    const trail = READING_TRAILS.find(t =>
+      t.thinkerIds.some(tid =>
+        tid.toLowerCase() === thinkerName.toLowerCase() ||
+        thinkerName.toLowerCase().includes(tid.toLowerCase()) ||
+        tid.toLowerCase().includes(thinkerName.toLowerCase())
+      )
+    );
+
+    if (trail) {
+      triggerToast(`Fetching trail for ${thinkerName}...`);
+      try {
+        const response = await fetch(`/api/trail/${trail.id}`);
+        if (!response.ok) throw new Error("Trail not found");
+        
+        const trailCards: FeedCard[] = await response.json();
+        if (trailCards.length > 0) {
+           setFeedCards([...trailCards, ...feedCards]);
+           setPhoneTab("explore");
+           setActiveCardIndex(0);
+           triggerToast(`Filtered stream: ${thinkerName}`);
+        }
+      } catch (err) {
+         triggerToast(`No matching content found for ${thinkerName}.`);
+      }
+    } else {
+       triggerToast(`No matching content found for ${thinkerName}.`);
+    }
+  }, [feedCards, triggerToast]);
+
+  const handleStartTrail = useCallback(async (trailId: string) => {
+    const trail = READING_TRAILS.find(t => t.id === trailId);
+    if (!trail) return;
+
+    triggerToast(`Loading Trail: ${trail.title}...`);
+    try {
+      const response = await fetch(`/api/trail/${trailId}`);
+      if (!response.ok) throw new Error("Trail not found");
+      
+      const trailCards: FeedCard[] = await response.json();
+      
+      if (trailCards.length === 0) {
+        triggerToast(`Content not yet generated for ${trail.title}.`);
+        return;
+      }
+
+      setActiveTrailCards(trailCards);
+      setActiveCardIndex(0);
+      setPhoneTab("trail-view");
+      triggerToast(`Started Trail: ${trail.title}`);
+    } catch (err) {
+       console.error("Failed to load trail:", err);
+       triggerToast(`Failed to load ${trail.title}.`);
+    }
   }, [triggerToast]);
 
   const handleOpenConstellation = useCallback(() => setIsConstellationOpen(true), []);

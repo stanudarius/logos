@@ -10,10 +10,6 @@ export interface Presentation {
   reading_parts: ReadingPart[];
 }
 
-export interface CardData {
-  explore_title: string;
-  explore_subtext: string;
-}
 
 /** Typographic layout variants for the Thought Stream poster cards */
 export type LayoutVariant = "thesis" | "blockquote" | "fragment" | "epigraph" | "interstitial";
@@ -32,15 +28,6 @@ export interface FeedCard {
   layoutVariant?: LayoutVariant;
 }
 
-export interface ContentStack {
-  stack_id: string;
-  category: string;
-  topic: string;
-  philosopher: string;
-  visual_mood: string;
-  cards: CardData[];
-  presentation: Presentation;
-}
 
 export interface SavedVaultCard {
   id: string;

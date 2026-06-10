@@ -63,7 +63,7 @@ const ThoughtStream: React.FC<ThoughtStreamProps> = ({
               setActiveIndex((prev) => {
                 if (prev !== newIndex) {
                   onActiveCardChange(newIndex);
-                  
+
                   // Backup trigger
                   if (newIndex >= cards.length - 2 && !isLoadingRef.current) {
                     onFetchMoreRef.current();

@@ -47,3 +47,6 @@ CREATE POLICY "Users can delete own vault cards"
   ON vault_cards FOR DELETE 
   USING ( auth.uid() = user_id );
 
+CREATE POLICY "Users can update own vault cards" 
+  ON vault_cards FOR UPDATE 
+  USING ( auth.uid() = user_id );

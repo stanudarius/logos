@@ -179,7 +179,7 @@
       "visual_mood": "emerald_mist",
       "explore_title": "Living Without Appeal",
       "explore_subtext": "True rebellion is living fully in a world devoid of permanent meaning. To create your own fire in the dark is the ultimate human masterpiece.",
-      "layoutVariant": "interstitial",
+      "layoutVariant": "thesis",
       "presentation": {
         "title": "The Ethics of Revolt",
         "reading_parts": [
@@ -303,7 +303,7 @@
       "visual_mood": "amber_glow",
       "explore_title": "The Tub and the Lantern",
       "explore_subtext": "When you strip away the pompous masks of civilization, you discover that most people are desperately chasing gold while starving their own souls.",
-      "layoutVariant": "interstitial",
+      "layoutVariant": "thesis",
       "presentation": {
         "title": "The Barefoot Provocateur",
         "reading_parts": [
@@ -669,7 +669,7 @@
       "visual_mood": "emerald_mist",
       "explore_title": "The Divine Eccentric",
       "explore_subtext": "Do not just make art; transform your entire physical presence into a provocative, living myth that completely scrambles bourgeois reality.",
-      "layoutVariant": "interstitial",
+      "layoutVariant": "thesis",
       "presentation": {
         "title": "The Master of the Spectacle",
         "reading_parts": [
@@ -865,7 +865,7 @@
       "visual_mood": "emerald_mist",
       "explore_title": "The Surface is Everything",
       "explore_subtext": "If you want to know all about Andy Warhol, just look at the surface of my paintings and my clothes. There is absolutely nothing behind it.",
-      "layoutVariant": "interstitial",
+      "layoutVariant": "thesis",
       "presentation": {
         "title": "The Strategy of the Mirror",
         "reading_parts": [
@@ -1453,7 +1453,7 @@
       "visual_mood": "emerald_mist",
       "explore_title": "The Map and the Kingdom",
       "explore_subtext": "A guild of cartographers creates a map so meticulous that its scale is exactly one-to-one with the Empire. Eventually, the citizens live inside the map.",
-      "layoutVariant": "interstitial",
+      "layoutVariant": "thesis",
       "presentation": {
         "title": "The Tyranny of the Replica",
         "reading_parts": [
@@ -1464,6 +1464,594 @@
           {
             "part_number": 2,
             "text": "This parable serves as the definitive foundational text for postmodern theories of simulation. It warns against our human tendency to confuse our representations of reality—our metrics, profiles, and digital models—with the raw, unmappable landscape of existence itself. When we worship the map, we lose the country."
+          }
+        ]
+      }
+    }
+  ],
+  "manual_phi_nietzsche_01": [
+    {
+      "id": "manual_phi_nietzsche_01_card_0",
+      "stack_id": "phi_nietzsche_01",
+      "category": "philosophy",
+      "topic": "The Übermensch",
+      "philosopher": "Friedrich Nietzsche",
+      "visual_mood": "crimson_twilight",
+      "explore_title": "God is Dead",
+      "explore_subtext": "Not a literal death, but the collapse of absolute moral frameworks. The void stares back.",
+      "layoutVariant": "thesis",
+      "presentation": {
+        "title": "Thus Spoke Zarathustra",
+        "reading_parts": [
+          {
+            "part_number": 1,
+            "text": "When Nietzsche proclaimed the death of God, he was not gloating; he was issuing a profound warning. The removal of a central, absolute source of meaning leaves a terrifying void—nihilism. Without a transcendent anchor, humanity risks falling into the despair of the 'Last Man', a creature who desires nothing more than comfort and security, devoid of any higher aspiration."
+          },
+          {
+            "part_number": 2,
+            "text": "The antidote to this passive nihilism is the Übermensch, the 'Overman'. This figure does not look to the heavens for meaning but creates it on earth. The Übermensch embraces 'Amor Fati', loving their fate in its entirety, including suffering and struggle, transforming the chaos of existence into a self-authored masterpiece."
+          }
+        ]
+      }
+    },
+    {
+      "id": "manual_phi_nietzsche_01_card_1",
+      "stack_id": "phi_nietzsche_01",
+      "category": "philosophy",
+      "topic": "The Übermensch",
+      "philosopher": "Friedrich Nietzsche",
+      "visual_mood": "crimson_twilight",
+      "explore_title": "The Last Man",
+      "explore_subtext": "Contentment over greatness. A society seeking only comfort, blinking passively at the cosmos.",
+      "layoutVariant": "blockquote",
+      "presentation": {
+        "title": "Thus Spoke Zarathustra",
+        "reading_parts": [
+          {
+            "part_number": 1,
+            "text": "When Nietzsche proclaimed the death of God, he was not gloating; he was issuing a profound warning. The removal of a central, absolute source of meaning leaves a terrifying void—nihilism. Without a transcendent anchor, humanity risks falling into the despair of the 'Last Man', a creature who desires nothing more than comfort and security, devoid of any higher aspiration."
+          },
+          {
+            "part_number": 2,
+            "text": "The antidote to this passive nihilism is the Übermensch, the 'Overman'. This figure does not look to the heavens for meaning but creates it on earth. The Übermensch embraces 'Amor Fati', loving their fate in its entirety, including suffering and struggle, transforming the chaos of existence into a self-authored masterpiece."
+          }
+        ]
+      }
+    },
+    {
+      "id": "manual_phi_nietzsche_01_card_2",
+      "stack_id": "phi_nietzsche_01",
+      "category": "philosophy",
+      "topic": "The Übermensch",
+      "philosopher": "Friedrich Nietzsche",
+      "visual_mood": "crimson_twilight",
+      "explore_title": "Amor Fati",
+      "explore_subtext": "To love one's fate. Not merely to endure it, but to embrace it as necessary and beautiful.",
+      "layoutVariant": "fragment",
+      "presentation": {
+        "title": "Thus Spoke Zarathustra",
+        "reading_parts": [
+          {
+            "part_number": 1,
+            "text": "When Nietzsche proclaimed the death of God, he was not gloating; he was issuing a profound warning. The removal of a central, absolute source of meaning leaves a terrifying void—nihilism. Without a transcendent anchor, humanity risks falling into the despair of the 'Last Man', a creature who desires nothing more than comfort and security, devoid of any higher aspiration."
+          },
+          {
+            "part_number": 2,
+            "text": "The antidote to this passive nihilism is the Übermensch, the 'Overman'. This figure does not look to the heavens for meaning but creates it on earth. The Übermensch embraces 'Amor Fati', loving their fate in its entirety, including suffering and struggle, transforming the chaos of existence into a self-authored masterpiece."
+          }
+        ]
+      }
+    },
+    {
+      "id": "manual_phi_nietzsche_01_card_3",
+      "stack_id": "phi_nietzsche_01",
+      "category": "philosophy",
+      "topic": "The Übermensch",
+      "philosopher": "Friedrich Nietzsche",
+      "visual_mood": "crimson_twilight",
+      "explore_title": "The Overman",
+      "explore_subtext": "The one who creates their own values out of the ashes of old gods. The lightning out of the dark cloud.",
+      "layoutVariant": "epigraph",
+      "presentation": {
+        "title": "Thus Spoke Zarathustra",
+        "reading_parts": [
+          {
+            "part_number": 1,
+            "text": "When Nietzsche proclaimed the death of God, he was not gloating; he was issuing a profound warning. The removal of a central, absolute source of meaning leaves a terrifying void—nihilism. Without a transcendent anchor, humanity risks falling into the despair of the 'Last Man', a creature who desires nothing more than comfort and security, devoid of any higher aspiration."
+          },
+          {
+            "part_number": 2,
+            "text": "The antidote to this passive nihilism is the Übermensch, the 'Overman'. This figure does not look to the heavens for meaning but creates it on earth. The Übermensch embraces 'Amor Fati', loving their fate in its entirety, including suffering and struggle, transforming the chaos of existence into a self-authored masterpiece."
+          }
+        ]
+      }
+    }
+  ],
+  "manual_phi_camus_01": [
+    {
+      "id": "manual_phi_camus_01_card_0",
+      "stack_id": "phi_camus_01",
+      "category": "philosophy",
+      "topic": "The Absurd",
+      "philosopher": "Albert Camus",
+      "visual_mood": "cosmic_void",
+      "explore_title": "The Absurd Encounter",
+      "explore_subtext": "The conflict between our desire for meaning and the universe's silent, profound indifference.",
+      "layoutVariant": "thesis",
+      "presentation": {
+        "title": "The Myth of Sisyphus",
+        "reading_parts": [
+          {
+            "part_number": 1,
+            "text": "The fundamental tension of human existence, according to Camus, is the 'Absurd': our desperate hunger for meaning clashing against a cold, unreasonable universe. We ask for purpose, and the cosmos responds with silence. To seek an escape from this tension—whether through religion, false hope, or physical suicide—is to betray our own consciousness."
+          },
+          {
+            "part_number": 2,
+            "text": "Instead, Camus demands we revolt. We must accept the Absurd and live defiantly in spite of it. Like Sisyphus condemned to roll a boulder up a mountain for eternity, we must find our victory in the struggle itself. In the face of a meaningless universe, the act of living fully becomes the ultimate rebellion."
+          }
+        ]
+      }
+    },
+    {
+      "id": "manual_phi_camus_01_card_1",
+      "stack_id": "phi_camus_01",
+      "category": "philosophy",
+      "topic": "The Absurd",
+      "philosopher": "Albert Camus",
+      "visual_mood": "cosmic_void",
+      "explore_title": "Philosophical Suicide",
+      "explore_subtext": "Leaping into faith or escaping reality. A refusal to face the Absurd directly.",
+      "layoutVariant": "blockquote",
+      "presentation": {
+        "title": "The Myth of Sisyphus",
+        "reading_parts": [
+          {
+            "part_number": 1,
+            "text": "The fundamental tension of human existence, according to Camus, is the 'Absurd': our desperate hunger for meaning clashing against a cold, unreasonable universe. We ask for purpose, and the cosmos responds with silence. To seek an escape from this tension—whether through religion, false hope, or physical suicide—is to betray our own consciousness."
+          },
+          {
+            "part_number": 2,
+            "text": "Instead, Camus demands we revolt. We must accept the Absurd and live defiantly in spite of it. Like Sisyphus condemned to roll a boulder up a mountain for eternity, we must find our victory in the struggle itself. In the face of a meaningless universe, the act of living fully becomes the ultimate rebellion."
+          }
+        ]
+      }
+    },
+    {
+      "id": "manual_phi_camus_01_card_2",
+      "stack_id": "phi_camus_01",
+      "category": "philosophy",
+      "topic": "The Absurd",
+      "philosopher": "Albert Camus",
+      "visual_mood": "cosmic_void",
+      "explore_title": "The Rebel",
+      "explore_subtext": "To live without appeal. Confronting the meaninglessness of life and choosing to live anyway.",
+      "layoutVariant": "fragment",
+      "presentation": {
+        "title": "The Myth of Sisyphus",
+        "reading_parts": [
+          {
+            "part_number": 1,
+            "text": "The fundamental tension of human existence, according to Camus, is the 'Absurd': our desperate hunger for meaning clashing against a cold, unreasonable universe. We ask for purpose, and the cosmos responds with silence. To seek an escape from this tension—whether through religion, false hope, or physical suicide—is to betray our own consciousness."
+          },
+          {
+            "part_number": 2,
+            "text": "Instead, Camus demands we revolt. We must accept the Absurd and live defiantly in spite of it. Like Sisyphus condemned to roll a boulder up a mountain for eternity, we must find our victory in the struggle itself. In the face of a meaningless universe, the act of living fully becomes the ultimate rebellion."
+          }
+        ]
+      }
+    },
+    {
+      "id": "manual_phi_camus_01_card_3",
+      "stack_id": "phi_camus_01",
+      "category": "philosophy",
+      "topic": "The Absurd",
+      "philosopher": "Albert Camus",
+      "visual_mood": "cosmic_void",
+      "explore_title": "Happy Sisyphus",
+      "explore_subtext": "Pushing the boulder endlessly, knowing it will fall. The struggle itself is enough to fill a human heart.",
+      "layoutVariant": "epigraph",
+      "presentation": {
+        "title": "The Myth of Sisyphus",
+        "reading_parts": [
+          {
+            "part_number": 1,
+            "text": "The fundamental tension of human existence, according to Camus, is the 'Absurd': our desperate hunger for meaning clashing against a cold, unreasonable universe. We ask for purpose, and the cosmos responds with silence. To seek an escape from this tension—whether through religion, false hope, or physical suicide—is to betray our own consciousness."
+          },
+          {
+            "part_number": 2,
+            "text": "Instead, Camus demands we revolt. We must accept the Absurd and live defiantly in spite of it. Like Sisyphus condemned to roll a boulder up a mountain for eternity, we must find our victory in the struggle itself. In the face of a meaningless universe, the act of living fully becomes the ultimate rebellion."
+          }
+        ]
+      }
+    }
+  ],
+  "manual_phi_socrates_01": [
+    {
+      "id": "manual_phi_socrates_01_card_0",
+      "stack_id": "phi_socrates_01",
+      "category": "philosophy",
+      "topic": "The Examined Life",
+      "philosopher": "Socrates",
+      "visual_mood": "blinding_sunlight",
+      "explore_title": "The Gadfly of Athens",
+      "explore_subtext": "Stinging a complacent city awake. Asking uncomfortable questions of those who claim to know.",
+      "layoutVariant": "thesis",
+      "presentation": {
+        "title": "The Apology",
+        "reading_parts": [
+          {
+            "part_number": 1,
+            "text": "Socrates roamed Athens not to impart knowledge, but to expose the illusion of it. He believed that the greatest obstacle to wisdom was the false certainty of the so-called wise. By claiming 'I know that I know nothing', he positioned himself as the ultimate seeker, free from the burdens of dogma."
+          },
+          {
+            "part_number": 2,
+            "text": "His legacy is the mandate to question relentlessly. 'The unexamined life is not worth living' is not merely an aphorism; it is a moral imperative. To exist without scrutinizing one's own values, beliefs, and actions is to live blindly, surrendering the very faculty that makes us human."
+          }
+        ]
+      }
+    },
+    {
+      "id": "manual_phi_socrates_01_card_1",
+      "stack_id": "phi_socrates_01",
+      "category": "philosophy",
+      "topic": "The Examined Life",
+      "philosopher": "Socrates",
+      "visual_mood": "blinding_sunlight",
+      "explore_title": "I Know Nothing",
+      "explore_subtext": "The highest wisdom is the recognition of one's own ignorance. The starting point of all inquiry.",
+      "layoutVariant": "blockquote",
+      "presentation": {
+        "title": "The Apology",
+        "reading_parts": [
+          {
+            "part_number": 1,
+            "text": "Socrates roamed Athens not to impart knowledge, but to expose the illusion of it. He believed that the greatest obstacle to wisdom was the false certainty of the so-called wise. By claiming 'I know that I know nothing', he positioned himself as the ultimate seeker, free from the burdens of dogma."
+          },
+          {
+            "part_number": 2,
+            "text": "His legacy is the mandate to question relentlessly. 'The unexamined life is not worth living' is not merely an aphorism; it is a moral imperative. To exist without scrutinizing one's own values, beliefs, and actions is to live blindly, surrendering the very faculty that makes us human."
+          }
+        ]
+      }
+    },
+    {
+      "id": "manual_phi_socrates_01_card_2",
+      "stack_id": "phi_socrates_01",
+      "category": "philosophy",
+      "topic": "The Examined Life",
+      "philosopher": "Socrates",
+      "visual_mood": "blinding_sunlight",
+      "explore_title": "The Socratic Method",
+      "explore_subtext": "Stripping away assumptions layer by layer until the bare truth, or profound confusion, remains.",
+      "layoutVariant": "fragment",
+      "presentation": {
+        "title": "The Apology",
+        "reading_parts": [
+          {
+            "part_number": 1,
+            "text": "Socrates roamed Athens not to impart knowledge, but to expose the illusion of it. He believed that the greatest obstacle to wisdom was the false certainty of the so-called wise. By claiming 'I know that I know nothing', he positioned himself as the ultimate seeker, free from the burdens of dogma."
+          },
+          {
+            "part_number": 2,
+            "text": "His legacy is the mandate to question relentlessly. 'The unexamined life is not worth living' is not merely an aphorism; it is a moral imperative. To exist without scrutinizing one's own values, beliefs, and actions is to live blindly, surrendering the very faculty that makes us human."
+          }
+        ]
+      }
+    },
+    {
+      "id": "manual_phi_socrates_01_card_3",
+      "stack_id": "phi_socrates_01",
+      "category": "philosophy",
+      "topic": "The Examined Life",
+      "philosopher": "Socrates",
+      "visual_mood": "blinding_sunlight",
+      "explore_title": "The Examined Life",
+      "explore_subtext": "A life without rigorous self-reflection is not worth living for a human being.",
+      "layoutVariant": "epigraph",
+      "presentation": {
+        "title": "The Apology",
+        "reading_parts": [
+          {
+            "part_number": 1,
+            "text": "Socrates roamed Athens not to impart knowledge, but to expose the illusion of it. He believed that the greatest obstacle to wisdom was the false certainty of the so-called wise. By claiming 'I know that I know nothing', he positioned himself as the ultimate seeker, free from the burdens of dogma."
+          },
+          {
+            "part_number": 2,
+            "text": "His legacy is the mandate to question relentlessly. 'The unexamined life is not worth living' is not merely an aphorism; it is a moral imperative. To exist without scrutinizing one's own values, beliefs, and actions is to live blindly, surrendering the very faculty that makes us human."
+          }
+        ]
+      }
+    }
+  ],
+  "manual_art_rothko_01": [
+    {
+      "id": "manual_art_rothko_01_card_0",
+      "stack_id": "art_rothko_01",
+      "category": "arts",
+      "topic": "Color Field Painting",
+      "philosopher": "Mark Rothko",
+      "visual_mood": "crimson_twilight",
+      "explore_title": "The Elimination of Form",
+      "explore_subtext": "Stripping away recognizable objects to communicate pure, unadulterated human emotion.",
+      "layoutVariant": "thesis",
+      "presentation": {
+        "title": "The Spiritual in Art",
+        "reading_parts": [
+          {
+            "part_number": 1,
+            "text": "Mark Rothko sought to bypass the intellect and strike directly at the soul. By eliminating recognizable forms and reducing painting to massive, luminous blocks of color, he removed the distractions of the material world. His works are not meant to be analyzed; they are meant to be experienced as overwhelming emotional environments."
+          },
+          {
+            "part_number": 2,
+            "text": "When standing before a Rothko canvas, the sheer scale and vibrating hues are intended to evoke the profound states of human existence—tragedy, ecstasy, and doom. It is an encounter with the sublime, an invitation to quiet contemplation in an increasingly noisy and fragmented world."
+          }
+        ]
+      }
+    },
+    {
+      "id": "manual_art_rothko_01_card_1",
+      "stack_id": "art_rothko_01",
+      "category": "arts",
+      "topic": "Color Field Painting",
+      "philosopher": "Mark Rothko",
+      "visual_mood": "crimson_twilight",
+      "explore_title": "Tragedy, Ecstasy, Doom",
+      "explore_subtext": "The paintings are not abstractions; they are living representations of fundamental human drama.",
+      "layoutVariant": "blockquote",
+      "presentation": {
+        "title": "The Spiritual in Art",
+        "reading_parts": [
+          {
+            "part_number": 1,
+            "text": "Mark Rothko sought to bypass the intellect and strike directly at the soul. By eliminating recognizable forms and reducing painting to massive, luminous blocks of color, he removed the distractions of the material world. His works are not meant to be analyzed; they are meant to be experienced as overwhelming emotional environments."
+          },
+          {
+            "part_number": 2,
+            "text": "When standing before a Rothko canvas, the sheer scale and vibrating hues are intended to evoke the profound states of human existence—tragedy, ecstasy, and doom. It is an encounter with the sublime, an invitation to quiet contemplation in an increasingly noisy and fragmented world."
+          }
+        ]
+      }
+    },
+    {
+      "id": "manual_art_rothko_01_card_2",
+      "stack_id": "art_rothko_01",
+      "category": "arts",
+      "topic": "Color Field Painting",
+      "philosopher": "Mark Rothko",
+      "visual_mood": "crimson_twilight",
+      "explore_title": "The Immersive Scale",
+      "explore_subtext": "Large canvases designed to envelop the viewer, making them a participant, not a spectator.",
+      "layoutVariant": "fragment",
+      "presentation": {
+        "title": "The Spiritual in Art",
+        "reading_parts": [
+          {
+            "part_number": 1,
+            "text": "Mark Rothko sought to bypass the intellect and strike directly at the soul. By eliminating recognizable forms and reducing painting to massive, luminous blocks of color, he removed the distractions of the material world. His works are not meant to be analyzed; they are meant to be experienced as overwhelming emotional environments."
+          },
+          {
+            "part_number": 2,
+            "text": "When standing before a Rothko canvas, the sheer scale and vibrating hues are intended to evoke the profound states of human existence—tragedy, ecstasy, and doom. It is an encounter with the sublime, an invitation to quiet contemplation in an increasingly noisy and fragmented world."
+          }
+        ]
+      }
+    },
+    {
+      "id": "manual_art_rothko_01_card_3",
+      "stack_id": "art_rothko_01",
+      "category": "arts",
+      "topic": "Color Field Painting",
+      "philosopher": "Mark Rothko",
+      "visual_mood": "crimson_twilight",
+      "explore_title": "The Inner Light",
+      "explore_subtext": "Colors that seem to breathe and pulse, vibrating with a spiritual intensity that transcends paint.",
+      "layoutVariant": "epigraph",
+      "presentation": {
+        "title": "The Spiritual in Art",
+        "reading_parts": [
+          {
+            "part_number": 1,
+            "text": "Mark Rothko sought to bypass the intellect and strike directly at the soul. By eliminating recognizable forms and reducing painting to massive, luminous blocks of color, he removed the distractions of the material world. His works are not meant to be analyzed; they are meant to be experienced as overwhelming emotional environments."
+          },
+          {
+            "part_number": 2,
+            "text": "When standing before a Rothko canvas, the sheer scale and vibrating hues are intended to evoke the profound states of human existence—tragedy, ecstasy, and doom. It is an encounter with the sublime, an invitation to quiet contemplation in an increasingly noisy and fragmented world."
+          }
+        ]
+      }
+    }
+  ],
+  "manual_lit_borges_01": [
+    {
+      "id": "manual_lit_borges_01_card_0",
+      "stack_id": "lit_borges_01",
+      "category": "literature",
+      "topic": "Labyrinths and Mirrors",
+      "philosopher": "Jorge Luis Borges",
+      "visual_mood": "emerald_mist",
+      "explore_title": "The Infinite Library",
+      "explore_subtext": "A universe made of hexagonal rooms, containing every possible combination of letters. Total knowledge, total noise.",
+      "layoutVariant": "thesis",
+      "presentation": {
+        "title": "Fictions and Reality",
+        "reading_parts": [
+          {
+            "part_number": 1,
+            "text": "Jorge Luis Borges constructed literary architectures that defy the laws of physics and logic. His stories are philosophical thought experiments dressed as fictions, exploring the terrifying implications of infinity, eternity, and the labyrinthine nature of the universe. In his works, reality is revealed to be as fragile and constructed as a dream."
+          },
+          {
+            "part_number": 2,
+            "text": "Through metaphors of endless libraries, branching time, and terrifying mirrors, Borges dismantles the illusion of a singular, coherent identity or truth. He invites the reader into a vertigo of ideas, where knowledge is a maze that always leads back to the mystery of our own existence."
+          }
+        ]
+      }
+    },
+    {
+      "id": "manual_lit_borges_01_card_1",
+      "stack_id": "lit_borges_01",
+      "category": "literature",
+      "topic": "Labyrinths and Mirrors",
+      "philosopher": "Jorge Luis Borges",
+      "visual_mood": "emerald_mist",
+      "explore_title": "The Garden of Forking Paths",
+      "explore_subtext": "Time as a labyrinth where every outcome happens simultaneously, creating infinite parallel realities.",
+      "layoutVariant": "blockquote",
+      "presentation": {
+        "title": "Fictions and Reality",
+        "reading_parts": [
+          {
+            "part_number": 1,
+            "text": "Jorge Luis Borges constructed literary architectures that defy the laws of physics and logic. His stories are philosophical thought experiments dressed as fictions, exploring the terrifying implications of infinity, eternity, and the labyrinthine nature of the universe. In his works, reality is revealed to be as fragile and constructed as a dream."
+          },
+          {
+            "part_number": 2,
+            "text": "Through metaphors of endless libraries, branching time, and terrifying mirrors, Borges dismantles the illusion of a singular, coherent identity or truth. He invites the reader into a vertigo of ideas, where knowledge is a maze that always leads back to the mystery of our own existence."
+          }
+        ]
+      }
+    },
+    {
+      "id": "manual_lit_borges_01_card_2",
+      "stack_id": "lit_borges_01",
+      "category": "literature",
+      "topic": "Labyrinths and Mirrors",
+      "philosopher": "Jorge Luis Borges",
+      "visual_mood": "emerald_mist",
+      "explore_title": "The Aleph",
+      "explore_subtext": "A point in space that contains all other points. To see the entire universe, simultaneously, from every angle.",
+      "layoutVariant": "fragment",
+      "presentation": {
+        "title": "Fictions and Reality",
+        "reading_parts": [
+          {
+            "part_number": 1,
+            "text": "Jorge Luis Borges constructed literary architectures that defy the laws of physics and logic. His stories are philosophical thought experiments dressed as fictions, exploring the terrifying implications of infinity, eternity, and the labyrinthine nature of the universe. In his works, reality is revealed to be as fragile and constructed as a dream."
+          },
+          {
+            "part_number": 2,
+            "text": "Through metaphors of endless libraries, branching time, and terrifying mirrors, Borges dismantles the illusion of a singular, coherent identity or truth. He invites the reader into a vertigo of ideas, where knowledge is a maze that always leads back to the mystery of our own existence."
+          }
+        ]
+      }
+    },
+    {
+      "id": "manual_lit_borges_01_card_3",
+      "stack_id": "lit_borges_01",
+      "category": "literature",
+      "topic": "Labyrinths and Mirrors",
+      "philosopher": "Jorge Luis Borges",
+      "visual_mood": "emerald_mist",
+      "explore_title": "The Illusion of Identity",
+      "explore_subtext": "Are we the dreamer or the dreamt? The self shatters into a thousand reflections.",
+      "layoutVariant": "epigraph",
+      "presentation": {
+        "title": "Fictions and Reality",
+        "reading_parts": [
+          {
+            "part_number": 1,
+            "text": "Jorge Luis Borges constructed literary architectures that defy the laws of physics and logic. His stories are philosophical thought experiments dressed as fictions, exploring the terrifying implications of infinity, eternity, and the labyrinthine nature of the universe. In his works, reality is revealed to be as fragile and constructed as a dream."
+          },
+          {
+            "part_number": 2,
+            "text": "Through metaphors of endless libraries, branching time, and terrifying mirrors, Borges dismantles the illusion of a singular, coherent identity or truth. He invites the reader into a vertigo of ideas, where knowledge is a maze that always leads back to the mystery of our own existence."
+          }
+        ]
+      }
+    }
+  ],
+  "manual_arch_corbusier_01": [
+    {
+      "id": "manual_arch_corbusier_01_card_0",
+      "stack_id": "arch_corbusier_01",
+      "category": "architecture",
+      "topic": "The Machine for Living",
+      "philosopher": "Le Corbusier",
+      "visual_mood": "amber_glow",
+      "explore_title": "Form Follows Function",
+      "explore_subtext": "Stripping away ornamental excess to reveal the pure, rational geometry of the structure.",
+      "layoutVariant": "thesis",
+      "presentation": {
+        "title": "Towards a New Architecture",
+        "reading_parts": [
+          {
+            "part_number": 1,
+            "text": "Le Corbusier saw the traditional home as an obsolete relic, burdened by unnecessary ornamentation and inefficient layouts. Inspired by the sleek precision of ocean liners and airplanes, he declared that 'a house is a machine for living in'. His vision demanded radical rationality, elevating function to an aesthetic absolute."
+          },
+          {
+            "part_number": 2,
+            "text": "By formulating his 'Five Points of Architecture', he freed the wall from its structural duties, allowing light and space to pour in. His concrete pilotis lifted buildings off the ground, reconnecting humanity with the earth, while his roof gardens reclaimed the footprint of the structure, forging a stark, controversial, yet undeniable new paradigm."
+          }
+        ]
+      }
+    },
+    {
+      "id": "manual_arch_corbusier_01_card_1",
+      "stack_id": "arch_corbusier_01",
+      "category": "architecture",
+      "topic": "The Machine for Living",
+      "philosopher": "Le Corbusier",
+      "visual_mood": "amber_glow",
+      "explore_title": "The Five Points",
+      "explore_subtext": "Pilotis, free facade, open floor plan, ribbon windows, and roof gardens. The grammar of modernism.",
+      "layoutVariant": "blockquote",
+      "presentation": {
+        "title": "Towards a New Architecture",
+        "reading_parts": [
+          {
+            "part_number": 1,
+            "text": "Le Corbusier saw the traditional home as an obsolete relic, burdened by unnecessary ornamentation and inefficient layouts. Inspired by the sleek precision of ocean liners and airplanes, he declared that 'a house is a machine for living in'. His vision demanded radical rationality, elevating function to an aesthetic absolute."
+          },
+          {
+            "part_number": 2,
+            "text": "By formulating his 'Five Points of Architecture', he freed the wall from its structural duties, allowing light and space to pour in. His concrete pilotis lifted buildings off the ground, reconnecting humanity with the earth, while his roof gardens reclaimed the footprint of the structure, forging a stark, controversial, yet undeniable new paradigm."
+          }
+        ]
+      }
+    },
+    {
+      "id": "manual_arch_corbusier_01_card_2",
+      "stack_id": "arch_corbusier_01",
+      "category": "architecture",
+      "topic": "The Machine for Living",
+      "philosopher": "Le Corbusier",
+      "visual_mood": "amber_glow",
+      "explore_title": "A Machine for Living In",
+      "explore_subtext": "The house not as a sentimental shell, but as a precise instrument optimized for human needs.",
+      "layoutVariant": "fragment",
+      "presentation": {
+        "title": "Towards a New Architecture",
+        "reading_parts": [
+          {
+            "part_number": 1,
+            "text": "Le Corbusier saw the traditional home as an obsolete relic, burdened by unnecessary ornamentation and inefficient layouts. Inspired by the sleek precision of ocean liners and airplanes, he declared that 'a house is a machine for living in'. His vision demanded radical rationality, elevating function to an aesthetic absolute."
+          },
+          {
+            "part_number": 2,
+            "text": "By formulating his 'Five Points of Architecture', he freed the wall from its structural duties, allowing light and space to pour in. His concrete pilotis lifted buildings off the ground, reconnecting humanity with the earth, while his roof gardens reclaimed the footprint of the structure, forging a stark, controversial, yet undeniable new paradigm."
+          }
+        ]
+      }
+    },
+    {
+      "id": "manual_arch_corbusier_01_card_3",
+      "stack_id": "arch_corbusier_01",
+      "category": "architecture",
+      "topic": "The Machine for Living",
+      "philosopher": "Le Corbusier",
+      "visual_mood": "amber_glow",
+      "explore_title": "The Radiant City",
+      "explore_subtext": "Utopian visions of sunlight, space, and greenery, replacing the chaos of the traditional metropolis.",
+      "layoutVariant": "epigraph",
+      "presentation": {
+        "title": "Towards a New Architecture",
+        "reading_parts": [
+          {
+            "part_number": 1,
+            "text": "Le Corbusier saw the traditional home as an obsolete relic, burdened by unnecessary ornamentation and inefficient layouts. Inspired by the sleek precision of ocean liners and airplanes, he declared that 'a house is a machine for living in'. His vision demanded radical rationality, elevating function to an aesthetic absolute."
+          },
+          {
+            "part_number": 2,
+            "text": "By formulating his 'Five Points of Architecture', he freed the wall from its structural duties, allowing light and space to pour in. His concrete pilotis lifted buildings off the ground, reconnecting humanity with the earth, while his roof gardens reclaimed the footprint of the structure, forging a stark, controversial, yet undeniable new paradigm."
           }
         ]
       }

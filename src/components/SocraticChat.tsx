@@ -37,6 +37,7 @@ const SocraticChat: React.FC<SocraticChatProps> = ({
   const isMountedRef = useRef(true);
 
   useEffect(() => {
+    isMountedRef.current = true;
     return () => {
       isMountedRef.current = false;
       abortControllerRef.current?.abort();

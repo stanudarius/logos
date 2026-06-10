@@ -91,7 +91,9 @@ const PhoneEmulator: React.FC<PhoneEmulatorProps> = ({
       const dataUrl = await toPng(node, {
         quality: 0.95,
         pixelRatio: 2,
+        skipFonts: true, // Bypass font CORS issues
         filter: (el) => {
+          if (el.id === 'parallax-bg') return false;
           // Filter out the bookmark toggle and drawer when capturing
           if (el.tagName === 'BUTTON' && el.id?.startsWith('bookmark-toggle')) return false;
           if (el.classList && typeof el.classList.contains === 'function' && el.classList.contains('deep-dive-drawer')) return false;
@@ -102,11 +104,29 @@ const PhoneEmulator: React.FC<PhoneEmulatorProps> = ({
       const philosopher = currentDisplayCards[activeCardIndex]?.philosopher || "philosophy";
       const filename = `${philosopher.replace(/\s+/g, '-').toLowerCase()}-logos.png`;
 
-      // Try native share API first (mobile)
-      if (navigator.share) {
-        const res = await fetch(dataUrl);
-        const blob = await res.blob();
-        const file = new File([blob], filename, { type: blob.type });
+      // Robustly convert dataUrl (base64) to File to avoid "Failed to fetch" on data URIs
+      const arr = dataUrl.split(',');
+      const mimeMatch = arr[0].match(/:(.*?);/);
+      const mime = mimeMatch ? mimeMatch[1] : 'image/png';
+      const bstr = atob(arr[1]);
+      let n = bstr.length;
+      const u8arr = new Uint8Array(n);
+      while (n--) {
+        u8arr[n] = bstr.charCodeAt(n);
+      }
+      const file = new File([u8arr], filename, { type: mime });
+
+      const downloadFallback = () => {
+        const link = document.createElement("a");
+        link.download = filename;
+        link.href = dataUrl;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        onTriggerToast("Saved to downloads!");
+      };
+
+      if (navigator.canShare && navigator.canShare({ files: [file] })) {
         try {
           await navigator.share({
             files: [file]
@@ -116,21 +136,19 @@ const PhoneEmulator: React.FC<PhoneEmulatorProps> = ({
           if (shareErr.name === 'AbortError') {
             onTriggerToast("Share cancelled.");
           } else {
-            console.error(shareErr);
-            onTriggerToast("Failed to share.");
+            console.error("Share failed, falling back to download:", shareErr);
+            // Fallback to direct download
+            downloadFallback();
           }
         }
       } else {
         // Fallback to direct download
-        const link = document.createElement("a");
-        link.download = filename;
-        link.href = dataUrl;
-        link.click();
-        onTriggerToast("Saved to downloads!");
+        downloadFallback();
       }
-    } catch (err) {
-      console.error(err);
-      onTriggerToast("Failed to generate image.");
+    } catch (err: any) {
+      console.error("Share Button Error:", err);
+      const msg = err?.message || err?.toString() || "Unknown error";
+      onTriggerToast(`Share Error: ${msg.substring(0, 40)}`);
     } finally {
       setIsSharing(false);
     }
@@ -258,8 +276,8 @@ const PhoneEmulator: React.FC<PhoneEmulatorProps> = ({
           className="flex flex-col items-center gap-1 group active:scale-95 transition-all focus:outline-none"
         >
           <div className={`w-9 h-9 rounded-xl border flex items-center justify-center shadow-xs transition-all ${phoneTab === "explore"
-              ? "bg-[#1C1C1E] border-[#1C1C1E] text-[#FAF8F3]"
-              : "border-[#E8E4DC] bg-white hover:border-[#D4CFC5] text-[#1C1C1E] shadow-2xs"
+            ? "bg-[#1C1C1E] border-[#1C1C1E] text-[#FAF8F3]"
+            : "border-[#E8E4DC] bg-white hover:border-[#D4CFC5] text-[#1C1C1E] shadow-2xs"
             }`}>
             <BookOpen className="w-3.5 h-3.5 stroke-[1.5]" />
           </div>
@@ -275,8 +293,8 @@ const PhoneEmulator: React.FC<PhoneEmulatorProps> = ({
           className="flex flex-col items-center gap-1 group active:scale-95 transition-all focus:outline-none"
         >
           <div className={`w-9 h-9 rounded-xl border flex items-center justify-center shadow-xs transition-all ${(phoneTab === "trails" || phoneTab === "trail-view")
-              ? "bg-[#1C1C1E] border-[#1C1C1E] text-[#FAF8F3]"
-              : "border-[#E8E4DC] bg-white hover:border-[#D4CFC5] text-[#1C1C1E] shadow-2xs"
+            ? "bg-[#1C1C1E] border-[#1C1C1E] text-[#FAF8F3]"
+            : "border-[#E8E4DC] bg-white hover:border-[#D4CFC5] text-[#1C1C1E] shadow-2xs"
             }`}>
             <Waypoints className="w-3.5 h-3.5 stroke-[1.5]" />
           </div>
@@ -292,8 +310,8 @@ const PhoneEmulator: React.FC<PhoneEmulatorProps> = ({
           className="flex flex-col items-center gap-1 active:scale-95 transition-all focus:outline-none"
         >
           <div className={`w-9 h-9 rounded-xl border flex items-center justify-center shadow-xs transition-all relative ${phoneTab === "vault"
-              ? "bg-[#1C1C1E] border-[#1C1C1E] text-[#FAF8F3]"
-              : "border-[#E8E4DC] bg-white hover:border-[#D4CFC5] text-[#1C1C1E] shadow-2xs"
+            ? "bg-[#1C1C1E] border-[#1C1C1E] text-[#FAF8F3]"
+            : "border-[#E8E4DC] bg-white hover:border-[#D4CFC5] text-[#1C1C1E] shadow-2xs"
             }`}>
             <Bookmark className="w-3.5 h-3.5 fill-current stroke-[1.5]" />
             {savedVaultCards.length > 0 && (

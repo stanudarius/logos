@@ -73,6 +73,7 @@ const ParallaxBackground = () => {
 
   return (
     <motion.div
+      id="parallax-bg"
       style={{
         x: smoothX,
         y: smoothY,
@@ -103,9 +104,12 @@ const ThoughtAtom: React.FC<ThoughtAtomProps> = ({
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [showHeart, setShowHeart] = useState(false);
   const heartTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const isMountedRef = useRef(true);
 
   useEffect(() => {
+    isMountedRef.current = true;
     return () => {
+      isMountedRef.current = false;
       if (heartTimeoutRef.current) clearTimeout(heartTimeoutRef.current);
     };
   }, []);
@@ -121,7 +125,9 @@ const ThoughtAtom: React.FC<ThoughtAtomProps> = ({
         onToggleSave(index);
         setShowHeart(true);
         if (heartTimeoutRef.current) clearTimeout(heartTimeoutRef.current);
-        heartTimeoutRef.current = setTimeout(() => setShowHeart(false), 800);
+        heartTimeoutRef.current = setTimeout(() => {
+          if (isMountedRef.current) setShowHeart(false);
+        }, 800);
       }
 
       // Haptic feedback (Double Pop)
