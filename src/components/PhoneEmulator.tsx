@@ -28,8 +28,9 @@ const StatusBarTime = () => {
 
 interface PhoneEmulatorProps {
   // Display state
-  phoneTab: "explore" | "vault" | "trails";
-  currentDisplayCards: FeedCard[];
+  phoneTab: "explore" | "vault" | "trails" | "trail-view";
+  feedCards: FeedCard[];
+  activeTrailCards: FeedCard[];
   activeCardIndex: number;
 
   isFetchingMore: boolean;
@@ -56,7 +57,8 @@ interface PhoneEmulatorProps {
 
 const PhoneEmulator: React.FC<PhoneEmulatorProps> = ({
   phoneTab,
-  currentDisplayCards,
+  feedCards,
+  activeTrailCards,
   activeCardIndex,
   isFetchingMore,
   savedVaultCards,
@@ -82,7 +84,9 @@ const PhoneEmulator: React.FC<PhoneEmulatorProps> = ({
     setIsSharing(true);
     try {
       const { toPng } = await import("html-to-image");
-      const node = document.getElementById(`thought-atom-${activeCardIndex}`);
+      const container = document.getElementById(`thought-stream-${phoneTab}`);
+      if (!container) throw new Error("Stream container not found");
+      const node = container.querySelector(`[data-card-index="${activeCardIndex}"]`) as HTMLElement;
       if (!node) throw new Error("Card node not found");
 
       onTriggerToast("Generating shareable image...");
@@ -101,7 +105,8 @@ const PhoneEmulator: React.FC<PhoneEmulatorProps> = ({
         }
       });
 
-      const philosopher = currentDisplayCards[activeCardIndex]?.philosopher || "philosophy";
+      const activeCards = phoneTab === "trail-view" ? activeTrailCards : feedCards;
+      const philosopher = activeCards[activeCardIndex]?.philosopher || "philosophy";
       const filename = `${philosopher.replace(/\s+/g, '-').toLowerCase()}-logos.png`;
 
       // Robustly convert dataUrl (base64) to File to avoid "Failed to fetch" on data URIs
@@ -152,7 +157,7 @@ const PhoneEmulator: React.FC<PhoneEmulatorProps> = ({
     } finally {
       setIsSharing(false);
     }
-  }, [activeCardIndex, isSharing, currentDisplayCards, onTriggerToast]);
+  }, [activeCardIndex, isSharing, feedCards, activeTrailCards, phoneTab, onTriggerToast]);
 
   return (
     <div
@@ -198,21 +203,34 @@ const PhoneEmulator: React.FC<PhoneEmulatorProps> = ({
       <div className="relative z-10 flex-1 flex flex-col overflow-hidden">
 
         {/* EXPLORE FEED — THOUGHT STREAM */}
-        {(phoneTab === "explore" || phoneTab === "trail-view") && (
-          <>
-            <ThoughtStream
-              cards={currentDisplayCards}
-              isLoading={isFetchingMore}
-              onActiveCardChange={onActiveCardChange}
-              onFetchMore={onFetchMore}
-              savedVaultCardIds={savedVaultCardIds}
-              onToggleSave={onToggleSaveToVault}
-              onTriggerToast={onTriggerToast}
-              onOpenDeepDive={onOpenDeepDive}
-              onOpenChat={onOpenChat}
-            />
-          </>
-        )}
+        <div id="thought-stream-explore" className={`h-full w-full ${phoneTab === "explore" ? "block" : "hidden"}`}>
+          <ThoughtStream
+            cards={feedCards}
+            isLoading={isFetchingMore}
+            onActiveCardChange={onActiveCardChange}
+            onFetchMore={onFetchMore}
+            savedVaultCardIds={savedVaultCardIds}
+            onToggleSave={onToggleSaveToVault}
+            onTriggerToast={onTriggerToast}
+            onOpenDeepDive={onOpenDeepDive}
+            onOpenChat={onOpenChat}
+          />
+        </div>
+
+        {/* TRAIL VIEW — THOUGHT STREAM */}
+        <div id="thought-stream-trail-view" className={`h-full w-full ${phoneTab === "trail-view" ? "block" : "hidden"}`}>
+          <ThoughtStream
+            cards={activeTrailCards}
+            isLoading={isFetchingMore}
+            onActiveCardChange={onActiveCardChange}
+            onFetchMore={onFetchMore}
+            savedVaultCardIds={savedVaultCardIds}
+            onToggleSave={onToggleSaveToVault}
+            onTriggerToast={onTriggerToast}
+            onOpenDeepDive={onOpenDeepDive}
+            onOpenChat={onOpenChat}
+          />
+        </div>
 
         {/* THE VAULT */}
         {phoneTab === "vault" && (

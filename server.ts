@@ -96,40 +96,62 @@ app.post("/api/generate", (req, res) => {
        return res.status(404).json({ error: "Feed exhausted. No more cards in database.", feed_exhausted: true });
     }
 
-    let selectedStack: any[] = [];
+    let matchingStacks = stacksArray;
+    let nonMatchingStacks: any[][] = [];
 
     if (rabbitHoleContext && rabbitHoleContext.length > 0) {
       const contextString = rabbitHoleContext.join(" ").toLowerCase();
       
-      const matchingStacks = stacksArray.filter(stack => {
+      matchingStacks = stacksArray.filter(stack => {
         const firstCard = stack[0];
-        return contextString.includes(firstCard.category.toLowerCase()) || 
-               contextString.includes(firstCard.philosopher.toLowerCase());
+        const t = firstCard.topic?.toLowerCase() || "";
+        const p = firstCard.philosopher?.toLowerCase() || "";
+        const c = firstCard.category?.toLowerCase() || "";
+        return contextString.includes(c) || contextString.includes(p) || contextString.includes(t);
       });
       
-      const nonMatchingStacks = stacksArray.filter(stack => {
+      nonMatchingStacks = stacksArray.filter(stack => {
         const firstCard = stack[0];
-        return !contextString.includes(firstCard.category.toLowerCase()) && 
-               !contextString.includes(firstCard.philosopher.toLowerCase());
+        const t = firstCard.topic?.toLowerCase() || "";
+        const p = firstCard.philosopher?.toLowerCase() || "";
+        const c = firstCard.category?.toLowerCase() || "";
+        return !contextString.includes(c) && !contextString.includes(p) && !contextString.includes(t);
       });
+    }
 
-      // 70% chance Exploitation, 30% chance Exploration
+    const returnedCards = [];
+    let lastPhilosopher = "";
+
+    for (let i = 0; i < 4; i++) {
+      let chosenStack;
       const roll = Math.random();
-      if (roll < 0.70 && matchingStacks.length > 0) {
-        selectedStack = shuffleArray(matchingStacks)[0];
-      } else if (nonMatchingStacks.length > 0) {
-        selectedStack = shuffleArray(nonMatchingStacks)[0];
+      
+      const validMatching = matchingStacks.filter(s => s[0].philosopher !== lastPhilosopher);
+      const validNonMatching = nonMatchingStacks.filter(s => s[0].philosopher !== lastPhilosopher);
+      const validAll = stacksArray.filter(s => s[0].philosopher !== lastPhilosopher);
+
+      if (roll < 0.70 && validMatching.length > 0) {
+        chosenStack = validMatching[Math.floor(Math.random() * validMatching.length)];
+      } else if (validNonMatching.length > 0) {
+        chosenStack = validNonMatching[Math.floor(Math.random() * validNonMatching.length)];
+      } else if (validAll.length > 0) {
+        chosenStack = validAll[Math.floor(Math.random() * validAll.length)];
       } else {
-        selectedStack = shuffleArray(stacksArray)[0];
+        // Fallback if all valid arrays are empty (e.g. only 1 philosopher exists)
+        chosenStack = stacksArray[Math.floor(Math.random() * stacksArray.length)];
       }
-    } else {
-      selectedStack = shuffleArray(stacksArray)[0];
+
+      if (chosenStack) {
+        const card = chosenStack[Math.floor(Math.random() * chosenStack.length)];
+        returnedCards.push(card);
+        lastPhilosopher = card.philosopher;
+      }
     }
 
     // Assign unique runtime IDs so React handles duplicate stacks gracefully
-    const uniqueStack = selectedStack.map(card => ({
+    const uniqueStack = returnedCards.map(card => ({
         ...card,
-        id: `${card.id}_${Date.now()}_${Math.floor(Math.random() * 1000)}`
+        id: `${card.id}_${Date.now()}_${Math.floor(Math.random() * 10000)}`
     }));
 
     res.json(uniqueStack);

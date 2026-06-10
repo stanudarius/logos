@@ -201,16 +201,9 @@ const ThoughtAtom: React.FC<ThoughtAtomProps> = ({
                 {/* 4-card Sequence Progress Indicator */}
                 <div className="flex items-center gap-1 mt-1.5">
                   {(() => {
-                    let cardSequence = 1;
-                    const cardMatch = card.id.match(/_card_(\d+)/);
-                    if (cardMatch) {
-                      cardSequence = parseInt(cardMatch[1], 10) + 1; // 0-indexed from JSON
-                    } else {
-                      const normalMatch = card.id.match(/_(\d+)(?:_|$)/);
-                      if (normalMatch) {
-                        cardSequence = parseInt(normalMatch[1], 10); // 1-indexed from hardcoded
-                      }
-                    }
+                    // Progress now reflects the 4-card rhythm leading up to an interstitial, 
+                    // or the position in a 4-card Trail.
+                    const cardSequence = (index % 5) + 1;
                     return [...Array(4)].map((_, i) => (
                       <div
                         key={i}
@@ -249,8 +242,8 @@ const ThoughtAtom: React.FC<ThoughtAtomProps> = ({
             aria-label="Read Deep Dive Essay"
             className="group flex flex-col items-center gap-1 active:scale-90 transition-transform"
           >
-            <div className="w-10 h-10 rounded-full bg-[#1C1C1E] shadow-lg border border-[#3A3A3E] flex items-center justify-center">
-              <BookOpen className="w-4 h-4 text-[#FAF8F3]" />
+            <div className="w-10 h-10 rounded-full bg-white/80 backdrop-blur-md shadow-lg border border-[#E8E4DC] flex items-center justify-center">
+              <BookOpen className="w-4 h-4 text-[#1C1C1E]" />
             </div>
             <span className="text-[9px] font-bold text-[#1C1C1E] drop-shadow-sm">Read</span>
           </button>
@@ -263,8 +256,8 @@ const ThoughtAtom: React.FC<ThoughtAtomProps> = ({
             aria-label="Debate with AI"
             className="group flex flex-col items-center gap-1 active:scale-90 transition-transform"
           >
-            <div className="w-10 h-10 rounded-full bg-[#FAF8F3] shadow-lg border border-[#D4CFC5] flex items-center justify-center">
-              <MessageCircle className="w-4 h-4 text-[#B5A48B]" />
+            <div className="w-10 h-10 rounded-full bg-white/80 backdrop-blur-md shadow-lg border border-[#E8E4DC] flex items-center justify-center">
+              <MessageCircle className="w-4 h-4 text-[#1C1C1E]" />
             </div>
             <span className="text-[9px] font-bold text-[#1C1C1E] drop-shadow-sm">Debate</span>
           </button>
@@ -469,7 +462,7 @@ function renderLayout(card: FeedCard, variant: LayoutVariant, index: number = 0)
 
     case "thesis":
       return (
-        <div className="flex-1 flex flex-col items-center justify-center text-center px-6 pb-16 relative overflow-hidden">
+        <div className="flex-1 flex flex-col items-center justify-center text-center pl-6 pr-16 pb-16 relative overflow-hidden">
           <Monogram philosopher={card.philosopher} />
           <TypewriterText text={card.topic} className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#B5A48B] mb-4 relative z-10" />
 
@@ -490,7 +483,7 @@ function renderLayout(card: FeedCard, variant: LayoutVariant, index: number = 0)
 
     case "blockquote":
       return (
-        <div className="flex-1 flex flex-col justify-center text-right px-6 pr-6 pl-8 pb-16 relative overflow-hidden">
+        <div className="flex-1 flex flex-col justify-center text-right pl-8 pr-16 pb-16 relative overflow-hidden">
           <Monogram philosopher={card.philosopher} />
 
           <TypewriterText text={card.topic} className="text-[9px] font-bold uppercase tracking-[0.2em] text-[#B5A48B] mb-4 relative z-10" />
@@ -512,7 +505,7 @@ function renderLayout(card: FeedCard, variant: LayoutVariant, index: number = 0)
 
     case "fragment":
       return (
-        <div className="flex-1 flex flex-col justify-center px-5 pb-16 relative overflow-hidden">
+        <div className="flex-1 flex flex-col justify-center pl-6 pr-16 pb-16 relative overflow-hidden">
           <Monogram philosopher={card.philosopher} />
 
           <div className="flex items-center gap-2 mb-5 relative z-10">
@@ -536,7 +529,7 @@ function renderLayout(card: FeedCard, variant: LayoutVariant, index: number = 0)
 
     case "epigraph":
       return (
-        <div className="flex-1 flex flex-col items-center justify-center text-center px-7 pb-16 relative overflow-hidden">
+        <div className="flex-1 flex flex-col items-center justify-center text-center pl-7 pr-16 pb-16 relative overflow-hidden">
           <Monogram philosopher={card.philosopher} />
 
           <TypewriterText text={card.topic} className="atom-label text-[0.625rem] font-bold uppercase tracking-[0.25em] text-[#B5A48B] mb-5 relative z-10 block" />

@@ -23,19 +23,38 @@ export default function App() {
       if (!groups[card.philosopher]) groups[card.philosopher] = [];
       groups[card.philosopher].push(card);
     });
-    const shuffledPhilosophers = Object.keys(groups).sort(() => Math.random() - 0.5);
+    const philosophers = Object.keys(groups);
+    philosophers.forEach(p => groups[p].sort(() => Math.random() - 0.5));
+
+    const allInitialCards: FeedCard[] = [];
+    let cardsRemaining = true;
+    while (cardsRemaining) {
+      cardsRemaining = false;
+      const roundPhilosophers = [...philosophers].sort(() => Math.random() - 0.5);
+      roundPhilosophers.forEach(p => {
+        if (groups[p].length > 0) {
+          allInitialCards.push(groups[p].shift() as FeedCard);
+          cardsRemaining = true;
+        }
+      });
+    }
 
     const initialFeed: FeedCard[] = [];
-    shuffledPhilosophers.forEach((p, idx) => {
-      initialFeed.push(...groups[p]);
-      if (idx < shuffledPhilosophers.length - 1) {
+    let count = 0;
+    allInitialCards.forEach(card => {
+      initialFeed.push(card);
+      count++;
+      if (count % 4 === 0) {
         initialFeed.push(getRandomInterstitial());
       }
     });
+
     return initialFeed;
   });
-  const [activeCardIndex, setActiveCardIndex] = useState(0);
+  const [activeExploreIndex, setActiveExploreIndex] = useState(0);
+  const [activeTrailIndex, setActiveTrailIndex] = useState(0);
   const [phoneTab, setPhoneTab] = useState<"explore" | "vault" | "trails" | "trail-view">("explore");
+  const activeCardIndex = phoneTab === "trail-view" ? activeTrailIndex : activeExploreIndex;
   const [isFetchingInfinite, setIsFetchingInfinite] = useState(false);
   const [isConstellationOpen, setIsConstellationOpen] = useState(false);
   const [isZenModeOpen, setIsZenModeOpen] = useState(false);
@@ -136,7 +155,6 @@ export default function App() {
 
     isFetchingInfiniteRef.current = true;
     setIsFetchingInfinite(true);
-    triggerToast("Discovering new ideas...");
 
     try {
       // Calculate top 3 interests
@@ -170,12 +188,17 @@ export default function App() {
       if (!isAppMounted.current) return;
 
       setFeedCards(prev => {
-        // Prevent back-to-back interstitials if the last card is already an interstitial
-        const lastCard = prev[prev.length - 1];
-        if (lastCard && lastCard.layoutVariant === "interstitial") {
-          return [...prev, ...newFeedItems];
-        }
-        return [...prev, getRandomInterstitial(), ...newFeedItems];
+        const newFeed = [...prev];
+        let currentCount = prev.filter(c => c.layoutVariant !== "interstitial").length;
+        
+        newFeedItems.forEach(card => {
+          newFeed.push(card);
+          currentCount++;
+          if (currentCount % 4 === 0) {
+            newFeed.push(getRandomInterstitial());
+          }
+        });
+        return newFeed;
       });
     } catch (err: unknown) {
       console.error(err);
@@ -190,8 +213,13 @@ export default function App() {
 
   /** Active card tracking — driven by ThoughtStream's IntersectionObserver */
   const handleActiveCardChange = useCallback((index: number) => {
-    setActiveCardIndex(index);
-  }, []);
+    if (phoneTab === "trail-view") {
+      setActiveTrailIndex(index);
+    } else {
+      setActiveExploreIndex(index);
+    }
+    trackCardInteraction(index, 1);
+  }, [phoneTab, trackCardInteraction]);
 
   const savedVaultCardIds = useMemo(() => new Set(savedVaultCards.map(c => c.id)), [savedVaultCards]);
 
@@ -306,53 +334,6 @@ export default function App() {
     triggerToast("Zen session complete!");
   }, [triggerToast]);
 
-  const filterByThinker = useCallback(async (thinkerName: string) => {
-    // 1. Try to filter the local feed first
-    const matching = feedCards.filter(c =>
-        c.philosopher.toLowerCase().includes(thinkerName.toLowerCase())
-    );
-
-    if (matching.length > 0) {
-      const rest = feedCards.filter(c =>
-        !c.philosopher.toLowerCase().includes(thinkerName.toLowerCase())
-      );
-      setFeedCards([...matching, ...rest]);
-      setPhoneTab("explore");
-      setActiveCardIndex(0);
-      triggerToast(`Filtered stream: ${thinkerName}`);
-      return;
-    }
-
-    // 2. If not in local feed, check if it's a Trail and fetch it from the unified backend
-    const trail = READING_TRAILS.find(t =>
-      t.thinkerIds.some(tid =>
-        tid.toLowerCase() === thinkerName.toLowerCase() ||
-        thinkerName.toLowerCase().includes(tid.toLowerCase()) ||
-        tid.toLowerCase().includes(thinkerName.toLowerCase())
-      )
-    );
-
-    if (trail) {
-      triggerToast(`Fetching trail for ${thinkerName}...`);
-      try {
-        const response = await fetch(`/api/trail/${trail.id}`);
-        if (!response.ok) throw new Error("Trail not found");
-        
-        const trailCards: FeedCard[] = await response.json();
-        if (trailCards.length > 0) {
-           setFeedCards([...trailCards, ...feedCards]);
-           setPhoneTab("explore");
-           setActiveCardIndex(0);
-           triggerToast(`Filtered stream: ${thinkerName}`);
-        }
-      } catch (err) {
-         triggerToast(`No matching content found for ${thinkerName}.`);
-      }
-    } else {
-       triggerToast(`No matching content found for ${thinkerName}.`);
-    }
-  }, [feedCards, triggerToast]);
-
   const handleStartTrail = useCallback(async (trailId: string) => {
     const trail = READING_TRAILS.find(t => t.id === trailId);
     if (!trail) return;
@@ -370,7 +351,7 @@ export default function App() {
       }
 
       setActiveTrailCards(trailCards);
-      setActiveCardIndex(0);
+      setActiveTrailIndex(0);
       setPhoneTab("trail-view");
       triggerToast(`Started Trail: ${trail.title}`);
     } catch (err) {
@@ -379,10 +360,26 @@ export default function App() {
     }
   }, [triggerToast]);
 
+  const filterByThinker = useCallback(async (thinkerName: string) => {
+    const trail = READING_TRAILS.find(t =>
+      t.thinkerIds.some(tid =>
+        tid.toLowerCase() === thinkerName.toLowerCase() ||
+        thinkerName.toLowerCase().includes(tid.toLowerCase()) ||
+        tid.toLowerCase().includes(thinkerName.toLowerCase())
+      )
+    );
+
+    if (trail) {
+      handleStartTrail(trail.id);
+    } else {
+       triggerToast(`No curated trail found for ${thinkerName}.`);
+    }
+  }, [handleStartTrail, triggerToast]);
+
   const handleOpenConstellation = useCallback(() => setIsConstellationOpen(true), []);
   const handleOpenZenMode = useCallback(() => setIsZenModeOpen(true), []);
 
-  const activeCard = feedCards[activeCardIndex] || INITIAL_FEED_CARDS[0];
+
 
 
   if (!session) {
@@ -401,7 +398,8 @@ export default function App() {
 
         <PhoneEmulator
           phoneTab={phoneTab}
-          currentDisplayCards={phoneTab === "trail-view" ? activeTrailCards : feedCards}
+          feedCards={feedCards}
+          activeTrailCards={activeTrailCards}
           activeCardIndex={activeCardIndex}
 
           isFetchingMore={isFetchingInfinite}
