@@ -193,25 +193,25 @@ export const ConstellationMap: React.FC<ConstellationMapProps> = React.memo(({ o
       animate={{ opacity: 1, scale: 1 }}
       exit={{ opacity: 0, scale: 0.9 }}
       transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-      className="fixed inset-0 z-50 bg-[#020202] overflow-hidden"
+      className="fixed inset-0 z-50 bg-[#020202] overflow-auto touch-pan-x touch-pan-y"
     >
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-white/[0.03] via-transparent to-transparent opacity-80" />
-      <div className="absolute inset-0" style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg width=\'60\' height=\'60\' viewBox=\'0 0 60 60\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cg fill=\'none\' fill-rule=\'evenodd\'%3E%3Cg fill=\'%23ffffff\' fill-opacity=\'0.05\'%3E%3Cpath d=\'M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z\'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")' }} />
+      <div className="fixed inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-white/[0.03] via-transparent to-transparent opacity-80 pointer-events-none" />
+      <div className="fixed inset-0 pointer-events-none" style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg width=\'60\' height=\'60\' viewBox=\'0 0 60 60\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cg fill=\'none\' fill-rule=\'evenodd\'%3E%3Cg fill=\'%23ffffff\' fill-opacity=\'0.05\'%3E%3Cpath d=\'M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z\'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")' }} />
 
-      <div className="absolute top-8 left-8 right-8 flex justify-between items-center z-20">
-        <div>
+      <div className="fixed top-8 left-8 right-8 flex justify-between items-center z-20 pointer-events-none">
+        <div className="pointer-events-auto">
           <h2 className="text-white text-2xl font-serif italic tracking-tight mb-1">Knowledge Constellation</h2>
           <p className="text-white/40 text-xs tracking-widest uppercase font-mono">Tap a thinker to filter the Stream</p>
         </div>
         <button
           onClick={onClose}
-          className="p-3 rounded-full bg-white/5 border border-white/10 hover:bg-white/10 text-white/50 hover:text-white transition-all backdrop-blur-md"
+          className="p-3 rounded-full bg-white/5 border border-white/10 hover:bg-white/10 text-white/50 hover:text-white transition-all backdrop-blur-md pointer-events-auto"
         >
           <X className="w-6 h-6" />
         </button>
       </div>
 
-      <div className="absolute bottom-8 left-8 z-20 flex flex-wrap gap-3">
+      <div className="fixed bottom-8 left-8 z-20 flex flex-wrap gap-3 pointer-events-none">
         {(["Influenced", "Critiqued", "Contradicts", "Contemporaries", "Inspired"] as EdgeRelationship[]).map((rel) => (
           <div key={rel} className="flex items-center gap-1.5">
             <div className="w-3 h-0.5 rounded-full" style={{ backgroundColor: getRelationshipColor(rel) }} />
@@ -220,8 +220,8 @@ export const ConstellationMap: React.FC<ConstellationMapProps> = React.memo(({ o
         ))}
       </div>
 
-      <div className="absolute inset-0">
-        <svg className="w-full h-full relative z-0">
+      <div className="relative w-full h-full min-w-[1000px] min-h-[800px] mt-24 mb-24 md:m-0">
+        <svg className="absolute inset-0 w-full h-full z-0 pointer-events-none">
           {EDGES.map((edge, idx) => {
             const fromNode = nodesMap.get(edge.from);
             const toNode = nodesMap.get(edge.to);
