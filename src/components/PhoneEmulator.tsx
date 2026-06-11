@@ -59,7 +59,6 @@ const PhoneEmulator: React.FC<PhoneEmulatorProps> = ({
   onOpenChat,
   onStartTrail
 }) => {
-  // Share functionality removed.
 
   return (
     <div
