@@ -11,7 +11,6 @@ interface ThoughtStreamProps {
   onFetchMore: () => void;
   savedVaultCardIds: Set<string>;
   onToggleSave: (index: number) => void;
-  onTriggerToast: (msg: string) => void;
   onOpenDeepDive?: (index: number) => void;
   onOpenChat?: (index: number) => void;
   isTrailMode?: boolean;
@@ -28,7 +27,6 @@ const ThoughtStream: React.FC<ThoughtStreamProps> = ({
   onFetchMore,
   savedVaultCardIds,
   onToggleSave,
-  onTriggerToast,
   onOpenDeepDive,
   onOpenChat,
   isTrailMode = false
@@ -179,7 +177,6 @@ const ThoughtStream: React.FC<ThoughtStreamProps> = ({
           isSaved={savedVaultCardIds.has(card.id)}
           isActive={index === activeIndex}
           onToggleSave={onToggleSave}
-          onTriggerToast={onTriggerToast}
           onOpenDeepDive={onOpenDeepDive}
           onOpenChat={onOpenChat}
           isTrailMode={isTrailMode}

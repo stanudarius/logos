@@ -26,7 +26,6 @@ interface PhoneEmulatorProps {
   onSetPhoneTab: (tab: "explore" | "vault") => void;
   onToggleSaveToVault: (idx: number) => void;
   savedVaultCardIds: Set<string>;
-  onTriggerToast: (msg: string) => void;
   onOpenConstellation?: () => void;
   onOpenZenMode?: () => void;
   onUpdateVaultCardAnnotation: (cardId: string, text: string) => void;
@@ -44,12 +43,11 @@ const PhoneEmulator: React.FC<PhoneEmulatorProps> = ({
   activeCardIndex,
   isFetchingMore,
   savedVaultCards,
+  savedVaultCardIds,
   onActiveCardChange,
   onFetchMore,
   onSetPhoneTab,
   onToggleSaveToVault,
-  savedVaultCardIds,
-  onTriggerToast,
   onOpenConstellation,
   onOpenZenMode,
   onUpdateVaultCardAnnotation,
@@ -97,7 +95,6 @@ const PhoneEmulator: React.FC<PhoneEmulatorProps> = ({
             onFetchMore={onFetchMore}
             savedVaultCardIds={savedVaultCardIds}
             onToggleSave={onToggleSaveToVault}
-            onTriggerToast={onTriggerToast}
             onOpenDeepDive={onOpenDeepDive}
             onOpenChat={onOpenChat}
             isTrailMode={phoneTab === "trail-view"}
@@ -112,7 +109,6 @@ const PhoneEmulator: React.FC<PhoneEmulatorProps> = ({
             onFetchMore={onFetchMore}
             savedVaultCardIds={savedVaultCardIds}
             onToggleSave={onToggleSaveToVault}
-            onTriggerToast={onTriggerToast}
             onOpenDeepDive={onOpenDeepDive}
             onOpenChat={onOpenChat}
             isTrailMode={phoneTab === "trail-view"}
@@ -138,7 +134,6 @@ const PhoneEmulator: React.FC<PhoneEmulatorProps> = ({
                 <button
                   onClick={() => {
                     onSetPhoneTab("explore");
-                    onTriggerToast("Returning to the Stream.");
                   }}
                   className="group flex items-center gap-2 text-[12px] font-serif italic text-[#1C1C1E] hover:text-[#B5A48B] transition-all duration-300 mt-2"
                 >
@@ -154,7 +149,6 @@ const PhoneEmulator: React.FC<PhoneEmulatorProps> = ({
                 onUpdateAnnotation={onUpdateVaultCardAnnotation}
                 onAssignToFolder={onAssignToFolder}
                 onDeleteFromVault={onDeleteFromVault}
-                onTriggerToast={onTriggerToast}
               />
             )}
           </div>
@@ -171,7 +165,6 @@ const PhoneEmulator: React.FC<PhoneEmulatorProps> = ({
           id="phone-mode-explore-tab"
           onClick={() => {
             onSetPhoneTab("explore");
-            onTriggerToast("Switched to active Explore Feed.");
           }}
           className="flex flex-col items-center gap-1 group active:scale-95 transition-all focus:outline-none"
         >
@@ -188,7 +181,6 @@ const PhoneEmulator: React.FC<PhoneEmulatorProps> = ({
           id="phone-mode-trails-tab"
           onClick={() => {
             onSetPhoneTab("trails");
-            onTriggerToast("Opened Trails.");
           }}
           className="flex flex-col items-center gap-1 group active:scale-95 transition-all focus:outline-none"
         >
@@ -205,7 +197,6 @@ const PhoneEmulator: React.FC<PhoneEmulatorProps> = ({
           id="phone-mode-vault-tab"
           onClick={() => {
             onSetPhoneTab("vault");
-            onTriggerToast("Opened Vault.");
           }}
           className="flex flex-col items-center gap-1 active:scale-95 transition-all focus:outline-none"
         >

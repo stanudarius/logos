@@ -5,7 +5,6 @@ import { INITIAL_FEED_CARDS } from "./data/feedCards";
 import { getRandomInterstitial } from "./data/interstitials";
 import type { FeedCard, SavedVaultCard } from "./types";
 
-import Toast from "./components/Toast";
 import PhoneEmulator from "./components/PhoneEmulator";
 import { AuthScreen } from "./components/AuthScreen";
 import { ConstellationMap } from "./components/ConstellationMap";
@@ -15,7 +14,6 @@ import type { Session } from "@supabase/supabase-js";
 import { READING_TRAILS } from "./data/trailsData";
 
 export default function App() {
-  const [toastMessage, setToastMessage] = useState<string | null>(null);
 
   const [feedCards, setFeedCards] = useState<FeedCard[]>(() => {
     const groups: Record<string, FeedCard[]> = {};
@@ -139,10 +137,6 @@ export default function App() {
   }, [session]);
 
 
-  const triggerToast = useCallback((msg: string) => {
-    setToastMessage(msg);
-    setTimeout(() => setToastMessage(null), 2800);
-  }, []);
 
   const isFetchingInfiniteRef = useRef(false);
   const feedExhaustedRef = useRef(false);
@@ -172,7 +166,6 @@ export default function App() {
          const data = await response.json();
          if (data.feed_exhausted) {
              feedExhaustedRef.current = true;
-             triggerToast("You've reached the end of the feed! Check back later.");
              return;
          }
       }
@@ -199,14 +192,13 @@ export default function App() {
       });
     } catch (err: unknown) {
       console.error(err);
-      if (isAppMounted.current) triggerToast("Failed to fetch next sequence.");
     } finally {
       if (isAppMounted.current) {
         isFetchingInfiniteRef.current = false;
         setIsFetchingInfinite(false);
       }
     }
-  }, [triggerToast, phoneTab]);
+  }, [phoneTab]);
 
   const handleActiveCardChange = useCallback((index: number) => {
     if (phoneTab === "trail-view") {
@@ -230,7 +222,6 @@ export default function App() {
       const indexInVault = savedVaultCardsRef.current.findIndex(c => c.id === card.id);
       const cardToRemove = savedVaultCardsRef.current[indexInVault];
       setSavedVaultCards(prev => prev.filter(c => c.id !== card.id));
-      triggerToast("Removed from Vault");
       try {
         const { error } = await supabase.from('vault_cards').delete().eq('user_id', session.user.id).eq('card_id', card.id);
         if (error) throw error;
@@ -242,7 +233,6 @@ export default function App() {
             return next;
           });
         }
-        if (isAppMounted.current) triggerToast("Failed to remove. Try again.");
       }
     } else {
       const vaultCard: SavedVaultCard = {
@@ -251,7 +241,6 @@ export default function App() {
       };
       setSavedVaultCards(prev => [...prev, vaultCard]);
       trackCardInteraction(index, 3); // High signal for saving
-      triggerToast("Saved to Vault.");
       try {
         const { error } = await supabase.from('vault_cards').insert([{
           user_id: session.user.id,
@@ -261,10 +250,9 @@ export default function App() {
         if (error) throw error;
       } catch (err) {
         setSavedVaultCards(prev => prev.filter(c => c.id !== vaultCard.id));
-        triggerToast(`Failed to save: ${err?.message || JSON.stringify(err)}`);
       }
     }
-  }, [triggerToast, session, phoneTab, trackCardInteraction]);
+  }, [session, phoneTab, trackCardInteraction]);
 
   const deleteFromVault = useCallback(async (id: string) => {
     if (!session?.user) return;
@@ -272,7 +260,6 @@ export default function App() {
     const indexInVault = savedVaultCards.findIndex(c => c.id === id);
     const cardToDelete = savedVaultCards[indexInVault];
     setSavedVaultCards(prev => prev.filter(c => c.id !== id));
-    triggerToast("Card removed from vault.");
 
     try {
       const { error } = await supabase.from('vault_cards').delete().eq('user_id', session.user.id).eq('card_id', id);
@@ -285,9 +272,8 @@ export default function App() {
           return next;
         });
       }
-      if (isAppMounted.current) triggerToast("Failed to remove. Try again.");
     }
-  }, [triggerToast, session, savedVaultCards]);
+  }, [session, savedVaultCards]);
 
   const updateVaultCardAnnotation = useCallback(async (id: string, annotation: string) => {
     const cardToUpdate = savedVaultCards.find(c => c.id === id);
@@ -302,10 +288,9 @@ export default function App() {
         if (error) throw error;
       } catch (err) {
         setSavedVaultCards(prev => prev.map(c => c.id === id ? cardToUpdate : c));
-        triggerToast("Failed to update annotation.");
       }
     }
-  }, [savedVaultCards, session, triggerToast]);
+  }, [savedVaultCards, session]);
 
   const assignToFolder = useCallback(async (id: string, folderName: string | undefined) => {
     const cardToUpdate = savedVaultCards.find(c => c.id === id);
@@ -313,7 +298,6 @@ export default function App() {
 
     const newCardData = { ...cardToUpdate, user_folder: folderName };
     setSavedVaultCards(prev => prev.map(c => c.id === id ? newCardData : c));
-    triggerToast(folderName ? `Moved to ${folderName}` : "Removed from folder");
 
     if (session?.user) {
       try {
@@ -321,20 +305,17 @@ export default function App() {
         if (error) throw error;
       } catch (err) {
         setSavedVaultCards(prev => prev.map(c => c.id === id ? cardToUpdate : c));
-        triggerToast("Failed to move folder.");
       }
     }
-  }, [savedVaultCards, session, triggerToast]);
+  }, [savedVaultCards, session]);
 
   const handleZenSessionComplete = useCallback(() => {
-    triggerToast("Zen session complete!");
-  }, [triggerToast]);
+  }, []);
 
   const handleStartTrail = useCallback(async (trailId: string) => {
     const trail = READING_TRAILS.find(t => t.id === trailId);
     if (!trail) return;
 
-    triggerToast(`Loading Trail: ${trail.title}...`);
     try {
       const response = await fetch(`/api/trail/${trailId}`);
       if (!response.ok) throw new Error("Trail not found");
@@ -342,19 +323,16 @@ export default function App() {
       const trailCards: FeedCard[] = await response.json();
       
       if (trailCards.length === 0) {
-        triggerToast(`Content not yet generated for ${trail.title}.`);
         return;
       }
 
       setActiveTrailCards(trailCards);
       setActiveTrailIndex(0);
       setPhoneTab("trail-view");
-      triggerToast(`Started Trail: ${trail.title}`);
     } catch (err) {
        console.error("Failed to load trail:", err);
-       triggerToast(`Failed to load ${trail.title}.`);
     }
-  }, [triggerToast]);
+  }, []);
 
   const filterByThinker = useCallback(async (thinkerName: string) => {
     const trail = READING_TRAILS.find(t =>
@@ -368,9 +346,8 @@ export default function App() {
     if (trail) {
       handleStartTrail(trail.id);
     } else {
-       triggerToast(`No curated trail found for ${thinkerName}.`);
     }
-  }, [handleStartTrail, triggerToast]);
+  }, [handleStartTrail]);
 
   const handleOpenConstellation = useCallback(() => setIsConstellationOpen(true), []);
   const handleOpenZenMode = useCallback(() => setIsZenModeOpen(true), []);
@@ -381,8 +358,7 @@ export default function App() {
   if (!session) {
     return (
       <div className="w-full h-[100dvh] bg-[#0A0A0A] flex items-center justify-center overflow-hidden p-4 sm:p-8">
-        <Toast message={toastMessage} />
-        <AuthScreen onLoginSuccess={() => { }} onTriggerToast={triggerToast} />
+        <AuthScreen onLoginSuccess={() => { }} />
       </div>
     );
   }
@@ -390,7 +366,6 @@ export default function App() {
   return (
     <div className="w-full h-[100dvh] bg-[#0A0A0A] flex items-center justify-center overflow-hidden p-0 sm:p-8">
       <div className="w-full sm:max-w-[420px] h-full flex flex-col items-center justify-center font-sans relative">
-        <Toast message={toastMessage} />
 
         <PhoneEmulator
           phoneTab={phoneTab}
@@ -406,7 +381,6 @@ export default function App() {
           onToggleSaveToVault={toggleSaveToVault}
           savedVaultCardIds={savedVaultCardIds}
           onDeleteFromVault={deleteFromVault}
-          onTriggerToast={triggerToast}
           onOpenConstellation={handleOpenConstellation}
           onOpenZenMode={handleOpenZenMode}
           onUpdateVaultCardAnnotation={updateVaultCardAnnotation}

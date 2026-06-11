@@ -14,7 +14,6 @@ interface ThoughtAtomProps {
   index: number;
   isSaved: boolean;
   onToggleSave: (index: number) => void;
-  onTriggerToast: (msg: string) => void;
   onOpenDeepDive?: (index: number) => void;
   onOpenChat?: (index: number) => void;
   isActive?: boolean;
@@ -92,7 +91,6 @@ const ThoughtAtom: React.FC<ThoughtAtomProps> = ({
   index,
   isSaved,
   onToggleSave,
-  onTriggerToast,
   onOpenDeepDive,
   onOpenChat,
   isActive,

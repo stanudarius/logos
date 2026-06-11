@@ -28,7 +28,6 @@ interface CommonplaceBookProps {
   onUpdateAnnotation: (id: string, text: string) => void;
   onAssignToFolder: (id: string, folderName: string | undefined) => void;
   onDeleteFromVault: (id: string) => void;
-  onTriggerToast: (msg: string) => void;
 }
 
 const CommonplaceBook: React.FC<CommonplaceBookProps> = ({
@@ -81,7 +80,6 @@ const CommonplaceBook: React.FC<CommonplaceBookProps> = ({
   const handleExport = async () => {
     if (orderedCards.length === 0) return;
     setIsExporting(true);
-    onTriggerToast("Synthesizing Commonplace Book essay...");
     try {
       const res = await fetch("/api/export", {
         method: "POST",
@@ -98,10 +96,8 @@ const CommonplaceBook: React.FC<CommonplaceBookProps> = ({
       a.download = "My_Commonplace_Book.md";
       a.click();
       URL.revokeObjectURL(url);
-      onTriggerToast("Commonplace Book exported!");
     } catch (err) {
       console.error(err);
-      onTriggerToast("Failed to export.");
     } finally {
       setIsExporting(false);
     }
