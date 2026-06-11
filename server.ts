@@ -57,7 +57,8 @@ try {
 
 // Validation Schemas
 const generateSchema = z.object({
-  rabbitHoleContext: z.array(z.string()).optional()
+  rabbitHoleContext: z.array(z.string()).optional(),
+  seenIds: z.array(z.string()).optional()
 });
 
 const chatSchema = z.object({
@@ -87,19 +88,25 @@ app.post("/api/generate", (req, res) => {
       return res.status(400).json({ error: "Invalid request payload", details: parsed.error.issues });
     }
 
-    const { rabbitHoleContext } = parsed.data;
+    const { rabbitHoleContext, seenIds } = parsed.data;
 
-    if (stacksArray.length === 0) {
+    const seenSet = new Set(seenIds || []);
+
+    const availableStacks = stacksArray
+      .map(stack => stack.filter(card => !seenSet.has(card.id)))
+      .filter(stack => stack.length > 0);
+
+    if (availableStacks.length === 0) {
        return res.status(404).json({ error: "Feed exhausted. No more cards in database.", feed_exhausted: true });
     }
 
-    let matchingStacks = stacksArray;
+    let matchingStacks = availableStacks;
     let nonMatchingStacks: any[][] = [];
 
     if (rabbitHoleContext && rabbitHoleContext.length > 0) {
       const contextString = rabbitHoleContext.join(" ").toLowerCase();
       
-      matchingStacks = stacksArray.filter(stack => {
+      matchingStacks = availableStacks.filter(stack => {
         const firstCard = stack[0];
         const t = firstCard.topic?.toLowerCase() || "";
         const p = firstCard.philosopher?.toLowerCase() || "";
@@ -107,7 +114,7 @@ app.post("/api/generate", (req, res) => {
         return contextString.includes(c) || contextString.includes(p) || contextString.includes(t);
       });
       
-      nonMatchingStacks = stacksArray.filter(stack => {
+      nonMatchingStacks = availableStacks.filter(stack => {
         const firstCard = stack[0];
         const t = firstCard.topic?.toLowerCase() || "";
         const p = firstCard.philosopher?.toLowerCase() || "";
@@ -123,9 +130,9 @@ app.post("/api/generate", (req, res) => {
       let chosenStack;
       const roll = Math.random();
       
-      const validMatching = matchingStacks.filter(s => s[0].philosopher !== lastPhilosopher);
-      const validNonMatching = nonMatchingStacks.filter(s => s[0].philosopher !== lastPhilosopher);
-      const validAll = stacksArray.filter(s => s[0].philosopher !== lastPhilosopher);
+      const validMatching = matchingStacks.filter(s => s.length > 0 && s[0].philosopher !== lastPhilosopher);
+      const validNonMatching = nonMatchingStacks.filter(s => s.length > 0 && s[0].philosopher !== lastPhilosopher);
+      const validAll = availableStacks.filter(s => s.length > 0 && s[0].philosopher !== lastPhilosopher);
 
       if (roll < 0.70 && validMatching.length > 0) {
         chosenStack = validMatching[Math.floor(Math.random() * validMatching.length)];
@@ -134,18 +141,26 @@ app.post("/api/generate", (req, res) => {
       } else if (validAll.length > 0) {
         chosenStack = validAll[Math.floor(Math.random() * validAll.length)];
       } else {
-        chosenStack = stacksArray[Math.floor(Math.random() * stacksArray.length)];
+        const fallbackStacks = availableStacks.filter(s => s.length > 0);
+        if (fallbackStacks.length > 0) {
+          chosenStack = fallbackStacks[Math.floor(Math.random() * fallbackStacks.length)];
+        }
       }
 
-      if (chosenStack) {
-        const card = chosenStack[Math.floor(Math.random() * chosenStack.length)];
+      if (chosenStack && chosenStack.length > 0) {
+        const cardIndex = Math.floor(Math.random() * chosenStack.length);
+        const card = chosenStack[cardIndex];
         returnedCards.push(card);
         lastPhilosopher = card.philosopher;
+        chosenStack.splice(cardIndex, 1);
+      } else {
+        break;
       }
     }
 
     const uniqueStack = returnedCards.map(card => ({
         ...card,
+        base_id: card.id,
         id: `${card.id}_${Date.now()}_${Math.floor(Math.random() * 10000)}`
     }));
 

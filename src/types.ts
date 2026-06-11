@@ -24,6 +24,7 @@ export interface FeedCard {
   explore_subtext: string;
   presentation: Presentation;
   stack_id?: string;
+  base_id?: string;
   /** Assigned programmatically — cycles through 4 typographic layouts */
   layoutVariant?: LayoutVariant;
 }

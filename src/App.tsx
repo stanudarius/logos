@@ -161,11 +161,16 @@ export default function App() {
         .slice(0, 3)
         .map(([topic]) => topic);
 
+      const seenIds = feedCardsRef.current
+        .filter(c => c.layoutVariant !== "interstitial")
+        .map(c => c.base_id || c.id);
+
       const response = await fetch("/api/generate", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          rabbitHoleContext: sortedInterests.length > 0 ? sortedInterests : undefined
+          rabbitHoleContext: sortedInterests.length > 0 ? sortedInterests : undefined,
+          seenIds
         }),
       });
       
