@@ -57,10 +57,10 @@ export const NODES: Node[] = [
   { id: "warhol", label: "Andy Warhol", x: 85, y: 55, group: "arts" },
   { id: "abramovic", label: "Marina Abramović", x: 50, y: 45, group: "arts" },
 
-  // Architecture (existing)
-  { id: "gaudi", label: "Gaudi", x: 90, y: 70, group: "architecture" },
-  { id: "wright", label: "Frank Lloyd Wright", x: 10, y: 80, group: "architecture" },
-  { id: "corbusier", label: "Le Corbusier", x: 15, y: 95, group: "architecture" },
+  // Architecture (now Arts)
+  { id: "gaudi", label: "Gaudi", x: 90, y: 70, group: "arts" },
+  { id: "wright", label: "Frank Lloyd Wright", x: 10, y: 80, group: "arts" },
+  { id: "corbusier", label: "Le Corbusier", x: 15, y: 95, group: "arts" },
 ];
 
 export const EDGES: GraphEdge[] = [
