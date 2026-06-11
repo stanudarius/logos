@@ -67,6 +67,27 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({ onLoginSuccess }) => {
     }
   };
 
+  const handleForgotPassword = async () => {
+    if (!email) {
+      setError("Please enter your email address to reset your password.");
+      return;
+    }
+    setLoading(true);
+    setError(null);
+    setSuccess(null);
+    try {
+      // Need to provide a redirectUrl if we have a specific path to handle resets
+      // Assuming default behavior for now
+      const { error } = await supabase.auth.resetPasswordForEmail(email);
+      if (error) throw error;
+      setSuccess("Password reset link sent! Check your email.");
+    } catch (err: any) {
+      setError(err.message || "Failed to send reset link.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="flex flex-col items-center justify-center h-full w-full bg-[#0A0A0A] text-white p-8">
       <div className="w-full max-w-sm">
@@ -111,13 +132,28 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({ onLoginSuccess }) => {
           </button>
         </form>
 
-        <div className="mt-6 text-center">
+        <div className="mt-6 flex flex-col items-center gap-4">
           <button 
-            onClick={() => setIsSignUp(!isSignUp)}
+            onClick={() => {
+              setIsSignUp(!isSignUp);
+              setError(null);
+              setSuccess(null);
+            }}
+            type="button"
             className="text-xs text-neutral-400 hover:text-white transition-colors"
           >
             {isSignUp ? "Already have an account? Sign in." : "Need an account? Sign up."}
           </button>
+
+          {!isSignUp && (
+            <button
+              onClick={handleForgotPassword}
+              type="button"
+              className="text-xs text-neutral-500 hover:text-white transition-colors"
+            >
+              Forgot your password?
+            </button>
+          )}
         </div>
       </div>
     </div>
