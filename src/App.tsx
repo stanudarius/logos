@@ -9,6 +9,7 @@ import PhoneEmulator from "./components/PhoneEmulator";
 import { AuthScreen } from "./components/AuthScreen";
 import { ConstellationMap } from "./components/ConstellationMap";
 import ZenMode from "./components/ZenMode";
+import { ResetPasswordScreen } from "./components/ResetPasswordScreen";
 import { supabase } from "./lib/supabase";
 import type { Session } from "@supabase/supabase-js";
 import { READING_TRAILS } from "./data/trailsData";
@@ -56,6 +57,7 @@ export default function App() {
   const [isFetchingInfinite, setIsFetchingInfinite] = useState(false);
   const [isConstellationOpen, setIsConstellationOpen] = useState(false);
   const [isZenModeOpen, setIsZenModeOpen] = useState(false);
+  const [isRecoveringPassword, setIsRecoveringPassword] = useState(false);
 
   const [activeTrailCards, setActiveTrailCards] = useState<FeedCard[]>([]);
 
@@ -106,8 +108,13 @@ export default function App() {
 
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
-      if (isMounted) setSession(session);
+    } = supabase.auth.onAuthStateChange((event, session) => {
+      if (isMounted) {
+        setSession(session);
+        if (event === 'PASSWORD_RECOVERY') {
+          setIsRecoveringPassword(true);
+        }
+      }
     });
 
     return () => {
@@ -354,6 +361,14 @@ export default function App() {
 
 
 
+
+  if (isRecoveringPassword) {
+    return (
+      <div className="w-full h-[100dvh] bg-[#0A0A0A] flex items-center justify-center overflow-hidden p-4 sm:p-8">
+        <ResetPasswordScreen onPasswordReset={() => setIsRecoveringPassword(false)} />
+      </div>
+    );
+  }
 
   if (!session) {
     return (
