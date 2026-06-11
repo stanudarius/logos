@@ -219,7 +219,7 @@ const ThoughtAtom: React.FC<ThoughtAtomProps> = ({
         </div>
       )}
 
-      {/* Vertical Action Bar (TikTok Style) */}
+      {/* Vertical Action Bar */}
       {layoutVariant !== "interstitial" && (
         <div className="absolute right-3 bottom-24 z-40 flex flex-col gap-5 pointer-events-auto">
           <button

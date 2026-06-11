@@ -18,7 +18,7 @@ interface ThoughtStreamProps {
 }
 
 /**
- * ThoughtStream — CSS scroll-snap container for the vertical "TikTok" feed.
+ * ThoughtStream — CSS scroll-snap container for the vertical feed.
  * Tracks active card via scroll events and infinite scroll at the bottom.
  */
 const ThoughtStream: React.FC<ThoughtStreamProps> = ({
