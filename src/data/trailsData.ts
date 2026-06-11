@@ -279,7 +279,7 @@ export const READING_TRAILS: ReadingTrail[] = [
     thinkerIds: ["Frida Kahlo"]
   },
 
-  // ================= NEW ARCHITECTURE (Assimilated to ARTS) =================
+
   {
     id: "organic-architecture_gaudi",
     category: "arts",
