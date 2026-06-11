@@ -35,6 +35,7 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({ onLoginSuccess }) => {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
   const [isSignUp, setIsSignUp] = useState(false);
+  const [isDelete, setIsDelete] = useState(false);
 
   const handleAuth = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -43,6 +44,24 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({ onLoginSuccess }) => {
     setSuccess(null);
 
     try {
+      if (isDelete) {
+        // Step 1: Authenticate to prove identity
+        const { error: signInError } = await supabase.auth.signInWithPassword({ email, password });
+        if (signInError) throw new Error("Invalid email or password. Cannot delete account.");
+        
+        // Step 2: Delete via RPC
+        const { error: rpcError } = await supabase.rpc('delete_user');
+        if (rpcError) throw new Error("Failed to delete account. Did you run the SQL setup script?");
+        
+        // Step 3: Clean up session
+        await supabase.auth.signOut();
+        
+        setSuccess("Your account has been permanently deleted.");
+        setIsDelete(false);
+        setPassword('');
+        return;
+      }
+
       if (isSignUp) {
         const isPwned = await checkPasswordPwned(password);
         if (isPwned) {
@@ -126,26 +145,32 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({ onLoginSuccess }) => {
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-white text-black font-semibold rounded-xl px-4 py-3 text-sm hover:bg-neutral-200 transition-colors active:scale-[0.98] disabled:opacity-50"
+            className={`w-full font-semibold rounded-xl px-4 py-3 text-sm transition-colors active:scale-[0.98] disabled:opacity-50 ${
+              isDelete 
+                ? "bg-red-500/20 text-red-500 hover:bg-red-500/30 border border-red-500/50" 
+                : "bg-white text-black hover:bg-neutral-200"
+            }`}
           >
-            {loading ? "Processing..." : (isSignUp ? "Create Account" : "Sign In")}
+            {loading ? "Processing..." : isDelete ? "Permanently Delete Account" : isSignUp ? "Create Account" : "Sign In"}
           </button>
         </form>
 
         <div className="mt-6 flex flex-col items-center gap-4">
-          <button 
-            onClick={() => {
-              setIsSignUp(!isSignUp);
-              setError(null);
-              setSuccess(null);
-            }}
-            type="button"
-            className="text-xs text-neutral-400 hover:text-white transition-colors"
-          >
-            {isSignUp ? "Already have an account? Sign in." : "Need an account? Sign up."}
-          </button>
+          {!isDelete && (
+            <button 
+              onClick={() => {
+                setIsSignUp(!isSignUp);
+                setError(null);
+                setSuccess(null);
+              }}
+              type="button"
+              className="text-xs text-neutral-400 hover:text-white transition-colors"
+            >
+              {isSignUp ? "Already have an account? Sign in." : "Need an account? Sign up."}
+            </button>
+          )}
 
-          {!isSignUp && (
+          {!isSignUp && !isDelete && (
             <button
               onClick={handleForgotPassword}
               type="button"
@@ -154,6 +179,19 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({ onLoginSuccess }) => {
               Forgot your password?
             </button>
           )}
+
+          <button
+            onClick={() => {
+              setIsDelete(!isDelete);
+              setIsSignUp(false);
+              setError(null);
+              setSuccess(null);
+            }}
+            type="button"
+            className={`text-xs transition-colors ${isDelete ? "text-neutral-400 hover:text-white" : "text-red-500/60 hover:text-red-500"}`}
+          >
+            {isDelete ? "Cancel deletion, go back to sign in." : "Delete Account"}
+          </button>
         </div>
       </div>
     </div>
