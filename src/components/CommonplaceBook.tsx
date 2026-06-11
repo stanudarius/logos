@@ -35,7 +35,7 @@ const CommonplaceBook: React.FC<CommonplaceBookProps> = ({
   onUpdateAnnotation,
   onAssignToFolder,
   onDeleteFromVault,
-  onTriggerToast,
+
 }) => {
   const [orderedCards, setOrderedCards] = useState(cards);
   const [isExporting, setIsExporting] = useState(false);
