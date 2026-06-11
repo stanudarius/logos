@@ -18,6 +18,7 @@ interface ThoughtAtomProps {
   onOpenDeepDive?: (index: number) => void;
   onOpenChat?: (index: number) => void;
   isActive?: boolean;
+  isTrailMode?: boolean;
 }
 
 const ParallaxBackground = () => {
@@ -94,7 +95,8 @@ const ThoughtAtom: React.FC<ThoughtAtomProps> = ({
   onTriggerToast,
   onOpenDeepDive,
   onOpenChat,
-  isActive
+  isActive,
+  isTrailMode = false
 }) => {
   const [isDeepDiveOpen, setIsDeepDiveOpen] = useState(false);
   const [isChatOpen, setIsChatOpen] = useState(false);
@@ -195,20 +197,22 @@ const ThoughtAtom: React.FC<ThoughtAtomProps> = ({
                   {card.presentation?.title || card.topic}
                 </p>
                 {/* 4-card Sequence Progress Indicator */}
-                <div className="flex items-center gap-1 mt-1.5">
-                  {(() => {
-                    // Progress reflects the 4-card rhythm leading up to an interstitial, 
-                    // or the position in a 4-card Trail.
-                    const cardSequence = (index % 5) + 1;
-                    return [...Array(4)].map((_, i) => (
-                      <div
-                        key={i}
-                        className={`h-[2px] w-2.5 rounded-full transition-all ${i < cardSequence ? "bg-[#B5A48B]" : "bg-[#E8E4DC]"
-                          }`}
-                      />
-                    ));
-                  })()}
-                </div>
+                {isTrailMode && (
+                  <div className="flex items-center gap-1 mt-1.5">
+                    {(() => {
+                      // Progress reflects the 4-card rhythm leading up to an interstitial, 
+                      // or the position in a 4-card Trail.
+                      const cardSequence = (index % 5) + 1;
+                      return [...Array(4)].map((_, i) => (
+                        <div
+                          key={i}
+                          className={`h-[2px] w-2.5 rounded-full transition-all ${i < cardSequence ? "bg-[#B5A48B]" : "bg-[#E8E4DC]"
+                            }`}
+                        />
+                      ));
+                    })()}
+                  </div>
+                )}
               </div>
             </div>
           </div>

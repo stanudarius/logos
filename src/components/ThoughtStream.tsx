@@ -14,6 +14,7 @@ interface ThoughtStreamProps {
   onTriggerToast: (msg: string) => void;
   onOpenDeepDive?: (index: number) => void;
   onOpenChat?: (index: number) => void;
+  isTrailMode?: boolean;
 }
 
 /**
@@ -29,7 +30,8 @@ const ThoughtStream: React.FC<ThoughtStreamProps> = ({
   onToggleSave,
   onTriggerToast,
   onOpenDeepDive,
-  onOpenChat
+  onOpenChat,
+  isTrailMode = false
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [activeIndex, setActiveIndex] = useState(0);
@@ -180,6 +182,7 @@ const ThoughtStream: React.FC<ThoughtStreamProps> = ({
           onTriggerToast={onTriggerToast}
           onOpenDeepDive={onOpenDeepDive}
           onOpenChat={onOpenChat}
+          isTrailMode={isTrailMode}
         />
       ))}
       <div ref={sentinelRef} className="h-4 w-full flex-shrink-0" aria-hidden="true" />

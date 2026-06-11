@@ -189,6 +189,7 @@ const PhoneEmulator: React.FC<PhoneEmulatorProps> = ({
             onTriggerToast={onTriggerToast}
             onOpenDeepDive={onOpenDeepDive}
             onOpenChat={onOpenChat}
+            isTrailMode={phoneTab === "trail-view"}
           />
         </div>
 
@@ -203,6 +204,7 @@ const PhoneEmulator: React.FC<PhoneEmulatorProps> = ({
             onTriggerToast={onTriggerToast}
             onOpenDeepDive={onOpenDeepDive}
             onOpenChat={onOpenChat}
+            isTrailMode={phoneTab === "trail-view"}
           />
         </div>
 
