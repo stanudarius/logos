@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
 import {
-  BookOpen, Bookmark, Network, ArrowLeft, Timer, Waypoints, X, Share
+  BookOpen, Bookmark, Network, ArrowLeft, Timer, Waypoints, X
 } from "lucide-react";
 import { motion } from "motion/react";
 import type { FeedCard, SavedVaultCard } from "../types";
@@ -59,46 +59,7 @@ const PhoneEmulator: React.FC<PhoneEmulatorProps> = ({
   onOpenChat,
   onStartTrail
 }) => {
-  const [isSharing, setIsSharing] = useState(false);
-  const [shareImage, setShareImage] = useState<string | null>(null);
-
-  const handleShareClick = useCallback(async () => {
-    if (isSharing) return;
-    setIsSharing(true);
-    try {
-      const { toPng } = await import("html-to-image");
-      const container = document.getElementById(`thought-stream-${phoneTab}`);
-      if (!container) throw new Error("Stream container not found");
-      const node = container.querySelector(`[data-card-index="${activeCardIndex}"]`) as HTMLElement;
-      if (!node) throw new Error("Card node not found");
-
-      onTriggerToast("Generating shareable image...");
-
-      // Temporarily hide the deep dive drawer and buttons if they exist
-      const dataUrl = await toPng(node, {
-        quality: 0.95,
-        pixelRatio: 2,
-        skipFonts: true, // Bypass font CORS issues
-        filter: (el) => {
-          if (el.id === 'parallax-bg') return false;
-          // Filter out the bookmark toggle and drawer when capturing
-          if (el.tagName === 'BUTTON' && el.id?.startsWith('bookmark-toggle')) return false;
-          if (el.classList && typeof el.classList.contains === 'function' && el.classList.contains('deep-dive-drawer')) return false;
-          return true;
-        }
-      });
-
-      // Instead of relying on buggy Web Share API with async delays in iOS PWAs,
-      // we display the generated image in a modal and instruct the user to long-press.
-      setShareImage(dataUrl);
-      onTriggerToast("Image ready!");
-    } catch (err) {
-      console.error("Failed to generate image", err);
-      onTriggerToast("Failed to create image");
-    } finally {
-      setIsSharing(false);
-    }
-  }, [phoneTab, activeCardIndex, activeTrailCards, feedCards, isSharing, onTriggerToast]);
+  // Share functionality removed.
 
   return (
     <div
@@ -116,14 +77,6 @@ const PhoneEmulator: React.FC<PhoneEmulatorProps> = ({
               title="Zen Mode"
             >
               <Timer className="w-5 h-5" />
-            </button>
-            <button
-              onClick={handleShareClick}
-              disabled={isSharing}
-              className="p-1.5 rounded-full backdrop-blur-md bg-[#1C1C1E]/5 hover:bg-[#1C1C1E]/15 transition-all text-[#1C1C1E] disabled:opacity-50"
-              title="Share Snapshot"
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8" /><polyline points="16 6 12 2 8 6" /><line x1="12" x2="12" y1="2" y2="15" /></svg>
             </button>
             <button
               onClick={onOpenConstellation}
@@ -273,69 +226,6 @@ const PhoneEmulator: React.FC<PhoneEmulatorProps> = ({
       </div>
 
       <div className="absolute bottom-1 left-1/2 -translate-x-1/2 w-32 h-1 bg-[#D4CFC5]/60 rounded-full select-none pointer-events-none hidden sm:block" />
-
-      {shareImage && (
-        <div className="absolute inset-0 z-[100] bg-black/90 flex flex-col items-center justify-center p-6 backdrop-blur-sm">
-          <button
-            onClick={() => setShareImage(null)}
-            className="absolute top-6 right-6 w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-white/70 hover:text-white transition-all"
-          >
-            <X className="w-4 h-4" />
-          </button>
-          
-          <div className="w-full max-w-[280px] rounded-2xl overflow-hidden shadow-2xl mb-6 ring-1 ring-white/10 pointer-events-auto touch-callout-default">
-            <img 
-              src={shareImage} 
-              alt="Generated card" 
-              className="w-full h-auto pointer-events-auto"
-              style={{ WebkitTouchCallout: 'default' }}
-            />
-          </div>
-          
-          <div className="text-center space-y-2 pointer-events-none">
-            <h3 className="text-white font-serif text-xl italic">Long-press to save</h3>
-            <p className="text-white/50 text-xs px-8">
-              Press and hold the image above to save it directly to your Photos.
-            </p>
-          </div>
-          
-          <button 
-            onClick={async () => {
-              if (navigator.share) {
-                try {
-                  const arr = shareImage.split(',');
-                  const mimeMatch = arr[0].match(/:(.*?);/);
-                  const mime = mimeMatch ? mimeMatch[1] : 'image/png';
-                  const bstr = atob(arr[1]);
-                  let n = bstr.length;
-                  const u8arr = new Uint8Array(n);
-                  while (n--) u8arr[n] = bstr.charCodeAt(n);
-                  const file = new File([u8arr], "logos-card.png", { type: mime });
-                  await navigator.share({ files: [file] });
-                } catch(e) {
-                  // Fallback to manual download if share sheet fails
-                  const link = document.createElement("a");
-                  link.download = "logos-card.png";
-                  link.href = shareImage;
-                  document.body.appendChild(link);
-                  link.click();
-                  document.body.removeChild(link);
-                }
-              } else {
-                  const link = document.createElement("a");
-                  link.download = "logos-card.png";
-                  link.href = shareImage;
-                  document.body.appendChild(link);
-                  link.click();
-                  document.body.removeChild(link);
-              }
-            }}
-            className="mt-8 px-6 py-3 rounded-full bg-white/10 hover:bg-white/20 text-white font-semibold text-sm flex items-center gap-2 transition-all active:scale-95"
-          >
-            <Share className="w-4 h-4" /> Share via OS
-          </button>
-        </div>
-      )}
 
     </div>
   );
