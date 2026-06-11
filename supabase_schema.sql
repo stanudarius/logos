@@ -3,8 +3,6 @@
 -- 1. Create Profiles Table
 CREATE TABLE profiles (
   id UUID REFERENCES auth.users NOT NULL PRIMARY KEY,
-  mastery_points INTEGER DEFAULT 120,
-  streak INTEGER DEFAULT 3,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc', NOW())
 );
 
