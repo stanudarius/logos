@@ -97,7 +97,8 @@ const PhoneEmulator: React.FC<PhoneEmulatorProps> = ({
             onToggleSave={onToggleSaveToVault}
             onOpenDeepDive={onOpenDeepDive}
             onOpenChat={onOpenChat}
-            isTrailMode={phoneTab === "trail-view"}
+            isTrailMode={false}
+            isActiveTab={phoneTab === "explore"}
           />
         </div>
 
@@ -112,6 +113,7 @@ const PhoneEmulator: React.FC<PhoneEmulatorProps> = ({
             onOpenDeepDive={onOpenDeepDive}
             onOpenChat={onOpenChat}
             isTrailMode={phoneTab === "trail-view"}
+            isActiveTab={phoneTab === "trail-view"}
           />
         </div>
 
