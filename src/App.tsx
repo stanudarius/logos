@@ -17,38 +17,29 @@ import { READING_TRAILS } from "./data/trailsData";
 export default function App() {
 
   const [feedCards, setFeedCards] = useState<FeedCard[]>(() => {
-    const groups: Record<string, FeedCard[]> = {};
-    INITIAL_FEED_CARDS.forEach(card => {
-      if (!groups[card.philosopher]) groups[card.philosopher] = [];
-      groups[card.philosopher].push(card);
-    });
-    const philosophers = Object.keys(groups);
-    philosophers.forEach(p => groups[p].sort(() => Math.random() - 0.5));
+    const groups = INITIAL_FEED_CARDS.reduce((acc, card) => {
+      acc[card.philosopher] = acc[card.philosopher] || [];
+      acc[card.philosopher].push(card);
+      return acc;
+    }, {} as Record<string, FeedCard[]>);
+
+    Object.values(groups).forEach(g => g.sort(() => Math.random() - 0.5));
 
     const allInitialCards: FeedCard[] = [];
-    let cardsRemaining = true;
-    while (cardsRemaining) {
-      cardsRemaining = false;
-      const roundPhilosophers = [...philosophers].sort(() => Math.random() - 0.5);
-      roundPhilosophers.forEach(p => {
+    let added = true;
+    while (added) {
+      added = false;
+      Object.keys(groups).sort(() => Math.random() - 0.5).forEach(p => {
         if (groups[p].length > 0) {
-          allInitialCards.push(groups[p].shift() as FeedCard);
-          cardsRemaining = true;
+          allInitialCards.push(groups[p].shift()!);
+          added = true;
         }
       });
     }
 
-    const initialFeed: FeedCard[] = [];
-    let count = 0;
-    allInitialCards.forEach(card => {
-      initialFeed.push(card);
-      count++;
-      if (count % 4 === 0) {
-        initialFeed.push(getRandomInterstitial());
-      }
-    });
-
-    return initialFeed;
+    return allInitialCards.flatMap((card, i) => 
+      (i + 1) % 4 === 0 ? [card, getRandomInterstitial()] : [card]
+    );
   });
   const [activeExploreIndex, setActiveExploreIndex] = useState(0);
   const [activeTrailIndex, setActiveTrailIndex] = useState(0);
@@ -222,21 +213,22 @@ export default function App() {
     trackCardInteraction(index, 1);
   }, [phoneTab, trackCardInteraction]);
 
-  const savedVaultCardIds = useMemo(() => new Set(savedVaultCards.map(c => c.id)), [savedVaultCards]);
+  const savedVaultCardIds = useMemo(() => new Set(savedVaultCards.map(c => c.base_id || c.id)), [savedVaultCards]);
 
   const toggleSaveToVault = useCallback(async (index: number) => {
     if (!session?.user) return;
 
     const currentDeck = phoneTab === "trail-view" ? activeTrailCardsRef.current : feedCardsRef.current;
     const card = currentDeck[index] || INITIAL_FEED_CARDS[0];
-    const isSaved = savedVaultCardsRef.current.some(c => c.id === card.id);
+    const cardBaseId = card.base_id || card.id;
+    const isSaved = savedVaultCardsRef.current.some(c => (c.base_id || c.id) === cardBaseId);
 
     if (isSaved) {
-      const indexInVault = savedVaultCardsRef.current.findIndex(c => c.id === card.id);
+      const indexInVault = savedVaultCardsRef.current.findIndex(c => (c.base_id || c.id) === cardBaseId);
       const cardToRemove = savedVaultCardsRef.current[indexInVault];
-      setSavedVaultCards(prev => prev.filter(c => c.id !== card.id));
+      setSavedVaultCards(prev => prev.filter(c => (c.base_id || c.id) !== cardBaseId));
       try {
-        const { error } = await supabase.from('vault_cards').delete().eq('user_id', session.user.id).eq('card_id', card.id);
+        const { error } = await supabase.from('vault_cards').delete().eq('user_id', session.user.id).eq('card_id', cardToRemove.id);
         if (error) throw error;
       } catch (err) {
         if (cardToRemove && isAppMounted.current) {

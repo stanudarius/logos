@@ -174,7 +174,7 @@ const ThoughtStream: React.FC<ThoughtStreamProps> = ({
           card={card}
           layoutVariant={card.layoutVariant || LAYOUT_CYCLE[index % LAYOUT_CYCLE.length]}
           index={index}
-          isSaved={savedVaultCardIds.has(card.id)}
+          isSaved={savedVaultCardIds.has(card.base_id || card.id)}
           isActive={index === activeIndex}
           onToggleSave={onToggleSave}
           onOpenDeepDive={onOpenDeepDive}
