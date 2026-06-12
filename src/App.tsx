@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback, useRef, useMemo } from "react";
 import { AnimatePresence } from "motion/react";
 
-import { INITIAL_FEED_CARDS } from "./data/feedCards";
+
 import { getRandomInterstitial } from "./data/interstitials";
 import type { FeedCard, SavedVaultCard } from "./types";
 
@@ -16,31 +16,7 @@ import { READING_TRAILS } from "./data/trailsData";
 
 export default function App() {
 
-  const [feedCards, setFeedCards] = useState<FeedCard[]>(() => {
-    const groups = INITIAL_FEED_CARDS.reduce((acc, card) => {
-      acc[card.philosopher] = acc[card.philosopher] || [];
-      acc[card.philosopher].push(card);
-      return acc;
-    }, {} as Record<string, FeedCard[]>);
-
-    Object.values(groups).forEach(g => g.sort(() => Math.random() - 0.5));
-
-    const allInitialCards: FeedCard[] = [];
-    let added = true;
-    while (added) {
-      added = false;
-      Object.keys(groups).sort(() => Math.random() - 0.5).forEach(p => {
-        if (groups[p].length > 0) {
-          allInitialCards.push(groups[p].shift()!);
-          added = true;
-        }
-      });
-    }
-
-    return allInitialCards.flatMap((card, i) => 
-      (i + 1) % 4 === 0 ? [card, getRandomInterstitial()] : [card]
-    );
-  });
+  const [feedCards, setFeedCards] = useState<FeedCard[]>([]);
   const [activeExploreIndex, setActiveExploreIndex] = useState(0);
   const [activeTrailIndex, setActiveTrailIndex] = useState(0);
   const [phoneTab, setPhoneTab] = useState<"explore" | "vault" | "trails" | "trail-view">("explore");
@@ -219,7 +195,8 @@ export default function App() {
     if (!session?.user) return;
 
     const currentDeck = phoneTab === "trail-view" ? activeTrailCardsRef.current : feedCardsRef.current;
-    const card = currentDeck[index] || INITIAL_FEED_CARDS[0];
+    const card = currentDeck[index];
+    if (!card) return;
     const cardBaseId = card.base_id || card.id;
     const isSaved = savedVaultCardsRef.current.some(c => (c.base_id || c.id) === cardBaseId);
 
