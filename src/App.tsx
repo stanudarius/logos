@@ -200,6 +200,7 @@ export default function App() {
             newFeed.push(getRandomInterstitial());
           }
         });
+        feedCardsRef.current = newFeed; // Update ref synchronously to prevent duplicates in rapid successive fetches
         return newFeed;
       });
     } catch (err: unknown) {
