@@ -6,28 +6,6 @@ interface AuthScreenProps {
   onLoginSuccess: () => void;
 }
 
-async function checkPasswordPwned(password: string): Promise<boolean> {
-  const encoder = new TextEncoder();
-  const data = encoder.encode(password);
-  const hashBuffer = await crypto.subtle.digest('SHA-1', data);
-  const hashArray = Array.from(new Uint8Array(hashBuffer));
-  const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('').toUpperCase();
-  
-  const prefix = hashHex.slice(0, 5);
-  const suffix = hashHex.slice(5);
-
-  try {
-    const response = await fetch(`https://api.pwnedpasswords.com/range/${prefix}`);
-    if (!response.ok) return false;
-    const text = await response.text();
-    const leakedHashes = text.split('\n').map(line => line.split(':')[0].trim());
-    return leakedHashes.includes(suffix);
-  } catch (err) {
-    console.error("Error checking pwned passwords:", err);
-    return false;
-  }
-}
-
 export const AuthScreen: React.FC<AuthScreenProps> = ({ onLoginSuccess }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -63,13 +41,6 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({ onLoginSuccess }) => {
       }
 
       if (isSignUp) {
-        const isPwned = await checkPasswordPwned(password);
-        if (isPwned) {
-          setError("This password has been exposed in a data breach. Please choose a different password.");
-          setLoading(false);
-          return;
-        }
-
         const { error } = await supabase.auth.signUp({ email, password });
         if (error) throw error;
         setSuccess("Check your email for the confirmation link!");
