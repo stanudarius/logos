@@ -3,10 +3,9 @@ import { supabase } from '../lib/supabase';
 import { BookOpen } from 'lucide-react';
 
 interface AuthScreenProps {
-  onLoginSuccess: () => void;
 }
 
-export const AuthScreen: React.FC<AuthScreenProps> = ({ onLoginSuccess }) => {
+export const AuthScreen: React.FC<AuthScreenProps> = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
@@ -47,7 +46,6 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({ onLoginSuccess }) => {
       } else {
         const { error } = await supabase.auth.signInWithPassword({ email, password });
         if (error) throw error;
-        onLoginSuccess();
       }
     } catch (err: any) {
       const msg = err.message || "An error occurred during authentication.";

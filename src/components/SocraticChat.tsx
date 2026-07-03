@@ -5,8 +5,14 @@ import FocusLock from "react-focus-lock";
 import { getInitials } from "../utils/aesthetics";
 
 interface ChatMessage {
+  id: string;
   role: "user" | "model";
   text: string;
+}
+
+let _msgId = 0;
+function nextMsgId(): string {
+  return `msg-${++_msgId}-${Date.now()}`;
 }
 
 interface SocraticChatProps {
@@ -24,6 +30,7 @@ const SocraticChat: React.FC<SocraticChatProps> = ({
 }) => {
   const [messages, setMessages] = useState<ChatMessage[]>([
     {
+      id: nextMsgId(),
       role: "model",
       text: `Ah, a curious mind approaches. I am ${philosopher}. Ask me anything about ${topic} — challenge my ideas, and I shall challenge yours.`,
     },
@@ -56,7 +63,7 @@ const SocraticChat: React.FC<SocraticChatProps> = ({
     const trimmed = input.trim();
     if (!trimmed || isLoading) return;
 
-    const userMsg: ChatMessage = { role: "user", text: trimmed };
+    const userMsg: ChatMessage = { id: nextMsgId(), role: "user", text: trimmed };
     const updatedMessages = [...messages, userMsg];
     setMessages(updatedMessages);
     setInput("");
@@ -84,14 +91,14 @@ const SocraticChat: React.FC<SocraticChatProps> = ({
 
       const data = await res.json();
       if (isMountedRef.current) {
-        setMessages(prev => [...prev, { role: "model", text: data.reply }]);
+        setMessages(prev => [...prev, { id: nextMsgId(), role: "model", text: data.reply }]);
       }
     } catch (err: any) {
       if (err.name === 'AbortError') return;
       if (isMountedRef.current) {
         setMessages(prev => [
           ...prev,
-          { role: "model", text: "Forgive me — my thoughts were interrupted. Ask again." },
+          { id: nextMsgId(), role: "model", text: "Forgive me — my thoughts were interrupted. Ask again." },
         ]);
       }
     } finally {
@@ -161,7 +168,7 @@ const SocraticChat: React.FC<SocraticChatProps> = ({
         <AnimatePresence initial={false}>
           {messages.map((msg, i) => (
             <motion.div
-              key={i}
+              key={msg.id}
               initial={{ opacity: 0, y: 8, scale: 0.95 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
               transition={{ duration: 0.25 }}

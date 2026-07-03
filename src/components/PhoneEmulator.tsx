@@ -5,6 +5,7 @@ import {
 import { motion } from "motion/react";
 import type { FeedCard, SavedVaultCard } from "../types";
 import ThoughtStream from "./ThoughtStream";
+import { ParallaxBackground } from "./ThoughtAtom";
 import CommonplaceBook from "./CommonplaceBook";
 import ReadingTrailsDashboard from "./ReadingTrailsDashboard";
 
@@ -87,6 +88,8 @@ const PhoneEmulator: React.FC<PhoneEmulatorProps> = ({
       </div>
 
       <div className="relative z-10 flex-1 flex flex-col overflow-hidden">
+        {/* Single parallax instance for the entire stream (avoids per-card listener churn) */}
+        {(phoneTab === "explore" || phoneTab === "trail-view") && <ParallaxBackground />}
         <div id="thought-stream-explore" className={`h-full w-full ${phoneTab === "explore" ? "block" : "hidden"}`}>
           <ThoughtStream
             cards={feedCards}

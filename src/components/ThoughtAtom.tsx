@@ -1,6 +1,6 @@
 import React, { useState, useCallback, useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
-import { motion, AnimatePresence, useTransform, Variants, useMotionValue, useSpring } from "motion/react";
+import { motion, AnimatePresence, useMotionValue, useSpring } from "motion/react";
 
 import { BookOpen, X, MessageCircle, Heart } from "lucide-react";
 import type { FeedCard, LayoutVariant, ReadingPart } from "../types";
@@ -20,7 +20,7 @@ interface ThoughtAtomProps {
   isTrailMode?: boolean;
 }
 
-const ParallaxBackground = () => {
+export const ParallaxBackground = () => {
   const motionX = useMotionValue(0);
   const motionY = useMotionValue(0);
   const smoothX = useSpring(motionX, { damping: 40, stiffness: 150 });
@@ -151,8 +151,7 @@ const ThoughtAtom: React.FC<ThoughtAtomProps> = ({
         className={`h-full w-full bg-[#FAF8F3] flex flex-col relative select-none layout-${layoutVariant}`}
         onDoubleClick={handleDoubleTap}
       >
-        {/* Subtle grain texture overlay with cinematic parallax (ONLY rendered when active to save GPU texture memory) */}
-        {isActive && <ParallaxBackground />}
+        {/* Subtle grain texture overlay with cinematic parallax is rendered once at PhoneEmulator level */}
 
         {/* Double Tap Heart Overlay */}
         <AnimatePresence>

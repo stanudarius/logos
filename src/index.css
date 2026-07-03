@@ -58,7 +58,6 @@ body {
   scroll-snap-stop: always;
   height: 100%;
   min-height: 100%;
-  will-change: transform;
   contain: layout style paint;
 }
 

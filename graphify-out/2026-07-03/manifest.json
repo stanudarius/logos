@@ -1,0 +1,142 @@
+{
+  ".vscode/settings.json": {
+    "mtime": 1780858948.3483205,
+    "ast_hash": "e21598ab261bad9c03d700c295c63245",
+    "semantic_hash": "e21598ab261bad9c03d700c295c63245"
+  },
+  "data/database.json": {
+    "mtime": 1781244540.6780682,
+    "ast_hash": "2557c21bd4f4876167d6fc0aa5af31d8",
+    "semantic_hash": "2557c21bd4f4876167d6fc0aa5af31d8"
+  },
+  "package.json": {
+    "mtime": 1783088062.194943,
+    "ast_hash": "09875f24c01594cdea6efc6529c61e98",
+    "semantic_hash": "09875f24c01594cdea6efc6529c61e98"
+  },
+  "server.ts": {
+    "mtime": 1783087858.7657752,
+    "ast_hash": "ca1d08c7ccaa527e8404a29ef04c5e7a",
+    "semantic_hash": "ca1d08c7ccaa527e8404a29ef04c5e7a"
+  },
+  "src/App.tsx": {
+    "mtime": 1783087897.342635,
+    "ast_hash": "f61a2b576cb83925538994230fad5fd1",
+    "semantic_hash": "f61a2b576cb83925538994230fad5fd1"
+  },
+  "src/components/AuthScreen.tsx": {
+    "mtime": 1783087924.1599643,
+    "ast_hash": "f944f5bc26f74094105fbecb38d87f1c",
+    "semantic_hash": "f944f5bc26f74094105fbecb38d87f1c"
+  },
+  "src/components/CommonplaceBook.tsx": {
+    "mtime": 1783087966.5438368,
+    "ast_hash": "87a691bffc16eeaa7a35c54b4cd14954",
+    "semantic_hash": "87a691bffc16eeaa7a35c54b4cd14954"
+  },
+  "src/components/ConstellationMap.tsx": {
+    "mtime": 1783088007.5367954,
+    "ast_hash": "85c59d9559252052044e44d0fcbbb7ea",
+    "semantic_hash": "85c59d9559252052044e44d0fcbbb7ea"
+  },
+  "src/components/MiniConstellation.tsx": {
+    "mtime": 1783088039.552888,
+    "ast_hash": "1461466536ba09185a0bada2526e25f8",
+    "semantic_hash": "1461466536ba09185a0bada2526e25f8"
+  },
+  "src/components/PhoneEmulator.tsx": {
+    "mtime": 1783088131.035736,
+    "ast_hash": "8ca0c0eaeaff7708291218325e444d2e",
+    "semantic_hash": "8ca0c0eaeaff7708291218325e444d2e"
+  },
+  "src/components/ReadingTrailsDashboard.tsx": {
+    "mtime": 1781150435.789534,
+    "ast_hash": "dc038913d63cea120d9319c11ba00f06",
+    "semantic_hash": "dc038913d63cea120d9319c11ba00f06"
+  },
+  "src/components/ResetPasswordScreen.tsx": {
+    "mtime": 1781199217.556604,
+    "ast_hash": "a456bd9ca8aaaffcf8496afc14d6d138",
+    "semantic_hash": "a456bd9ca8aaaffcf8496afc14d6d138"
+  },
+  "src/components/SocraticChat.tsx": {
+    "mtime": 1783087964.455172,
+    "ast_hash": "fc10b1c2039c0d06a714fd6854ba7bc9",
+    "semantic_hash": "fc10b1c2039c0d06a714fd6854ba7bc9"
+  },
+  "src/components/ThoughtAtom.tsx": {
+    "mtime": 1783088118.3890831,
+    "ast_hash": "60ef4c6113b0d0b908904704a81bbe5f",
+    "semantic_hash": "60ef4c6113b0d0b908904704a81bbe5f"
+  },
+  "src/components/ThoughtStream.tsx": {
+    "mtime": 1783087928.8894837,
+    "ast_hash": "d810a6bce5feee5008cff7c712e6bf49",
+    "semantic_hash": "d810a6bce5feee5008cff7c712e6bf49"
+  },
+  "src/components/ZenMode.tsx": {
+    "mtime": 1783087956.0745232,
+    "ast_hash": "da017ee84ed82aaa7f68e256411c5248",
+    "semantic_hash": "da017ee84ed82aaa7f68e256411c5248"
+  },
+  "src/data/constellationData.ts": {
+    "mtime": 1781152532.9221468,
+    "ast_hash": "c4a2b3448db99d395ba468428d1ccd31",
+    "semantic_hash": "c4a2b3448db99d395ba468428d1ccd31"
+  },
+  "src/data/interstitials.ts": {
+    "mtime": 1781112159.317574,
+    "ast_hash": "289cf26ffbe113fe04e3a237f426d93a",
+    "semantic_hash": "289cf26ffbe113fe04e3a237f426d93a"
+  },
+  "src/data/trailsData.ts": {
+    "mtime": 1781152539.9773133,
+    "ast_hash": "44c6d3dcc71ca20c9392312dcb9f55bf",
+    "semantic_hash": "44c6d3dcc71ca20c9392312dcb9f55bf"
+  },
+  "src/lib/supabase.ts": {
+    "mtime": 1783087930.988277,
+    "ast_hash": "dfc45e1734289f112f72826891c5814e",
+    "semantic_hash": "dfc45e1734289f112f72826891c5814e"
+  },
+  "src/main.tsx": {
+    "mtime": 1780859822.8257005,
+    "ast_hash": "a8a9a7b12e75ebd6d576d8521d1cb20f",
+    "semantic_hash": "a8a9a7b12e75ebd6d576d8521d1cb20f"
+  },
+  "src/types.ts": {
+    "mtime": 1783087871.8469105,
+    "ast_hash": "71fdcf1edad880912d04b3442ee03910",
+    "semantic_hash": "71fdcf1edad880912d04b3442ee03910"
+  },
+  "src/utils/aesthetics.ts": {
+    "mtime": 1781018927.475044,
+    "ast_hash": "466ee6ea4b2671edb8c14ac3d251cf71",
+    "semantic_hash": "466ee6ea4b2671edb8c14ac3d251cf71"
+  },
+  "src/vite-env.d.ts": {
+    "mtime": 1780859942.1160953,
+    "ast_hash": "11ecfcbd6f7344db8ce9e9ae76e70a6c",
+    "semantic_hash": "11ecfcbd6f7344db8ce9e9ae76e70a6c"
+  },
+  "supabase_schema.sql": {
+    "mtime": 1781153440.4878724,
+    "ast_hash": "65ef10af829872918ba0a87f3b1b31c2",
+    "semantic_hash": "65ef10af829872918ba0a87f3b1b31c2"
+  },
+  "tsconfig.json": {
+    "mtime": 1781208671.65104,
+    "ast_hash": "e672af0827782f5923f0a09a6ff194a4",
+    "semantic_hash": "e672af0827782f5923f0a09a6ff194a4"
+  },
+  "vite.config.ts": {
+    "mtime": 1783088082.6888664,
+    "ast_hash": "dc095cd5be976544b820479964ead615",
+    "semantic_hash": "dc095cd5be976544b820479964ead615"
+  },
+  ".agents/settings.json": {
+    "mtime": 1783086578.502799,
+    "ast_hash": "598cb075410bcd95220ac90bbb60344a",
+    "semantic_hash": "598cb075410bcd95220ac90bbb60344a"
+  }
+}

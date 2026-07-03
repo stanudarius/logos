@@ -46,6 +46,11 @@ const ThoughtStream: React.FC<ThoughtStreamProps> = ({
     isLoadingRef.current = isLoading;
   }, [isLoading]);
 
+  const onFetchMoreRef = useRef(onFetchMore);
+  useEffect(() => {
+    onFetchMoreRef.current = onFetchMore;
+  }, [onFetchMore]);
+
   // Active card tracking via IntersectionObserver (O(1) performance instead of onScroll reflows)
   useEffect(() => {
     if (!isActiveTab) {
@@ -99,10 +104,7 @@ const ThoughtStream: React.FC<ThoughtStreamProps> = ({
     };
   }, [cards.length, onActiveCardChange, isActiveTab]);
 
-  const onFetchMoreRef = useRef(onFetchMore);
-  useEffect(() => {
-    onFetchMoreRef.current = onFetchMore;
-  }, [onFetchMore]);
+
 
   useEffect(() => {
     if (!isActiveTab) {
@@ -142,19 +144,22 @@ const ThoughtStream: React.FC<ThoughtStreamProps> = ({
   }, [isActiveTab]);
 
   // Keyboard navigation for desktop (scroll by card height)
+  const activeIndexRef = useRef(activeIndex);
+  activeIndexRef.current = activeIndex;
+
   const scrollToCard = useCallback(
     (direction: "up" | "down") => {
       const container = containerRef.current;
       if (!container) return;
       const nextIndex =
         direction === "down"
-          ? Math.min(activeIndex + 1, cards.length - 1)
-          : Math.max(activeIndex - 1, 0);
+          ? Math.min(activeIndexRef.current + 1, cards.length - 1)
+          : Math.max(activeIndexRef.current - 1, 0);
 
       const atoms = container.querySelectorAll(".thought-atom");
       atoms[nextIndex]?.scrollIntoView({ behavior: "smooth", block: "center" });
     },
-    [activeIndex, cards.length]
+    [cards.length]
   );
 
   useEffect(() => {

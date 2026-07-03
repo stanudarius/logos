@@ -227,7 +227,7 @@ const ZenMode: React.FC<ZenModeProps> = ({ onClose, onSessionComplete }) => {
                 className="text-center space-y-2"
               >
                 <span className="text-5xl">🧘</span>
-                <p className="text-lg font-serif italic text-[#5CB888]">+15 XP</p>
+                <p className="text-lg font-serif italic text-[#5CB888]">Well Done</p>
               </motion.div>
             ) : (
               <>

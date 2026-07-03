@@ -239,8 +239,8 @@ export default function App() {
   const deleteFromVault = useCallback(async (id: string) => {
     if (!session?.user) return;
 
-    const indexInVault = savedVaultCards.findIndex(c => c.id === id);
-    const cardToDelete = savedVaultCards[indexInVault];
+    const indexInVault = savedVaultCardsRef.current.findIndex(c => c.id === id);
+    const cardToDelete = savedVaultCardsRef.current[indexInVault];
     setSavedVaultCards(prev => prev.filter(c => c.id !== id));
 
     try {
@@ -255,10 +255,10 @@ export default function App() {
         });
       }
     }
-  }, [session, savedVaultCards]);
+  }, [session]);
 
   const updateVaultCardAnnotation = useCallback(async (id: string, annotation: string) => {
-    const cardToUpdate = savedVaultCards.find(c => c.id === id);
+    const cardToUpdate = savedVaultCardsRef.current.find(c => c.id === id);
     if (!cardToUpdate) return;
 
     const newCardData = { ...cardToUpdate, annotation };
@@ -272,10 +272,10 @@ export default function App() {
         setSavedVaultCards(prev => prev.map(c => c.id === id ? cardToUpdate : c));
       }
     }
-  }, [savedVaultCards, session]);
+  }, [session]);
 
   const assignToFolder = useCallback(async (id: string, folderName: string | undefined) => {
-    const cardToUpdate = savedVaultCards.find(c => c.id === id);
+    const cardToUpdate = savedVaultCardsRef.current.find(c => c.id === id);
     if (!cardToUpdate) return;
 
     const newCardData = { ...cardToUpdate, user_folder: folderName };
@@ -289,7 +289,7 @@ export default function App() {
         setSavedVaultCards(prev => prev.map(c => c.id === id ? cardToUpdate : c));
       }
     }
-  }, [savedVaultCards, session]);
+  }, [session]);
 
   const handleZenSessionComplete = useCallback(() => {
   }, []);
@@ -348,7 +348,7 @@ export default function App() {
   if (!session) {
     return (
       <div className="w-full h-[100dvh] bg-[#0A0A0A] flex items-center justify-center overflow-hidden p-4 sm:p-8">
-        <AuthScreen onLoginSuccess={() => { }} />
+        <AuthScreen />
       </div>
     );
   }
