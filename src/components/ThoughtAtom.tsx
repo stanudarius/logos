@@ -469,17 +469,21 @@ function renderLayout(card: FeedCard, variant: LayoutVariant, index: number = 0)
       return (
         <div className="flex-1 flex flex-col items-center justify-center text-center pl-6 pr-16 pb-16 relative overflow-hidden">
           <Monogram philosopher={card.philosopher} />
+          {/* Label — always bold, small-caps */}
           <TypewriterText text={card.topic} className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#B5A48B] mb-4 relative z-10" />
 
+          {/* Title — always semibold italic */}
           <motion.h1
             variants={titleAnim} initial="hidden" whileInView="visible" viewport={{ once: false }}
             className="atom-title font-serif text-[2rem] leading-[1.08] font-semibold italic text-[#1C1C1E] mb-5 tracking-tight relative z-10"
           >
             <TypewriterText text={card.explore_title} speed={0.015} delay={0.4} />
           </motion.h1>
+
+          {/* Subtext — always light */}
           <motion.p
             variants={descAnim} initial="hidden" whileInView="visible" viewport={{ once: false }}
-            className="atom-subtext text-[0.8125rem] leading-[1.7] text-[#6B6B6F] font-light max-w-[85%] relative z-10"
+            className="atom-subtext font-sans text-[0.8125rem] leading-[1.7] text-[#6B6B6F] font-light max-w-[85%] relative z-10"
           >
             {card.explore_subtext}
           </motion.p>
@@ -491,17 +495,21 @@ function renderLayout(card: FeedCard, variant: LayoutVariant, index: number = 0)
         <div className="flex-1 flex flex-col justify-center text-right pl-8 pr-16 pb-16 relative overflow-hidden">
           <Monogram philosopher={card.philosopher} />
 
+          {/* Label — always bold, small-caps */}
           <TypewriterText text={card.topic} className="text-[9px] font-bold uppercase tracking-[0.2em] text-[#B5A48B] mb-4 relative z-10" />
 
+          {/* Title — semibold italic (literary font) */}
           <motion.h1
             variants={titleAnim} initial="hidden" whileInView="visible" viewport={{ once: false }}
-            className="atom-title text-[1.375rem] leading-[1.35] font-normal italic text-[#1C1C1E] mb-4 relative z-10" style={{ fontFamily: "var(--font-literary)" }}
+            className="atom-title text-[1.375rem] leading-[1.35] font-semibold italic text-[#1C1C1E] mb-4 relative z-10" style={{ fontFamily: "var(--font-literary)" }}
           >
-            "<TypewriterText text={card.explore_title} speed={0.015} delay={0.4} />"
+            “<TypewriterText text={card.explore_title} speed={0.015} delay={0.4} />”
           </motion.h1>
+
+          {/* Subtext — always light */}
           <motion.p
             variants={descAnim} initial="hidden" whileInView="visible" viewport={{ once: false }}
-            className="atom-subtext text-[0.75rem] leading-[1.65] text-[#6B6B6F] font-light relative z-10"
+            className="atom-subtext font-sans text-[0.75rem] leading-[1.65] text-[#6B6B6F] font-light relative z-10"
           >
             {card.explore_subtext}
           </motion.p>
@@ -513,19 +521,24 @@ function renderLayout(card: FeedCard, variant: LayoutVariant, index: number = 0)
         <div className="flex-1 flex flex-col justify-center pl-6 pr-16 pb-16 relative overflow-hidden">
           <Monogram philosopher={card.philosopher} />
 
+          {/* Label — always bold, small-caps */}
           <div className="flex items-center gap-2 mb-5 relative z-10">
             <div className="h-[2px] w-8 bg-[#B5A48B] opacity-50" />
             <TypewriterText text={card.topic} className="text-[9px] font-bold uppercase tracking-[0.2em] text-[#B5A48B]" />
           </div>
+
+          {/* Title — semibold (sans, tight) */}
           <motion.h1
             variants={titleAnim} initial="hidden" whileInView="visible" viewport={{ once: false }}
-            className="atom-title text-[1.125rem] leading-[1.6] font-medium text-[#1C1C1E] text-justify mb-5 relative z-10" style={{ letterSpacing: "-0.025em", fontFamily: "var(--font-sans)", hyphens: "auto" }}
+            className="atom-title text-[1.125rem] leading-[1.6] font-semibold text-[#1C1C1E] text-justify mb-5 relative z-10" style={{ letterSpacing: "-0.025em", fontFamily: "var(--font-sans)", hyphens: "auto" }}
           >
             <TypewriterText text={card.explore_title} speed={0.015} delay={0.4} />. {card.explore_subtext}
           </motion.h1>
+
+          {/* Attribution — light italic */}
           <motion.p
             variants={descAnim} initial="hidden" whileInView="visible" viewport={{ once: false }}
-            className="atom-subtext text-[0.8125rem] leading-[1.6] text-[#8A8A8E] font-normal italic text-justify font-serif relative z-10"
+            className="atom-subtext font-serif text-[0.8125rem] leading-[1.6] text-[#8A8A8E] font-light italic text-justify relative z-10"
           >
             — {card.philosopher}
           </motion.p>
@@ -537,19 +550,25 @@ function renderLayout(card: FeedCard, variant: LayoutVariant, index: number = 0)
         <div className="flex-1 flex flex-col items-center justify-center text-center pl-7 pr-16 pb-16 relative overflow-hidden">
           <Monogram philosopher={card.philosopher} />
 
+          {/* Label — always bold, small-caps */}
           <TypewriterText text={card.topic} className="atom-label text-[0.625rem] font-bold uppercase tracking-[0.25em] text-[#B5A48B] mb-5 relative z-10 block" />
 
           <div className="atom-rule w-8 h-px bg-[#D4CFC5] mb-5 relative z-10" />
+
+          {/* Title — semibold italic (literary) */}
           <motion.h1
             variants={titleAnim} initial="hidden" whileInView="visible" viewport={{ once: false }}
-            className="atom-title text-[1.5rem] leading-[1.35] font-normal italic text-[#1C1C1E] mb-5 relative z-10" style={{ fontFamily: "var(--font-literary)" }}
+            className="atom-title text-[1.5rem] leading-[1.35] font-semibold italic text-[#1C1C1E] mb-5 relative z-10" style={{ fontFamily: "var(--font-literary)" }}
           >
             <TypewriterText text={card.explore_title} speed={0.015} delay={0.4} />
           </motion.h1>
+
           <div className="atom-rule-bottom w-8 h-px bg-[#D4CFC5] mb-4 relative z-10" />
+
+          {/* Subtext — always light */}
           <motion.p
             variants={descAnim} initial="hidden" whileInView="visible" viewport={{ once: false }}
-            className="atom-subtext text-[0.6875rem] leading-[1.7] text-[#8A8A8E] font-light max-w-[90%] relative z-10"
+            className="atom-subtext font-sans text-[0.6875rem] leading-[1.7] text-[#8A8A8E] font-light max-w-[90%] relative z-10"
           >
             {card.explore_subtext}
           </motion.p>
