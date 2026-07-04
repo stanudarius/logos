@@ -1,4 +1,4 @@
-import type { FeedCard } from "../types";
+import type { FeedCard } from "../types/feed";
 
 const createInterstitial = (id: string, title: string, subtext: string): FeedCard => ({
   id,

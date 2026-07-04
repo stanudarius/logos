@@ -1,5 +1,5 @@
 import React, { useRef, useEffect, useCallback, useState, memo } from "react";
-import type { FeedCard, LayoutVariant } from "../types";
+import type { FeedCard, LayoutVariant } from "../types/feed";
 import ThoughtAtom from "./ThoughtAtom";
 
 const LAYOUT_CYCLE: LayoutVariant[] = ["thesis", "blockquote", "fragment", "epigraph"];

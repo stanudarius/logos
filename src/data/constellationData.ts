@@ -1,4 +1,4 @@
-import type { GraphEdge, Node } from "../types";
+import type { GraphEdge, Node } from "../types/graph";
 
 export const NODES: Node[] = [
   // Philosophy - Ancient

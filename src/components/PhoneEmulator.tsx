@@ -3,9 +3,10 @@ import {
   BookOpen, Bookmark, Network, ArrowLeft, Timer, Waypoints
 } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
-import type { FeedCard, SavedVaultCard } from "../types";
+import type { FeedCard } from "../types/feed";
+import type { SavedVaultCard } from "../types/vault";
 import ThoughtStream from "./ThoughtStream";
-import { ParallaxBackground } from "./ThoughtAtom";
+import { ParallaxBackground } from "./ui/ParallaxBackground";
 import CommonplaceBook from "./CommonplaceBook";
 import ReadingTrailsDashboard from "./ReadingTrailsDashboard";
 

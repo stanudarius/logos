@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Reorder, motion, AnimatePresence } from "motion/react";
 import { Network, FileText, Download, FolderPlus, Folder, Trash2, BookMarked, X } from "lucide-react";
-import type { SavedVaultCard } from "../types";
+import type { SavedVaultCard } from "../types/vault";
 
 const AnnotationInput = React.memo(({ id, initialValue, onUpdate }: { id: string, initialValue: string, onUpdate: (id: string, text: string) => void }) => {
   const [text, setText] = useState(initialValue);

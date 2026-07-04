@@ -2,7 +2,7 @@ import React, { useState, useCallback, useMemo } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { getInitials } from "../utils/aesthetics";
 import { X } from "lucide-react";
-import type { GraphEdge, EdgeRelationship, Node } from "../types";
+import type { GraphEdge, EdgeRelationship, Node } from "../types/graph";
 
 import { NODES, EDGES } from "../data/constellationData";
 

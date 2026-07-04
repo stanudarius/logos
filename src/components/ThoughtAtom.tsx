@@ -1,12 +1,17 @@
 import React, { useState, useCallback, useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
-import { motion, AnimatePresence, useMotionValue, useSpring } from "motion/react";
-
+import { motion, AnimatePresence } from "motion/react";
 import { BookOpen, X, MessageCircle, Heart } from "lucide-react";
-import type { FeedCard, LayoutVariant, ReadingPart } from "../types";
+import type { FeedCard, LayoutVariant, ReadingPart } from "../types/feed";
 import { getInitials } from "../utils/aesthetics";
 import SocraticChat from "./SocraticChat";
 import FocusLock from "react-focus-lock";
+
+import { InterstitialLayout } from "./layouts/InterstitialLayout";
+import { ThesisLayout } from "./layouts/ThesisLayout";
+import { BlockquoteLayout } from "./layouts/BlockquoteLayout";
+import { FragmentLayout } from "./layouts/FragmentLayout";
+import { EpigraphLayout } from "./layouts/EpigraphLayout";
 
 interface ThoughtAtomProps {
   card: FeedCard;
@@ -19,71 +24,6 @@ interface ThoughtAtomProps {
   isActive?: boolean;
   isTrailMode?: boolean;
 }
-
-export const ParallaxBackground = () => {
-  const motionX = useMotionValue(0);
-  const motionY = useMotionValue(0);
-  const smoothX = useSpring(motionX, { damping: 40, stiffness: 150 });
-  const smoothY = useSpring(motionY, { damping: 40, stiffness: 150 });
-
-  useEffect(() => {
-    let ticking = false;
-    let rAF: number;
-
-    const handleMouseMove = (e: MouseEvent) => {
-      if (!ticking) {
-        rAF = requestAnimationFrame(() => {
-          const x = (e.clientX / window.innerWidth - 0.5) * 20;
-          const y = (e.clientY / window.innerHeight - 0.5) * 20;
-          motionX.set(x);
-          motionY.set(y);
-          ticking = false;
-        });
-        ticking = true;
-      }
-    };
-
-    const handleDeviceOrientation = (e: DeviceOrientationEvent) => {
-      if (e.gamma === null || e.beta === null) return;
-      if (!ticking) {
-        rAF = requestAnimationFrame(() => {
-          const x = Math.min(Math.max(e.gamma! / 4.5, -10), 10);
-          const y = Math.min(Math.max((e.beta! - 45) / 4.5, -10), 10);
-          motionX.set(x);
-          motionY.set(y);
-          ticking = false;
-        });
-        ticking = true;
-      }
-    };
-
-    window.addEventListener("mousemove", handleMouseMove, { passive: true });
-    if (typeof window !== 'undefined' && window.DeviceOrientationEvent) {
-      window.addEventListener("deviceorientation", handleDeviceOrientation, { passive: true });
-    }
-
-    return () => {
-      window.removeEventListener("mousemove", handleMouseMove);
-      if (typeof window !== 'undefined' && window.DeviceOrientationEvent) {
-        window.removeEventListener("deviceorientation", handleDeviceOrientation);
-      }
-      cancelAnimationFrame(rAF);
-    };
-  }, [motionX, motionY]);
-
-  return (
-    <motion.div
-      id="parallax-bg"
-      style={{
-        x: smoothX,
-        y: smoothY,
-        backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.5'/%3E%3C/svg%3E")`,
-      }}
-      className="absolute inset-0 opacity-[0.035] pointer-events-none scale-[1.05]"
-    />
-  );
-};
-
 
 const ThoughtAtom: React.FC<ThoughtAtomProps> = ({
   card,
@@ -168,7 +108,11 @@ const ThoughtAtom: React.FC<ThoughtAtomProps> = ({
           )}
         </AnimatePresence>
 
-        {renderLayout(card, layoutVariant, index)}
+        {layoutVariant === "interstitial" && <InterstitialLayout card={card} />}
+        {layoutVariant === "thesis" && <ThesisLayout card={card} />}
+        {layoutVariant === "blockquote" && <BlockquoteLayout card={card} />}
+        {layoutVariant === "fragment" && <FragmentLayout card={card} />}
+        {(layoutVariant === "epigraph" || !layoutVariant) && <EpigraphLayout card={card} />}
       </motion.div>
 
       {/* Author Footer (Clickable to open Deep Dive) */}
@@ -361,210 +305,5 @@ const ThoughtAtom: React.FC<ThoughtAtomProps> = ({
     </div>
   );
 };
-
-const TypewriterText = ({ text, className, speed = 0.04, delay = 0.2 }: { text: string; className?: string; speed?: number; delay?: number }) => {
-  return (
-    <motion.span
-      className={className}
-      initial={{ opacity: 0, y: 5 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.6, delay: delay, ease: "easeOut" }}
-      viewport={{ once: true, amount: 0.1 }}
-      style={{ display: "inline-block", willChange: "transform, opacity" }}
-    >
-      {text}
-    </motion.span>
-  );
-};
-
-/**
- * Universal Giant Monogram
- */
-const Monogram = ({ philosopher }: { philosopher: string }) => (
-  <motion.span
-    initial={{ scale: 1.4, opacity: 0 }}
-    whileInView={{ scale: 1, opacity: 0.07 }}
-    transition={{ duration: 1.2, ease: "easeOut" }}
-    viewport={{ once: false, amount: 0.2 }}
-    style={{ willChange: "transform, opacity" }}
-    className="atom-monogram absolute left-[-1.5rem] top-1/2 -translate-y-1/2 font-[var(--font-literary)] text-[14rem] font-semibold text-[#1C1C1E] leading-none pointer-events-none select-none z-0"
-  >
-    {getInitials(philosopher).charAt(0)}
-  </motion.span>
-);
-
-/**
- * Shared animation variants
- */
-const titleAnim = {
-  hidden: { y: 20, opacity: 0 },
-  visible: {
-    y: 0, opacity: 1,
-    transition: { type: "spring", stiffness: 200, damping: 15, delay: 0.5 }
-  }
-};
-
-const descAnim = {
-  hidden: { opacity: 0, y: 10 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.8, delay: 0.8, ease: "easeOut" } }
-};
-
-/**
- * Renders the appropriate typographic layout for a card.
- *
- * ── Shared typographic constants ─────────────────────────────────────────
- * All 4 content variants consume LABEL_CLS / TITLE_CLS / TITLE_STYLE /
- * SUBTEXT_CLS so the stream feels cohesive.  Structural differences
- * (alignment, decoration, spatial rhythm) are still unique per variant —
- * only the type grammar is locked.
- */
-function renderLayout(card: FeedCard, variant: LayoutVariant, _index: number = 0) {
-
-  // ── Shared tokens — change here to update every layout ──────────────────
-  const LABEL_CLS   = "text-[9px] font-sans font-bold uppercase tracking-[0.2em] text-[#B5A48B] mb-3 relative z-10";
-  const TITLE_CLS   = "atom-title text-[1.5rem] font-semibold italic leading-[1.25] tracking-[-0.015em] text-[#1C1C1E] mb-4 relative z-10";
-  const TITLE_STYLE = { fontFamily: "var(--font-literary)" } as const;
-  const SUBTEXT_CLS = "atom-subtext font-sans text-[0.8125rem] font-light leading-[1.7] text-[#6B6B6F] relative z-10";
-  // ────────────────────────────────────────────────────────────────────────
-
-  switch (variant) {
-
-    // ── Interstitial ── Full-bleed typographic poster (intentionally distinct)
-    case "interstitial": {
-      const words = card.explore_title.split(' ');
-      const hugeWord = words[words.length - 1];
-      const restTitle = words.slice(0, -1).join(' ') || card.topic;
-      return (
-        <div className="flex-1 w-full h-full bg-[#F5F0E8] relative overflow-hidden">
-          <motion.div
-            initial={{ x: 50, opacity: 0 }}
-            whileInView={{ x: 0, opacity: 1 }}
-            transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
-            className="absolute top-8 -right-12 text-[14rem] sm:text-[16rem] font-serif italic tracking-tighter leading-[0.75] text-[#E6DFD3] select-none pointer-events-none z-0"
-            style={{ willChange: "transform, opacity" }}
-          >
-            {hugeWord}
-          </motion.div>
-          <motion.div
-            initial={{ scaleX: 0 }}
-            whileInView={{ scaleX: 1 }}
-            transition={{ duration: 0.8, delay: 0.2, ease: "circOut" }}
-            className="absolute top-[45%] left-0 w-[65%] h-[2px] bg-[#C1694F] origin-left z-10"
-          />
-          <div className="absolute top-[45%] left-6 -translate-y-full pb-3 z-10">
-            <span className="text-[9px] font-mono uppercase tracking-[0.4em] text-[#2C2825]">
-              {restTitle}
-            </span>
-          </div>
-          <motion.div
-            variants={descAnim} initial="hidden" whileInView="visible" viewport={{ once: false }}
-            className="absolute top-[45%] right-6 pt-6 w-[55%] z-10"
-          >
-            <p className="text-[13px] font-serif text-[#2C2825] leading-[1.65] text-right">
-              {card.explore_subtext}
-            </p>
-          </motion.div>
-        </div>
-      );
-    }
-
-    // ── Thesis ── Centered · large monogram · headline card ─────────────────
-    case "thesis":
-      return (
-        <div className="flex-1 flex flex-col items-center justify-center text-center pl-6 pr-16 pb-16 relative overflow-hidden">
-          <Monogram philosopher={card.philosopher} />
-          <TypewriterText text={card.topic} className={LABEL_CLS} />
-          <motion.h1
-            variants={titleAnim} initial="hidden" whileInView="visible" viewport={{ once: false }}
-            className={TITLE_CLS} style={TITLE_STYLE}
-          >
-            <TypewriterText text={card.explore_title} speed={0.015} delay={0.4} />
-          </motion.h1>
-          <motion.p
-            variants={descAnim} initial="hidden" whileInView="visible" viewport={{ once: false }}
-            className={`${SUBTEXT_CLS} max-w-[85%]`}
-          >
-            {card.explore_subtext}
-          </motion.p>
-        </div>
-      );
-
-    // ── Blockquote ── Right-aligned · monogram bleeds left ──────────────────
-    case "blockquote":
-      return (
-        <div className="flex-1 flex flex-col justify-center text-right pl-8 pr-16 pb-16 relative overflow-hidden">
-          <Monogram philosopher={card.philosopher} />
-          <TypewriterText text={card.topic} className={`${LABEL_CLS} block`} />
-          <motion.h1
-            variants={titleAnim} initial="hidden" whileInView="visible" viewport={{ once: false }}
-            className={TITLE_CLS} style={TITLE_STYLE}
-          >
-            <TypewriterText text={card.explore_title} speed={0.015} delay={0.4} />
-          </motion.h1>
-          <motion.p
-            variants={descAnim} initial="hidden" whileInView="visible" viewport={{ once: false }}
-            className={SUBTEXT_CLS}
-          >
-            {card.explore_subtext}
-          </motion.p>
-        </div>
-      );
-
-    // ── Fragment ── Left-aligned · gold rule · philosopher attribution ────────
-    case "fragment":
-      return (
-        <div className="flex-1 flex flex-col justify-center pl-6 pr-16 pb-16 relative overflow-hidden">
-          <Monogram philosopher={card.philosopher} />
-          {/* Gold rule + label — unique to Fragment */}
-          <div className="flex items-center gap-2 mb-3 relative z-10">
-            <div className="h-[2px] w-8 bg-[#B5A48B] opacity-50 flex-shrink-0" />
-            <TypewriterText text={card.topic} className="text-[9px] font-sans font-bold uppercase tracking-[0.2em] text-[#B5A48B]" />
-          </div>
-          <motion.h1
-            variants={titleAnim} initial="hidden" whileInView="visible" viewport={{ once: false }}
-            className={TITLE_CLS} style={TITLE_STYLE}
-          >
-            <TypewriterText text={card.explore_title} speed={0.015} delay={0.4} />
-          </motion.h1>
-          <motion.p
-            variants={descAnim} initial="hidden" whileInView="visible" viewport={{ once: false }}
-            className={SUBTEXT_CLS}
-          >
-            {card.explore_subtext}
-          </motion.p>
-          {/* Attribution — structural personality unique to Fragment */}
-          <motion.p
-            variants={descAnim} initial="hidden" whileInView="visible" viewport={{ once: false }}
-            className="font-serif text-[0.75rem] font-light italic text-[#B5A48B] relative z-10 mt-3"
-          >
-            — {card.philosopher}
-          </motion.p>
-        </div>
-      );
-
-    // ── Epigraph ── Centered · horizontal rules frame the title ─────────────
-    case "epigraph":
-    default:
-      return (
-        <div className="flex-1 flex flex-col items-center justify-center text-center pl-7 pr-16 pb-16 relative overflow-hidden">
-          <TypewriterText text={card.topic} className={`${LABEL_CLS} block`} />
-          <div className="atom-rule w-8 h-px bg-[#D4CFC5] mb-5 relative z-10" />
-          <motion.h1
-            variants={titleAnim} initial="hidden" whileInView="visible" viewport={{ once: false }}
-            className={TITLE_CLS} style={TITLE_STYLE}
-          >
-            <TypewriterText text={card.explore_title} speed={0.015} delay={0.4} />
-          </motion.h1>
-          <div className="atom-rule-bottom w-8 h-px bg-[#D4CFC5] mb-4 relative z-10" />
-          <motion.p
-            variants={descAnim} initial="hidden" whileInView="visible" viewport={{ once: false }}
-            className={`${SUBTEXT_CLS} max-w-[90%]`}
-          >
-            {card.explore_subtext}
-          </motion.p>
-        </div>
-      );
-  }
-}
 
 export default React.memo(ThoughtAtom);
