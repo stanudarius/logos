@@ -1,6 +1,7 @@
 import React, { useState, useCallback } from "react";
 import { AnimatePresence } from "motion/react";
 import { Analytics } from "@vercel/analytics/react";
+import { SpeedInsights } from "@vercel/speed-insights/react";
 
 import { AppLayout } from "./components/AppLayout";
 import { AuthScreen } from "./components/AuthScreen";
@@ -105,6 +106,7 @@ export default function App() {
   return (
     <div className="w-full h-[100dvh] bg-[#FAF8F3] flex overflow-hidden p-0">
       <Analytics />
+      <SpeedInsights />
       <AppLayout
         phoneTab={phoneTab}
         feedCards={feedCards}
