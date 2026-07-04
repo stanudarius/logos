@@ -48,3 +48,25 @@ CREATE POLICY "Users can delete own vault cards"
 CREATE POLICY "Users can update own vault cards" 
   ON vault_cards FOR UPDATE 
   USING ( auth.uid() = user_id );
+
+-- 6. Create Feed Cards Table
+CREATE TABLE feed_cards (
+  id TEXT PRIMARY KEY,
+  stack_id TEXT NOT NULL,
+  category TEXT,
+  topic TEXT,
+  philosopher TEXT,
+  visual_mood TEXT,
+  explore_title TEXT,
+  explore_subtext TEXT,
+  layout_variant TEXT,
+  presentation JSONB
+);
+
+-- 7. Set up RLS for Feed Cards
+ALTER TABLE feed_cards ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Anyone can view feed cards" 
+  ON feed_cards FOR SELECT 
+  USING ( true );
+

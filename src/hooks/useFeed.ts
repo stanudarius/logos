@@ -3,6 +3,8 @@ import type { FeedCard } from "../types/feed";
 import { getRandomInterstitial } from "../data/interstitials";
 import { READING_TRAILS } from "../data/trailsData";
 
+import { supabase } from "../lib/supabase";
+
 export function useFeed(phoneTab: "explore" | "vault" | "trails" | "trail-view") {
   const [feedCards, setFeedCards] = useState<FeedCard[]>([]);
   const [activeTrailCards, setActiveTrailCards] = useState<FeedCard[]>([]);
@@ -42,29 +44,25 @@ export function useFeed(phoneTab: "explore" | "vault" | "trails" | "trail-view")
         .filter(c => c.layoutVariant !== "interstitial")
         .map(c => c.base_id || c.id);
 
-      const response = await fetch("/api/generate", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
+      const { data: newFeedItems, error: invokeError } = await supabase.functions.invoke('generate', {
+        body: {
           rabbitHoleContext: sortedInterests.length > 0 ? sortedInterests : undefined,
           seenIds
-        }),
+        }
       });
       
-      if (response.status === 404) {
-         const data = await response.json();
-         if (data.feed_exhausted) {
+      if (invokeError) {
+         if (invokeError.message?.includes('Feed exhausted') || invokeError.context?.status === 404) {
              feedExhaustedRef.current = true;
              setIsFeedExhausted(true);
              setIsFetchingInfinite(false);
              isFetchingInfiniteRef.current = false;
              return;
          }
+         throw invokeError;
       }
-      
-      if (!response.ok) throw new Error(`Backend error: ${response.status}`);
 
-      const newFeedItems: FeedCard[] = await response.json();
+      if (!newFeedItems) throw new Error("No data returned from edge function");
 
       setFeedCards(prev => {
         const newFeed = [...prev];
@@ -93,11 +91,17 @@ export function useFeed(phoneTab: "explore" | "vault" | "trails" | "trail-view")
     if (!trail) return false;
 
     try {
-      const response = await fetch(`/api/trail/${trailId}`);
-      if (!response.ok) throw new Error("Trail not found");
-      const trailCards: FeedCard[] = await response.json();
-      if (trailCards.length === 0) return false;
-      setActiveTrailCards(trailCards);
+      const { data: trailCards, error } = await supabase
+        .from('feed_cards')
+        .select('*')
+        .eq('stack_id', trailId);
+
+      if (error) throw error;
+      if (!trailCards || trailCards.length === 0) return false;
+      
+      // We restore layoutVariant from layout_variant for frontend compatibility
+      const mappedCards = trailCards.map(c => ({...c, layoutVariant: c.layout_variant}));
+      setActiveTrailCards(mappedCards);
       return true;
     } catch (err) {
        console.error("Failed to load trail:", err);
