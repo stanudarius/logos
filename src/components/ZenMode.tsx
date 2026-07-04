@@ -30,24 +30,8 @@ const SilenceIcon = () => (
   </svg>
 );
 
-const ForestIcon = () => (
-  <svg viewBox="0 0 16 16" fill="none" className="w-4 h-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round">
-    <path d="M8 2 L3 8 L6 8 L2 14 L14 14 L10 8 L13 8 Z" />
-  </svg>
-);
-
-const FireIcon = () => (
-  <svg viewBox="0 0 16 16" fill="none" className="w-4 h-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round">
-    <path d="M8 14 C11.3 14 14 11.3 14 8 C14 4.7 11.3 2 8 2 C4.7 2 2 4.7 2 8 C2 11.3 4.7 14 8 14 Z" />
-    <path d="M8 14 C9.65 14 11 12.65 11 11 C11 9.35 9.65 8 8 8 C6.35 8 5 9.35 5 11 C5 12.65 6.35 14 8 14 Z" />
-    <path d="M8 14 L8 8" />
-  </svg>
-);
-
 const SOUNDSCAPES = [
   { id: "rain",    label: "Rain",    Icon: RainIcon    },
-  { id: "forest",  label: "Forest",  Icon: ForestIcon  },
-  { id: "fire",    label: "Fire",    Icon: FireIcon    },
   { id: "silence", label: "Silence", Icon: SilenceIcon },
 ];
 
@@ -90,80 +74,6 @@ function createSoundscape(type: string, volume: number): (() => void) | null {
       bandpass.connect(gain);
       source.start();
       return () => { source.stop(); gain.disconnect(); };
-    }
-
-    if (type === "forest") {
-      // Forest: lower band-pass + occasional chirp
-      const bufferSize = 2 * ctx.sampleRate;
-      const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
-      const data = buffer.getChannelData(0);
-      for (let i = 0; i < bufferSize; i++) data[i] = Math.random() * 2 - 1;
-      const source = ctx.createBufferSource();
-      source.buffer = buffer;
-      source.loop = true;
-      const bandpass = ctx.createBiquadFilter();
-      bandpass.type = "bandpass";
-      bandpass.frequency.value = 400; // Lower pitch
-      bandpass.Q.value = 0.8;
-      source.connect(bandpass);
-      bandpass.connect(gain);
-      source.start();
-      
-      // Basic chirp oscillator
-      let chirpInterval: ReturnType<typeof setInterval>;
-      const playChirp = () => {
-        const osc = ctx.createOscillator();
-        const chirpGain = ctx.createGain();
-        osc.type = "sine";
-        osc.frequency.setValueAtTime(3000 + Math.random() * 1000, ctx.currentTime);
-        osc.frequency.exponentialRampToValueAtTime(1000, ctx.currentTime + 0.1);
-        
-        chirpGain.gain.setValueAtTime(0, ctx.currentTime);
-        chirpGain.gain.linearRampToValueAtTime(0.05, ctx.currentTime + 0.05);
-        chirpGain.gain.linearRampToValueAtTime(0, ctx.currentTime + 0.15);
-        
-        osc.connect(chirpGain);
-        chirpGain.connect(gain);
-        osc.start();
-        osc.stop(ctx.currentTime + 0.2);
-        
-        chirpInterval = setTimeout(playChirp, 2000 + Math.random() * 8000);
-      };
-      playChirp();
-      
-      return () => { source.stop(); gain.disconnect(); clearTimeout(chirpInterval); };
-    }
-
-    if (type === "fire") {
-      // Fire: low rumble + amplitude LFO
-      const bufferSize = 2 * ctx.sampleRate;
-      const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
-      const data = buffer.getChannelData(0);
-      for (let i = 0; i < bufferSize; i++) data[i] = Math.random() * 2 - 1;
-      const source = ctx.createBufferSource();
-      source.buffer = buffer;
-      source.loop = true;
-      const bandpass = ctx.createBiquadFilter();
-      bandpass.type = "lowpass";
-      bandpass.frequency.value = 150;
-      source.connect(bandpass);
-      
-      const lfo = ctx.createOscillator();
-      lfo.type = "sine";
-      lfo.frequency.value = 1.5; // Flutter speed
-      const lfoGain = ctx.createGain();
-      lfoGain.gain.value = 0.5; // LFO depth
-      lfo.connect(lfoGain.gain);
-      
-      const flutterGain = ctx.createGain();
-      flutterGain.gain.value = 0.5;
-      bandpass.connect(flutterGain);
-      lfoGain.connect(flutterGain);
-      flutterGain.connect(gain);
-      
-      source.start();
-      lfo.start();
-      return () => { source.stop(); lfo.stop(); gain.disconnect(); };
     }
 
     return null;
