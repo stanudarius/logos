@@ -1,9 +1,43 @@
 import React, { useState } from 'react';
 import { supabase } from '../lib/supabase';
-import { BookOpen } from 'lucide-react';
+import { motion, AnimatePresence } from 'motion/react';
 
 interface AuthScreenProps {
 }
+
+/** Lambda monogram — bespoke SVG lettermark for Logos */
+const LogosMonogram = () => (
+  <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-9 h-9">
+    <path
+      d="M8 40 L24 8 L40 40"
+      stroke="white"
+      strokeWidth="2.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      opacity="0.9"
+    />
+    <path
+      d="M16 28 L34 28"
+      stroke="white"
+      strokeWidth="2"
+      strokeLinecap="round"
+      opacity="0.5"
+    />
+  </svg>
+);
+
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: { staggerChildren: 0.12, delayChildren: 0.1 }
+  }
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 18 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.55, ease: [0.16, 1, 0.3, 1] } }
+};
 
 export const AuthScreen: React.FC<AuthScreenProps> = () => {
   const [email, setEmail] = useState('');
@@ -64,8 +98,6 @@ export const AuthScreen: React.FC<AuthScreenProps> = () => {
     setError(null);
     setSuccess(null);
     try {
-      // Need to provide a redirectUrl if we have a specific path to handle resets
-      // Assuming default behavior for now
       const { error } = await supabase.auth.resetPasswordForEmail(email);
       if (error) throw error;
       setSuccess("Password reset link sent! Check your email.");
@@ -78,55 +110,91 @@ export const AuthScreen: React.FC<AuthScreenProps> = () => {
 
   return (
     <div className="flex flex-col items-center justify-center h-full w-full bg-[#0A0A0A] text-white p-8">
-      <div className="w-full max-w-sm">
-        <div className="flex flex-col items-center mb-10">
-          <div className="w-16 h-16 bg-white/10 rounded-2xl flex items-center justify-center mb-4 backdrop-blur-md border border-white/10 shadow-2xl">
-            <BookOpen className="w-8 h-8 text-white" />
+      <motion.div
+        className="w-full max-w-sm"
+        variants={containerVariants}
+        initial="hidden"
+        animate="visible"
+      >
+        {/* ── Brand Header ── */}
+        <motion.div variants={itemVariants} className="flex flex-col items-center mb-10">
+          {/* Monogram */}
+          <div className="w-16 h-16 bg-white/10 rounded-2xl flex items-center justify-center mb-5 backdrop-blur-md border border-white/10 shadow-[0_0_40px_rgba(255,255,255,0.04)]">
+            <LogosMonogram />
           </div>
-          <h1 className="text-3xl font-serif italic font-semibold tracking-tight">Logos</h1>
-        </div>
 
-        <form onSubmit={handleAuth} className="space-y-4">
-          <div>
-            <input
-              type="email"
-              placeholder="Email address"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder-neutral-500 focus:outline-none focus:ring-1 focus:ring-white/30 transition-all"
-              required
-            />
-          </div>
-          <div>
-            <input
-              type="password"
-              placeholder="Password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder-neutral-500 focus:outline-none focus:ring-1 focus:ring-white/30 transition-all"
-              required
-            />
-          </div>
+          {/* Wordmark */}
+          <h1 className="text-3xl font-serif italic font-semibold tracking-tight mb-1.5">
+            Logos
+          </h1>
+
+          {/* Tagline */}
+          <p className="text-[11px] text-neutral-500 tracking-[0.18em] uppercase font-light">
+            Philosophy, distilled.
+          </p>
+        </motion.div>
+
+        {/* ── Auth Form ── */}
+        <motion.form variants={itemVariants} onSubmit={handleAuth} className="space-y-3">
+          <input
+            type="email"
+            placeholder="Email address"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder-neutral-500 focus:outline-none focus:ring-1 focus:ring-white/60 transition-all"
+            required
+          />
+          <input
+            type="password"
+            placeholder="Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder-neutral-500 focus:outline-none focus:ring-1 focus:ring-white/60 transition-all"
+            required
+          />
           
-          {error && <p className="text-red-400 text-xs text-center">{error}</p>}
-          {success && <p className="text-emerald-400 text-xs text-center">{success}</p>}
-          
+          <AnimatePresence mode="wait">
+            {error && (
+              <motion.p
+                key="error"
+                initial={{ opacity: 0, y: -4 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0 }}
+                className="text-red-400 text-xs text-center pt-1"
+              >
+                {error}
+              </motion.p>
+            )}
+            {success && (
+              <motion.p
+                key="success"
+                initial={{ opacity: 0, y: -4 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0 }}
+                className="text-emerald-400 text-xs text-center pt-1"
+              >
+                {success}
+              </motion.p>
+            )}
+          </AnimatePresence>
+
           <button
             type="submit"
             disabled={loading}
-            className={`w-full font-semibold rounded-xl px-4 py-3 text-sm transition-colors active:scale-[0.98] disabled:opacity-50 ${
-              isDelete 
-                ? "bg-red-500/20 text-red-500 hover:bg-red-500/30 border border-red-500/50" 
-                : "bg-white text-black hover:bg-neutral-200"
+            className={`w-full font-semibold rounded-xl px-4 py-3 text-sm transition-all active:scale-[0.98] disabled:opacity-50 mt-1 ${
+              isDelete
+                ? "bg-red-500/20 text-red-400 hover:bg-red-500/30 border border-red-500/40"
+                : "bg-white text-black hover:bg-neutral-100"
             }`}
           >
-            {loading ? "Processing..." : isDelete ? "Permanently Delete Account" : isSignUp ? "Create Account" : "Sign In"}
+            {loading ? "Processing…" : isDelete ? "Permanently Delete Account" : isSignUp ? "Create Account" : "Sign In"}
           </button>
-        </form>
+        </motion.form>
 
-        <div className="mt-6 flex flex-col items-center gap-4">
+        {/* ── Secondary Actions ── */}
+        <motion.div variants={itemVariants} className="mt-6 flex flex-col items-center gap-3">
           {!isDelete && (
-            <button 
+            <button
               onClick={() => {
                 setIsSignUp(!isSignUp);
                 setError(null);
@@ -148,7 +216,10 @@ export const AuthScreen: React.FC<AuthScreenProps> = () => {
               Forgot your password?
             </button>
           )}
+        </motion.div>
 
+        {/* ── Danger Zone (visually subordinate) ── */}
+        <motion.div variants={itemVariants} className="mt-8 pt-6 border-t border-white/5 flex justify-center">
           <button
             onClick={() => {
               setIsDelete(!isDelete);
@@ -157,12 +228,12 @@ export const AuthScreen: React.FC<AuthScreenProps> = () => {
               setSuccess(null);
             }}
             type="button"
-            className={`text-xs transition-colors ${isDelete ? "text-neutral-400 hover:text-white" : "text-red-500/60 hover:text-red-500"}`}
+            className={`text-[11px] transition-colors ${isDelete ? "text-neutral-400 hover:text-white" : "text-neutral-700 hover:text-red-500/80"}`}
           >
-            {isDelete ? "Cancel deletion, go back to sign in." : "Delete Account"}
+            {isDelete ? "Cancel — go back to sign in." : "Delete account"}
           </button>
-        </div>
-      </div>
+        </motion.div>
+      </motion.div>
     </div>
   );
 };

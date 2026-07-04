@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useCallback } from "react";
 import {
-  BookOpen, Bookmark, Network, ArrowLeft, Timer, Waypoints, X
+  BookOpen, Bookmark, Network, ArrowLeft, Timer, Waypoints
 } from "lucide-react";
-import { motion } from "motion/react";
+import { motion, AnimatePresence } from "motion/react";
 import type { FeedCard, SavedVaultCard } from "../types";
 import ThoughtStream from "./ThoughtStream";
 import { ParallaxBackground } from "./ThoughtAtom";
@@ -37,6 +37,12 @@ interface PhoneEmulatorProps {
   onStartTrail: (trailId: string) => void;
 }
 
+const NAV_TABS = [
+  { id: "explore", label: "Stream", Icon: BookOpen },
+  { id: "trails",  label: "Trails", Icon: Waypoints },
+  { id: "vault",   label: "Vault",  Icon: Bookmark },
+] as const;
+
 const PhoneEmulator: React.FC<PhoneEmulatorProps> = ({
   phoneTab,
   feedCards,
@@ -59,37 +65,44 @@ const PhoneEmulator: React.FC<PhoneEmulatorProps> = ({
   onStartTrail
 }) => {
 
+  const activeTabId =
+    phoneTab === "trail-view" ? "trails" :
+    phoneTab === "vault"      ? "vault"  : "explore";
+
   return (
     <div
       id="phone-device-emulation"
-      className={`relative rounded-none sm:rounded-[40px] h-[100dvh] sm:h-[90vh] sm:max-h-[850px] sm:min-h-[600px] w-full border-0 sm:border-[10px] sm:border-[#1A1A1A] bg-[#FAF8F3] shadow-none sm:shadow-[0_15px_40px_rgba(0,0,0,0.08)] flex flex-col justify-between overflow-hidden transition-all duration-700 ease-out`}
+      className="relative rounded-none sm:rounded-[40px] h-[100dvh] sm:h-[90vh] sm:max-h-[850px] sm:min-h-[600px] w-full border-0 sm:border-[10px] sm:border-[#1A1A1A] bg-[#FAF8F3] shadow-none sm:shadow-[0_20px_60px_rgba(0,0,0,0.20),0_8px_20px_rgba(0,0,0,0.12)] flex flex-col justify-between overflow-hidden transition-all duration-700 ease-out"
     >
-
-      <div className="relative z-50 flex justify-end items-center text-[10px] font-bold tracking-widest uppercase px-5 pt-4 pb-2 pointer-events-none">
-
+      {/* ── Status bar / header ── */}
+      <div className="relative z-50 flex justify-end items-center px-4 pt-4 pb-2 pointer-events-none border-b border-[#E8E4DC]/40 shadow-[0_1px_0_rgba(0,0,0,0.03)]">
         {phoneTab === "explore" && (
-          <div className="flex items-center gap-1.5 pointer-events-auto">
+          <div className="flex items-center gap-2 pointer-events-auto">
             <button
               onClick={onOpenZenMode}
-              className="p-1.5 rounded-full backdrop-blur-md bg-[#1C1C1E]/5 hover:bg-[#1C1C1E]/15 transition-all text-[#1C1C1E]"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-full backdrop-blur-md bg-[#1C1C1E]/6 hover:bg-[#1C1C1E]/12 border border-[#1C1C1E]/8 hover:border-[#1C1C1E]/15 transition-all text-[#1C1C1E] text-[10px] font-semibold tracking-wider uppercase"
               title="Zen Mode"
             >
-              <Timer className="w-5 h-5" />
+              <Timer className="w-3.5 h-3.5" />
+              <span>Focus</span>
             </button>
             <button
               onClick={onOpenConstellation}
-              className="p-1.5 rounded-full backdrop-blur-md bg-[#1C1C1E]/5 hover:bg-[#1C1C1E]/15 transition-all text-[#1C1C1E]"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-full backdrop-blur-md bg-[#1C1C1E]/6 hover:bg-[#1C1C1E]/12 border border-[#1C1C1E]/8 hover:border-[#1C1C1E]/15 transition-all text-[#1C1C1E] text-[10px] font-semibold tracking-wider uppercase"
               title="View Knowledge Constellation"
             >
-              <Network className="w-5 h-5" />
+              <Network className="w-3.5 h-3.5" />
+              <span>Map</span>
             </button>
           </div>
         )}
       </div>
 
+      {/* ── Main content area ── */}
       <div className="relative z-10 flex-1 flex flex-col overflow-hidden">
-        {/* Single parallax instance for the entire stream (avoids per-card listener churn) */}
+        {/* Single parallax instance for the entire stream */}
         {(phoneTab === "explore" || phoneTab === "trail-view") && <ParallaxBackground />}
+
         <div id="thought-stream-explore" className={`h-full w-full ${phoneTab === "explore" ? "block" : "hidden"}`}>
           <ThoughtStream
             cards={feedCards}
@@ -124,8 +137,12 @@ const PhoneEmulator: React.FC<PhoneEmulatorProps> = ({
           <div id="vault-dashboard-emulation" className="h-full flex flex-col justify-between px-4 py-2 pt-4">
             {savedVaultCards.length === 0 ? (
               <div className="flex-1 flex flex-col items-center justify-center text-center p-4 space-y-5">
-                <div className="w-14 h-14 rounded-full bg-[#F5F3ED] flex items-center justify-center">
-                  <Bookmark className="w-7 h-7 text-[#D4CFC5]" />
+                <div className="relative w-16 h-16 flex items-center justify-center">
+                  {/* Breathing pulse ring */}
+                  <div className="absolute inset-0 rounded-full bg-[#D4CFC5]/40 animate-breathe" />
+                  <div className="w-14 h-14 rounded-full bg-[#F5F3ED] flex items-center justify-center relative z-10">
+                    <Bookmark className="w-7 h-7 text-[#D4CFC5]" />
+                  </div>
                 </div>
                 <div className="space-y-2">
                   <h4 className="text-sm font-serif italic text-[#1C1C1E] font-semibold">
@@ -162,66 +179,50 @@ const PhoneEmulator: React.FC<PhoneEmulatorProps> = ({
         {phoneTab === "trails" && (
           <ReadingTrailsDashboard onStartTrail={onStartTrail} />
         )}
-
       </div>
 
-      <div className="p-1 flex items-center justify-around border-t border-[#E8E4DC]/60 pt-3 pb-2 relative z-10 bg-[#FAF8F3]/90 backdrop-blur-sm">
-        <button
-          id="phone-mode-explore-tab"
-          onClick={() => {
-            onSetPhoneTab("explore");
-          }}
-          className="flex flex-col items-center gap-1 group active:scale-95 transition-all focus:outline-none"
-        >
-          <div className={`w-9 h-9 rounded-xl border flex items-center justify-center shadow-xs transition-all ${phoneTab === "explore"
-            ? "bg-[#1C1C1E] border-[#1C1C1E] text-[#FAF8F3]"
-            : "border-[#E8E4DC] bg-white hover:border-[#D4CFC5] text-[#1C1C1E] shadow-2xs"
-            }`}>
-            <BookOpen className="w-3.5 h-3.5 stroke-[1.5]" />
-          </div>
-          <span className={`text-[8px] font-bold uppercase tracking-tight ${phoneTab === 'explore' ? 'text-[#1C1C1E]' : 'text-[#B5A48B]'}`}>Stream</span>
-        </button>
+      {/* ── Navigation Tab Bar ── */}
+      <div className="relative z-20 border-t border-[#E8E4DC]/70 bg-[#FAF8F3]/95 backdrop-blur-sm">
+        <div className="flex items-end justify-around pt-3 pb-2 px-2">
+          {NAV_TABS.map(({ id, label, Icon }) => {
+            const isActive =
+              id === "trails" ? (phoneTab === "trails" || phoneTab === "trail-view") :
+              id === activeTabId;
 
-        <button
-          id="phone-mode-trails-tab"
-          onClick={() => {
-            onSetPhoneTab("trails");
-          }}
-          className="flex flex-col items-center gap-1 group active:scale-95 transition-all focus:outline-none"
-        >
-          <div className={`w-9 h-9 rounded-xl border flex items-center justify-center shadow-xs transition-all ${(phoneTab === "trails" || phoneTab === "trail-view")
-            ? "bg-[#1C1C1E] border-[#1C1C1E] text-[#FAF8F3]"
-            : "border-[#E8E4DC] bg-white hover:border-[#D4CFC5] text-[#1C1C1E] shadow-2xs"
-            }`}>
-            <Waypoints className="w-3.5 h-3.5 stroke-[1.5]" />
-          </div>
-          <span className={`text-[8px] font-bold uppercase tracking-tight ${(phoneTab === 'trails' || phoneTab === 'trail-view') ? 'text-[#1C1C1E]' : 'text-[#B5A48B]'}`}>Trails</span>
-        </button>
+            const showBadge = id === "vault" && savedVaultCards.length > 0;
 
-        <button
-          id="phone-mode-vault-tab"
-          onClick={() => {
-            onSetPhoneTab("vault");
-          }}
-          className="flex flex-col items-center gap-1 active:scale-95 transition-all focus:outline-none"
-        >
-          <div className={`w-9 h-9 rounded-xl border flex items-center justify-center shadow-xs transition-all relative ${phoneTab === "vault"
-            ? "bg-[#1C1C1E] border-[#1C1C1E] text-[#FAF8F3]"
-            : "border-[#E8E4DC] bg-white hover:border-[#D4CFC5] text-[#1C1C1E] shadow-2xs"
-            }`}>
-            <Bookmark className="w-3.5 h-3.5 fill-current stroke-[1.5]" />
-            {savedVaultCards.length > 0 && (
-              <span className="absolute -top-1 -right-1 bg-[#B5A48B] text-white font-mono text-[7px] w-3.5 h-3.5 rounded-full flex items-center justify-center font-bold">
-                {savedVaultCards.length}
-              </span>
-            )}
-          </div>
-          <span className={`text-[8px] font-bold uppercase tracking-tight ${phoneTab === 'vault' ? 'text-[#1C1C1E]' : 'text-[#B5A48B]'}`}>Vault</span>
-        </button>
+            return (
+              <button
+                key={id}
+                id={`phone-mode-${id}-tab`}
+                onClick={() => onSetPhoneTab(id as "explore" | "vault")}
+                className="flex flex-col items-center gap-1.5 group active:scale-95 transition-all focus:outline-none min-w-[56px]"
+              >
+                <div className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-300 relative ${
+                  isActive
+                    ? "bg-[#1C1C1E] text-[#FAF8F3] shadow-[0_4px_14px_rgba(28,28,30,0.25)]"
+                    : "bg-white border border-[#E8E4DC] text-[#1C1C1E] hover:border-[#D4CFC5] shadow-[0_1px_4px_rgba(0,0,0,0.04)] hover:shadow-[0_2px_8px_rgba(0,0,0,0.07)]"
+                }`}>
+                  <Icon className="w-4 h-4 stroke-[1.5]" />
+                  {showBadge && (
+                    <span className="absolute -top-1 -right-1 bg-[#B5A48B] text-white font-mono text-[7px] w-3.5 h-3.5 rounded-full flex items-center justify-center font-bold">
+                      {savedVaultCards.length}
+                    </span>
+                  )}
+                </div>
+                <span className={`text-[9px] font-bold uppercase tracking-tight transition-colors ${
+                  isActive ? "text-[#1C1C1E]" : "text-[#B5A48B]"
+                }`}>
+                  {label}
+                </span>
+              </button>
+            );
+          })}
+        </div>
+
+        {/* Home bar indicator */}
+        <div className="absolute bottom-1.5 left-1/2 -translate-x-1/2 w-28 h-[4px] bg-[#D4CFC5]/70 rounded-full select-none pointer-events-none hidden sm:block" />
       </div>
-
-      <div className="absolute bottom-1 left-1/2 -translate-x-1/2 w-32 h-1 bg-[#D4CFC5]/60 rounded-full select-none pointer-events-none hidden sm:block" />
-
     </div>
   );
 };

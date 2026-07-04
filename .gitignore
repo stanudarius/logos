@@ -7,7 +7,6 @@ coverage/
 .env*
 !.env.example
 
-# Graphify / AI Agents
 graphify-out/
 AGENTS.md
 .graphifyignore
