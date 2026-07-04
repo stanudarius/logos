@@ -20,24 +20,29 @@ export function useVault(session: Session | null, trackCardInteraction: (index: 
     if (!session?.user) return;
     let isMounted = true;
     const fetchVault = async () => {
-      // Ensure profile exists
-      const { data: profile } = await supabase.from('profiles').select('id').eq('id', session.user.id).single();
-      if (!profile) {
-        await supabase.from('profiles').insert([{ id: session.user.id }]);
-      }
+      try {
+        // Ensure profile exists
+        const { data: profile, error: profileError } = await supabase.from('profiles').select('id').eq('id', session.user.id).single();
+        if (profileError && profileError.code !== 'PGRST116') {
+          console.error("Failed to fetch profile", profileError);
+        }
+        if (!profile) {
+          const { error: insertError } = await supabase.from('profiles').insert([{ id: session.user.id }]);
+          if (insertError) console.error("Failed to insert profile", insertError);
+        }
 
-      const { data: vault } = await supabase.from('vault_cards').select('*').eq('user_id', session.user.id);
-      if (vault && isMounted) {
-        setSavedVaultCards(vault.map(row => row.card_data as SavedVaultCard));
+        const { data: vault, error: vaultError } = await supabase.from('vault_cards').select('*').eq('user_id', session.user.id);
+        if (vaultError) throw vaultError;
+
+        if (vault && isMounted) {
+          setSavedVaultCards(vault.map(row => row.card_data as SavedVaultCard));
+        }
+      } catch (e) {
+        console.error("Failed to fetch vault", e);
       }
     };
     
-    // Add try/catch safely per original bug fix instruction (even though we're mostly doing cohesion)
-    try {
-      fetchVault();
-    } catch(e) {
-      console.error("Failed to fetch vault", e);
-    }
+    fetchVault();
     
     return () => { isMounted = false; };
   }, [session]);

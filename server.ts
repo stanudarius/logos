@@ -49,6 +49,7 @@ const DB_PATH = path.join(process.cwd(), "data", "database.json");
 let cardsDatabase: Record<string, any[]> = {};
 let stacksArray: any[][] = [];
 
+let dbLoadError = false;
 try {
   if (fs.existsSync(DB_PATH)) {
     const rawData = fs.readFileSync(DB_PATH, "utf-8");
@@ -56,9 +57,11 @@ try {
     stacksArray = Object.values(cardsDatabase).filter(arr => Array.isArray(arr) && arr.length > 0);
   } else {
     console.warn(`[Logos] WARNING: Unified database not found at ${DB_PATH}.`);
+    dbLoadError = true;
   }
 } catch (e) {
   console.error("[Logos] Error loading database.json.", e);
+  dbLoadError = true;
 }
 
 // Validation Schemas
@@ -87,6 +90,10 @@ const exportSchema = z.object({
 });
 
 app.post("/api/generate", (req, res) => {
+  if (dbLoadError || stacksArray.length === 0) {
+    return res.status(503).json({ error: "Service unavailable: database could not be loaded." });
+  }
+
   try {
     const parsed = generateSchema.safeParse(req.body);
     if (!parsed.success) {

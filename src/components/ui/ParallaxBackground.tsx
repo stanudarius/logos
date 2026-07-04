@@ -1,11 +1,16 @@
 import React, { useEffect } from "react";
-import { motion, useMotionValue, useSpring } from "motion/react";
+import { motion, useMotionValue, useSpring, useTransform } from "motion/react";
 
 export const ParallaxBackground = () => {
   const motionX = useMotionValue(0);
   const motionY = useMotionValue(0);
   const smoothX = useSpring(motionX, { damping: 40, stiffness: 150 });
   const smoothY = useSpring(motionY, { damping: 40, stiffness: 150 });
+
+  const transform = useTransform(
+    [smoothX, smoothY],
+    ([x, y]) => `translate3d(${x}px, ${y}px, 0) scale(1.05)`
+  );
 
   useEffect(() => {
     let ticking = false;
@@ -55,12 +60,8 @@ export const ParallaxBackground = () => {
   return (
     <motion.div
       id="parallax-bg"
-      style={{
-        x: smoothX,
-        y: smoothY,
-        backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.5'/%3E%3C/svg%3E")`,
-      }}
-      className="absolute inset-0 opacity-[0.035] pointer-events-none scale-[1.05]"
+      style={{ transform }}
+      className="bg-noise absolute inset-0 opacity-[0.035] pointer-events-none"
     />
   );
 };
