@@ -1,7 +1,7 @@
 import React, { useState, useCallback } from "react";
 import { AnimatePresence } from "motion/react";
 
-import PhoneEmulator from "./components/PhoneEmulator";
+import { AppLayout } from "./components/AppLayout";
 import { AuthScreen } from "./components/AuthScreen";
 import { ConstellationMap } from "./components/ConstellationMap";
 import ZenMode from "./components/ZenMode";
@@ -102,31 +102,29 @@ export default function App() {
   }
 
   return (
-    <div className="w-full h-[100dvh] bg-[#0A0A0A] flex items-center justify-center overflow-hidden p-0 sm:p-8">
-      <div className="w-full sm:max-w-[420px] h-full flex flex-col items-center justify-center font-sans relative">
-        <PhoneEmulator
-          phoneTab={phoneTab}
-          feedCards={feedCards}
-          activeTrailCards={activeTrailCards}
-          activeCardIndex={activeCardIndex}
-          isFetchingMore={isFetchingInfinite}
-          isFeedExhausted={isFeedExhausted}
-          savedVaultCards={savedVaultCards}
-          onActiveCardChange={handleActiveCardChange}
-          onFetchMore={fetchInfiniteFeed}
-          onSetPhoneTab={setPhoneTab}
-          onToggleSaveToVault={handleToggleSaveToVaultWrapper}
-          savedVaultCardIds={savedVaultCardIds}
-          onDeleteFromVault={deleteFromVault}
-          onOpenConstellation={handleOpenConstellation}
-          onOpenZenMode={handleOpenZenMode}
-          onUpdateVaultCardAnnotation={updateVaultCardAnnotation}
-          onAssignToFolder={assignToFolder}
-          onOpenDeepDive={handleOpenDeepDive}
-          onOpenChat={handleOpenChat}
-          onStartTrail={handleStartTrailWrapper}
-        />
-      </div>
+    <div className="w-full h-[100dvh] bg-[#FAF8F3] flex overflow-hidden p-0">
+      <AppLayout
+        phoneTab={phoneTab}
+        feedCards={feedCards}
+        activeTrailCards={activeTrailCards}
+        activeCardIndex={activeCardIndex}
+        isFetchingMore={isFetchingInfinite}
+        isFeedExhausted={isFeedExhausted}
+        savedVaultCards={savedVaultCards}
+        onActiveCardChange={handleActiveCardChange}
+        onFetchMore={fetchInfiniteFeed}
+        onSetPhoneTab={setPhoneTab}
+        onToggleSaveToVault={handleToggleSaveToVaultWrapper}
+        savedVaultCardIds={savedVaultCardIds}
+        onDeleteFromVault={deleteFromVault}
+        onOpenConstellation={handleOpenConstellation}
+        onOpenZenMode={handleOpenZenMode}
+        onUpdateVaultCardAnnotation={updateVaultCardAnnotation}
+        onAssignToFolder={assignToFolder}
+        onOpenDeepDive={handleOpenDeepDive}
+        onOpenChat={handleOpenChat}
+        onStartTrail={handleStartTrailWrapper}
+      />
 
       <AnimatePresence>
         {isConstellationOpen && (
