@@ -68,8 +68,8 @@ const PhoneEmulator: React.FC<PhoneEmulatorProps> = ({
 }) => {
 
   const activeTabId =
-    phoneTab === "trail-view" ? "trails" :
-    phoneTab === "vault"      ? "vault"  : "explore";
+    (phoneTab === "trails" || phoneTab === "trail-view") ? "trails" :
+    phoneTab === "vault" ? "vault" : "explore";
 
   return (
     <div
@@ -189,9 +189,7 @@ const PhoneEmulator: React.FC<PhoneEmulatorProps> = ({
       <div className="relative z-20 border-t border-[#E8E4DC]/70 bg-[#FAF8F3]/95 backdrop-blur-sm">
         <div className="flex items-end justify-around pt-3 pb-2 px-2">
           {NAV_TABS.map(({ id, label, Icon }) => {
-            const isActive =
-              id === "trails" ? (phoneTab === "trails" || phoneTab === "trail-view") :
-              id === activeTabId;
+            const isActive = id === activeTabId;
 
             const showBadge = id === "vault" && savedVaultCards.length > 0;
 
