@@ -197,14 +197,11 @@ const ThoughtAtom: React.FC<ThoughtAtomProps> = ({
                 {isTrailMode && (
                   <div className="flex items-center gap-1 mt-1.5">
                     {(() => {
-                      // Progress reflects the 4-card rhythm leading up to an interstitial, 
-                      // or the position in a 4-card Trail.
                       const cardSequence = (index % 5) + 1;
                       return [...Array(4)].map((_, i) => (
                         <div
                           key={i}
-                          className={`h-[2px] w-2.5 rounded-full transition-all ${i < cardSequence ? "bg-[#B5A48B]" : "bg-[#E8E4DC]"
-                            }`}
+                          className={`h-[2px] w-2.5 rounded-full transition-all ${i < cardSequence ? "bg-[#B5A48B]" : "bg-[#E8E4DC]"}`}
                         />
                       ));
                     })()}
@@ -397,7 +394,7 @@ const Monogram = ({ philosopher }: { philosopher: string }) => (
 );
 
 /**
- * Common Animation Variants
+ * Shared animation variants
  */
 const titleAnim = {
   hidden: { y: 20, opacity: 0 },
@@ -414,18 +411,31 @@ const descAnim = {
 
 /**
  * Renders the appropriate typographic layout for a card.
+ *
+ * ── Shared typographic constants ─────────────────────────────────────────
+ * All 4 content variants consume LABEL_CLS / TITLE_CLS / TITLE_STYLE /
+ * SUBTEXT_CLS so the stream feels cohesive.  Structural differences
+ * (alignment, decoration, spatial rhythm) are still unique per variant —
+ * only the type grammar is locked.
  */
-function renderLayout(card: FeedCard, variant: LayoutVariant, index: number = 0) {
+function renderLayout(card: FeedCard, variant: LayoutVariant, _index: number = 0) {
+
+  // ── Shared tokens — change here to update every layout ──────────────────
+  const LABEL_CLS   = "text-[9px] font-sans font-bold uppercase tracking-[0.2em] text-[#B5A48B] mb-3 relative z-10";
+  const TITLE_CLS   = "atom-title text-[1.5rem] font-semibold italic leading-[1.25] tracking-[-0.015em] text-[#1C1C1E] mb-4 relative z-10";
+  const TITLE_STYLE = { fontFamily: "var(--font-literary)" } as const;
+  const SUBTEXT_CLS = "atom-subtext font-sans text-[0.8125rem] font-light leading-[1.7] text-[#6B6B6F] relative z-10";
+  // ────────────────────────────────────────────────────────────────────────
+
   switch (variant) {
+
+    // ── Interstitial ── Full-bleed typographic poster (intentionally distinct)
     case "interstitial": {
       const words = card.explore_title.split(' ');
       const hugeWord = words[words.length - 1];
       const restTitle = words.slice(0, -1).join(' ') || card.topic;
-
       return (
         <div className="flex-1 w-full h-full bg-[#F5F0E8] relative overflow-hidden">
-
-          {/* ENORMOUS bleeding word - pinned to top right, colliding with the edge */}
           <motion.div
             initial={{ x: 50, opacity: 0 }}
             whileInView={{ x: 0, opacity: 1 }}
@@ -435,23 +445,17 @@ function renderLayout(card: FeedCard, variant: LayoutVariant, index: number = 0)
           >
             {hugeWord}
           </motion.div>
-
-          {/* Extreme tension split: Muted terracotta line physically slicing the layout */}
           <motion.div
             initial={{ scaleX: 0 }}
             whileInView={{ scaleX: 1 }}
             transition={{ duration: 0.8, delay: 0.2, ease: "circOut" }}
             className="absolute top-[45%] left-0 w-[65%] h-[2px] bg-[#C1694F] origin-left z-10"
           />
-
-          {/* The rest of the title - tiny, mono, sitting exactly on the structural slice */}
           <div className="absolute top-[45%] left-6 -translate-y-full pb-3 z-10">
             <span className="text-[9px] font-mono uppercase tracking-[0.4em] text-[#2C2825]">
               {restTitle}
             </span>
           </div>
-
-          {/* Body text: Pinned hard to the right edge, under the slice, uncomfortably narrow */}
           <motion.div
             variants={descAnim} initial="hidden" whileInView="visible" viewport={{ once: false }}
             className="absolute top-[45%] right-6 pt-6 w-[55%] z-10"
@@ -460,115 +464,101 @@ function renderLayout(card: FeedCard, variant: LayoutVariant, index: number = 0)
               {card.explore_subtext}
             </p>
           </motion.div>
-
         </div>
       );
     }
 
+    // ── Thesis ── Centered · large monogram · headline card ─────────────────
     case "thesis":
       return (
         <div className="flex-1 flex flex-col items-center justify-center text-center pl-6 pr-16 pb-16 relative overflow-hidden">
           <Monogram philosopher={card.philosopher} />
-          {/* Label — always bold, small-caps */}
-          <TypewriterText text={card.topic} className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#B5A48B] mb-4 relative z-10" />
-
-          {/* Title — always semibold italic */}
+          <TypewriterText text={card.topic} className={LABEL_CLS} />
           <motion.h1
             variants={titleAnim} initial="hidden" whileInView="visible" viewport={{ once: false }}
-            className="atom-title font-serif text-[2rem] leading-[1.08] font-semibold italic text-[#1C1C1E] mb-5 tracking-tight relative z-10"
+            className={TITLE_CLS} style={TITLE_STYLE}
           >
             <TypewriterText text={card.explore_title} speed={0.015} delay={0.4} />
           </motion.h1>
-
-          {/* Subtext — always light */}
           <motion.p
             variants={descAnim} initial="hidden" whileInView="visible" viewport={{ once: false }}
-            className="atom-subtext font-sans text-[0.8125rem] leading-[1.7] text-[#6B6B6F] font-light max-w-[85%] relative z-10"
+            className={`${SUBTEXT_CLS} max-w-[85%]`}
           >
             {card.explore_subtext}
           </motion.p>
         </div>
       );
 
+    // ── Blockquote ── Right-aligned · monogram bleeds left ──────────────────
     case "blockquote":
       return (
         <div className="flex-1 flex flex-col justify-center text-right pl-8 pr-16 pb-16 relative overflow-hidden">
           <Monogram philosopher={card.philosopher} />
-
-          {/* Label — always bold, small-caps */}
-          <TypewriterText text={card.topic} className="text-[9px] font-bold uppercase tracking-[0.2em] text-[#B5A48B] mb-4 relative z-10" />
-
-          {/* Title — semibold italic (literary font) */}
+          <TypewriterText text={card.topic} className={`${LABEL_CLS} block`} />
           <motion.h1
             variants={titleAnim} initial="hidden" whileInView="visible" viewport={{ once: false }}
-            className="atom-title text-[1.375rem] leading-[1.35] font-semibold italic text-[#1C1C1E] mb-4 relative z-10" style={{ fontFamily: "var(--font-literary)" }}
+            className={TITLE_CLS} style={TITLE_STYLE}
           >
-            “<TypewriterText text={card.explore_title} speed={0.015} delay={0.4} />”
+            <TypewriterText text={card.explore_title} speed={0.015} delay={0.4} />
           </motion.h1>
-
-          {/* Subtext — always light */}
           <motion.p
             variants={descAnim} initial="hidden" whileInView="visible" viewport={{ once: false }}
-            className="atom-subtext font-sans text-[0.75rem] leading-[1.65] text-[#6B6B6F] font-light relative z-10"
+            className={SUBTEXT_CLS}
           >
             {card.explore_subtext}
           </motion.p>
         </div>
       );
 
+    // ── Fragment ── Left-aligned · gold rule · philosopher attribution ────────
     case "fragment":
       return (
         <div className="flex-1 flex flex-col justify-center pl-6 pr-16 pb-16 relative overflow-hidden">
           <Monogram philosopher={card.philosopher} />
-
-          {/* Label — always bold, small-caps */}
-          <div className="flex items-center gap-2 mb-5 relative z-10">
-            <div className="h-[2px] w-8 bg-[#B5A48B] opacity-50" />
-            <TypewriterText text={card.topic} className="text-[9px] font-bold uppercase tracking-[0.2em] text-[#B5A48B]" />
+          {/* Gold rule + label — unique to Fragment */}
+          <div className="flex items-center gap-2 mb-3 relative z-10">
+            <div className="h-[2px] w-8 bg-[#B5A48B] opacity-50 flex-shrink-0" />
+            <TypewriterText text={card.topic} className="text-[9px] font-sans font-bold uppercase tracking-[0.2em] text-[#B5A48B]" />
           </div>
-
-          {/* Title — semibold (sans, tight) */}
           <motion.h1
             variants={titleAnim} initial="hidden" whileInView="visible" viewport={{ once: false }}
-            className="atom-title text-[1.125rem] leading-[1.6] font-semibold text-[#1C1C1E] text-justify mb-5 relative z-10" style={{ letterSpacing: "-0.025em", fontFamily: "var(--font-sans)", hyphens: "auto" }}
+            className={TITLE_CLS} style={TITLE_STYLE}
           >
-            <TypewriterText text={card.explore_title} speed={0.015} delay={0.4} />. {card.explore_subtext}
+            <TypewriterText text={card.explore_title} speed={0.015} delay={0.4} />
           </motion.h1>
-
-          {/* Attribution — light italic */}
           <motion.p
             variants={descAnim} initial="hidden" whileInView="visible" viewport={{ once: false }}
-            className="atom-subtext font-serif text-[0.8125rem] leading-[1.6] text-[#8A8A8E] font-light italic text-justify relative z-10"
+            className={SUBTEXT_CLS}
+          >
+            {card.explore_subtext}
+          </motion.p>
+          {/* Attribution — structural personality unique to Fragment */}
+          <motion.p
+            variants={descAnim} initial="hidden" whileInView="visible" viewport={{ once: false }}
+            className="font-serif text-[0.75rem] font-light italic text-[#B5A48B] relative z-10 mt-3"
           >
             — {card.philosopher}
           </motion.p>
         </div>
       );
 
+    // ── Epigraph ── Centered · horizontal rules frame the title ─────────────
     case "epigraph":
+    default:
       return (
         <div className="flex-1 flex flex-col items-center justify-center text-center pl-7 pr-16 pb-16 relative overflow-hidden">
-          <Monogram philosopher={card.philosopher} />
-
-          {/* Label — always bold, small-caps */}
-          <TypewriterText text={card.topic} className="atom-label text-[0.625rem] font-bold uppercase tracking-[0.25em] text-[#B5A48B] mb-5 relative z-10 block" />
-
+          <TypewriterText text={card.topic} className={`${LABEL_CLS} block`} />
           <div className="atom-rule w-8 h-px bg-[#D4CFC5] mb-5 relative z-10" />
-
-          {/* Title — semibold italic (literary) */}
           <motion.h1
             variants={titleAnim} initial="hidden" whileInView="visible" viewport={{ once: false }}
-            className="atom-title text-[1.5rem] leading-[1.35] font-semibold italic text-[#1C1C1E] mb-5 relative z-10" style={{ fontFamily: "var(--font-literary)" }}
+            className={TITLE_CLS} style={TITLE_STYLE}
           >
             <TypewriterText text={card.explore_title} speed={0.015} delay={0.4} />
           </motion.h1>
-
           <div className="atom-rule-bottom w-8 h-px bg-[#D4CFC5] mb-4 relative z-10" />
-
-          {/* Subtext — always light */}
           <motion.p
             variants={descAnim} initial="hidden" whileInView="visible" viewport={{ once: false }}
-            className="atom-subtext font-sans text-[0.6875rem] leading-[1.7] text-[#8A8A8E] font-light max-w-[90%] relative z-10"
+            className={`${SUBTEXT_CLS} max-w-[90%]`}
           >
             {card.explore_subtext}
           </motion.p>
