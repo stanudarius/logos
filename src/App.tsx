@@ -22,6 +22,7 @@ export default function App() {
   const [phoneTab, setPhoneTab] = useState<"explore" | "vault" | "trails" | "trail-view">("explore");
   const activeCardIndex = phoneTab === "trail-view" ? activeTrailIndex : activeExploreIndex;
   const [isFetchingInfinite, setIsFetchingInfinite] = useState(false);
+  const [isFeedExhausted, setIsFeedExhausted] = useState(false);
   const [isConstellationOpen, setIsConstellationOpen] = useState(false);
   const [isZenModeOpen, setIsZenModeOpen] = useState(false);
   const [isRecoveringPassword, setIsRecoveringPassword] = useState(false);
@@ -145,6 +146,7 @@ export default function App() {
          const data = await response.json();
          if (data.feed_exhausted) {
              feedExhaustedRef.current = true;
+             setIsFeedExhausted(true);
              return;
          }
       }
@@ -364,6 +366,7 @@ export default function App() {
           activeCardIndex={activeCardIndex}
 
           isFetchingMore={isFetchingInfinite}
+          isFeedExhausted={isFeedExhausted}
           savedVaultCards={savedVaultCards}
           onActiveCardChange={handleActiveCardChange}
           onFetchMore={fetchInfiniteFeed}

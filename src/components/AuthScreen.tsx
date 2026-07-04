@@ -191,6 +191,26 @@ export const AuthScreen: React.FC<AuthScreenProps> = () => {
           </button>
         </motion.form>
 
+        {/* ── Feature Pills (Sign up only) ── */}
+        <AnimatePresence>
+          {isSignUp && !isDelete && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto" }}
+              exit={{ opacity: 0, height: 0 }}
+              className="mt-5 overflow-hidden"
+            >
+              <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide -mx-8 px-8" style={{ scrollbarWidth: 'none' }}>
+                {["Curate your feed", "Save to Vault", "Zen Mode", "Socratic Chat", "Export to Obsidian"].map((feat, idx) => (
+                  <div key={idx} className="flex-shrink-0 bg-white/10 border border-white/10 rounded-full px-3 py-1.5 text-[10px] uppercase font-mono tracking-wider text-white/70">
+                    {feat}
+                  </div>
+                ))}
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
         {/* ── Secondary Actions ── */}
         <motion.div variants={itemVariants} className="mt-6 flex flex-col items-center gap-3">
           {!isDelete && (

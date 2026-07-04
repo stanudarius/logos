@@ -17,6 +17,7 @@ interface PhoneEmulatorProps {
   activeCardIndex: number;
 
   isFetchingMore: boolean;
+  isFeedExhausted: boolean;
 
   // Vault state
   savedVaultCards: SavedVaultCard[];
@@ -49,6 +50,7 @@ const PhoneEmulator: React.FC<PhoneEmulatorProps> = ({
   activeTrailCards,
   activeCardIndex,
   isFetchingMore,
+  isFeedExhausted,
   savedVaultCards,
   savedVaultCardIds,
   onActiveCardChange,
@@ -107,6 +109,7 @@ const PhoneEmulator: React.FC<PhoneEmulatorProps> = ({
           <ThoughtStream
             cards={feedCards}
             isLoading={isFetchingMore}
+            isFeedExhausted={isFeedExhausted}
             onActiveCardChange={onActiveCardChange}
             onFetchMore={onFetchMore}
             savedVaultCardIds={savedVaultCardIds}
@@ -122,6 +125,7 @@ const PhoneEmulator: React.FC<PhoneEmulatorProps> = ({
           <ThoughtStream
             cards={activeTrailCards}
             isLoading={isFetchingMore}
+            isFeedExhausted={false} // Trails are static and don't infinite scroll
             onActiveCardChange={onActiveCardChange}
             onFetchMore={onFetchMore}
             savedVaultCardIds={savedVaultCardIds}
@@ -220,8 +224,6 @@ const PhoneEmulator: React.FC<PhoneEmulatorProps> = ({
           })}
         </div>
 
-        {/* Home bar indicator */}
-        <div className="absolute bottom-1.5 left-1/2 -translate-x-1/2 w-28 h-[4px] bg-[#D4CFC5]/70 rounded-full select-none pointer-events-none hidden sm:block" />
       </div>
     </div>
   );
