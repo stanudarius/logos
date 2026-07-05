@@ -1,4 +1,4 @@
-import { useState, useCallback, useRef } from "react";
+import { useState, useCallback, useRef, useMemo } from "react";
 import type { FeedCard } from "@/src/features/feed/types";
 import { getRandomInterstitial } from "@/src/data/interstitials";
 import { READING_TRAILS } from "@/src/data/trailsData";
@@ -109,7 +109,7 @@ export function useFeed(phoneTab: "explore" | "vault" | "trails" | "trail-view")
     }
   }, []);
 
-  return {
+  return useMemo(() => ({
     feedCards,
     activeTrailCards,
     isFetchingInfinite,
@@ -119,5 +119,13 @@ export function useFeed(phoneTab: "explore" | "vault" | "trails" | "trail-view")
     handleStartTrail,
     feedCardsRef,
     activeTrailCardsRef
-  };
+  }), [
+    feedCards,
+    activeTrailCards,
+    isFetchingInfinite,
+    isFeedExhausted,
+    trackCardInteraction,
+    fetchInfiniteFeed,
+    handleStartTrail
+  ]);
 }

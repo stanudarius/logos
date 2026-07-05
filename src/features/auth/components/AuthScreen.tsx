@@ -10,7 +10,7 @@ const LogosMonogram = () => (
   <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-9 h-9">
     <path
       d="M8 40 L24 8 L40 40"
-      stroke="white"
+      stroke="#1C1C1E"
       strokeWidth="2.5"
       strokeLinecap="round"
       strokeLinejoin="round"
@@ -18,7 +18,7 @@ const LogosMonogram = () => (
     />
     <path
       d="M16 28 L34 28"
-      stroke="white"
+      stroke="#1C1C1E"
       strokeWidth="2"
       strokeLinecap="round"
       opacity="0.5"
@@ -109,29 +109,31 @@ export const AuthScreen: React.FC<AuthScreenProps> = () => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center h-full w-full bg-[#0A0A0A] text-white p-8">
+    <div className="flex flex-col items-center justify-center h-full w-full bg-[#FAF8F3] text-[#1C1C1E] p-4 relative overflow-hidden">
+      {/* Decorative Orbs */}
+      <div className="absolute top-[10%] left-[20%] w-[40vw] h-[40vw] max-w-[500px] max-h-[500px] bg-[#B5A48B]/10 rounded-full blur-[80px] pointer-events-none mix-blend-multiply" />
+      <div className="absolute bottom-[10%] right-[20%] w-[35vw] h-[35vw] max-w-[400px] max-h-[400px] bg-[#D4CFC5]/20 rounded-full blur-[80px] pointer-events-none mix-blend-multiply" />
+      
       <motion.div
-        className="w-full max-w-sm"
+        className="w-full max-w-[380px] bg-white rounded-[2rem] p-8 sm:p-10 shadow-[0_8px_40px_-12px_rgba(0,0,0,0.06)] border border-[#E8E4DC]/80 relative z-10"
         variants={containerVariants}
         initial="hidden"
         animate="visible"
       >
         {/* ── Brand Header ── */}
-        <motion.div variants={itemVariants} className="flex flex-col items-center mb-10">
+        <motion.div variants={itemVariants} className="flex flex-col items-center mb-8">
           {/* Monogram */}
-          <div className="w-16 h-16 bg-white/10 rounded-2xl flex items-center justify-center mb-5 backdrop-blur-md border border-white/10 shadow-[0_0_40px_rgba(255,255,255,0.04)]">
+          <div className="w-16 h-16 bg-[#FAF8F3] rounded-2xl flex items-center justify-center mb-5 shadow-inner border border-[#E8E4DC] relative overflow-hidden">
+            <div className="absolute inset-0 bg-gradient-to-tr from-[#E8E4DC]/20 to-transparent" />
             <LogosMonogram />
           </div>
 
           {/* Wordmark */}
-          <h1 className="text-3xl font-serif italic font-semibold tracking-tight mb-1.5">
+          <h1 className="text-3xl font-serif italic font-semibold tracking-tight mb-1 text-[#1C1C1E]">
             Logos
           </h1>
 
-          {/* Tagline */}
-          <p className="text-[11px] text-neutral-500 tracking-[0.18em] uppercase font-light">
-            Philosophy, distilled.
-          </p>
+
         </motion.div>
 
         {/* ── Auth Form ── */}
@@ -141,7 +143,7 @@ export const AuthScreen: React.FC<AuthScreenProps> = () => {
             placeholder="Email address"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder-neutral-500 focus:outline-none focus:ring-1 focus:ring-white/60 transition-all"
+            className="w-full bg-[#FAF8F3]/50 hover:bg-[#FAF8F3] focus:bg-white border border-[#E8E4DC] rounded-xl px-4 py-3.5 text-sm text-[#1C1C1E] placeholder-neutral-400 focus:outline-none focus:ring-2 focus:ring-[#B5A48B]/20 focus:border-[#B5A48B]/50 transition-all duration-300"
             required
           />
           <input
@@ -149,7 +151,7 @@ export const AuthScreen: React.FC<AuthScreenProps> = () => {
             placeholder="Password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder-neutral-500 focus:outline-none focus:ring-1 focus:ring-white/60 transition-all"
+            className="w-full bg-[#FAF8F3]/50 hover:bg-[#FAF8F3] focus:bg-white border border-[#E8E4DC] rounded-xl px-4 py-3.5 text-sm text-[#1C1C1E] placeholder-neutral-400 focus:outline-none focus:ring-2 focus:ring-[#B5A48B]/20 focus:border-[#B5A48B]/50 transition-all duration-300"
             required
           />
           
@@ -160,7 +162,7 @@ export const AuthScreen: React.FC<AuthScreenProps> = () => {
                 initial={{ opacity: 0, y: -4 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0 }}
-                className="text-red-400 text-xs text-center pt-1"
+                className="text-red-600 text-xs text-center pt-1"
               >
                 {error}
               </motion.p>
@@ -171,7 +173,7 @@ export const AuthScreen: React.FC<AuthScreenProps> = () => {
                 initial={{ opacity: 0, y: -4 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0 }}
-                className="text-emerald-400 text-xs text-center pt-1"
+                className="text-emerald-600 text-xs text-center pt-1"
               >
                 {success}
               </motion.p>
@@ -181,38 +183,19 @@ export const AuthScreen: React.FC<AuthScreenProps> = () => {
           <button
             type="submit"
             disabled={loading}
-            className={`w-full font-semibold rounded-xl px-4 py-3 text-sm transition-all active:scale-[0.98] disabled:opacity-50 mt-1 ${
+            className={`w-full font-semibold rounded-xl px-4 py-3.5 text-sm transition-all active:scale-[0.98] disabled:opacity-50 mt-2 ${
               isDelete
-                ? "bg-red-500/20 text-red-400 hover:bg-red-500/30 border border-red-500/40"
-                : "bg-white text-black hover:bg-neutral-100"
+                ? "bg-red-50 text-red-600 hover:bg-red-100 border border-red-200"
+                : "bg-gradient-to-b from-[#2A2A2E] to-[#1C1C1E] text-white shadow-[0_2px_10px_rgba(28,28,30,0.12)] hover:shadow-[0_4px_14px_rgba(28,28,30,0.2)] hover:-translate-y-[1px] border border-[#1C1C1E]"
             }`}
           >
             {loading ? "Processing…" : isDelete ? "Permanently Delete Account" : isSignUp ? "Create Account" : "Sign In"}
           </button>
         </motion.form>
 
-        {/* ── Feature Pills (Sign up only) ── */}
-        <AnimatePresence>
-          {isSignUp && !isDelete && (
-            <motion.div
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: "auto" }}
-              exit={{ opacity: 0, height: 0 }}
-              className="mt-5 overflow-hidden"
-            >
-              <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide -mx-8 px-8" style={{ scrollbarWidth: 'none' }}>
-                {["Curate your feed", "Save to Vault", "Zen Mode", "Socratic Chat", "Export to Obsidian"].map((feat, idx) => (
-                  <div key={idx} className="flex-shrink-0 bg-white/10 border border-white/10 rounded-full px-3 py-1.5 text-[10px] uppercase font-mono tracking-wider text-white/70">
-                    {feat}
-                  </div>
-                ))}
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
 
         {/* ── Secondary Actions ── */}
-        <motion.div variants={itemVariants} className="mt-6 flex flex-col items-center gap-3">
+        <motion.div variants={itemVariants} className="mt-8 flex flex-col items-center gap-3">
           {!isDelete && (
             <button
               onClick={() => {
@@ -221,7 +204,7 @@ export const AuthScreen: React.FC<AuthScreenProps> = () => {
                 setSuccess(null);
               }}
               type="button"
-              className="text-xs text-neutral-400 hover:text-white transition-colors"
+              className="text-xs text-neutral-500 hover:text-[#1C1C1E] transition-colors"
             >
               {isSignUp ? "Already have an account? Sign in." : "Need an account? Sign up."}
             </button>
@@ -231,7 +214,7 @@ export const AuthScreen: React.FC<AuthScreenProps> = () => {
             <button
               onClick={handleForgotPassword}
               type="button"
-              className="text-xs text-neutral-500 hover:text-white transition-colors"
+              className="text-xs text-neutral-500 hover:text-[#1C1C1E] transition-colors"
             >
               Forgot your password?
             </button>
@@ -239,7 +222,7 @@ export const AuthScreen: React.FC<AuthScreenProps> = () => {
         </motion.div>
 
         {/* ── Danger Zone (visually subordinate) ── */}
-        <motion.div variants={itemVariants} className="mt-8 pt-6 border-t border-white/5 flex justify-center">
+        <motion.div variants={itemVariants} className="mt-8 pt-6 border-t border-[#E8E4DC]/60 flex justify-center">
           <button
             onClick={() => {
               setIsDelete(!isDelete);
@@ -248,7 +231,7 @@ export const AuthScreen: React.FC<AuthScreenProps> = () => {
               setSuccess(null);
             }}
             type="button"
-            className={`text-[11px] transition-colors ${isDelete ? "text-neutral-400 hover:text-white" : "text-neutral-700 hover:text-red-500/80"}`}
+            className={`text-[11px] transition-colors ${isDelete ? "text-neutral-500 hover:text-[#1C1C1E]" : "text-neutral-400 hover:text-red-600"}`}
           >
             {isDelete ? "Cancel — go back to sign in." : "Delete account"}
           </button>

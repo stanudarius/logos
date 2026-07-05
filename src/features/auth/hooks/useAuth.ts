@@ -5,11 +5,15 @@ import type { Session } from "@supabase/supabase-js";
 export function useAuth() {
   const [session, setSession] = useState<Session | null>(null);
   const [isRecoveringPassword, setIsRecoveringPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     let isMounted = true;
     supabase.auth.getSession().then(({ data: { session } }) => {
-      if (isMounted) setSession(session);
+      if (isMounted) {
+        setSession(session);
+        setIsLoading(false);
+      }
     });
 
     const {
@@ -29,5 +33,5 @@ export function useAuth() {
     };
   }, []);
 
-  return { session, isRecoveringPassword, setIsRecoveringPassword };
+  return { session, isRecoveringPassword, setIsRecoveringPassword, isLoading };
 }

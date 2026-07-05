@@ -1,17 +1,23 @@
 import React from "react";
-import { NODES, EDGES } from "@/src/data/constellationData";
+import { useConstellation } from "@/src/features/graph/hooks/useConstellation";
 
 interface MiniConstellationProps {
   thinkerIds: string[];
 }
 
 const MiniConstellation: React.FC<MiniConstellationProps> = React.memo(({ thinkerIds }) => {
+  const { nodes, edges: graphEdges, isLoading } = useConstellation();
+
   const { primaryNodes, contextNodes, edgesToDraw, viewBox, nodesMap } = React.useMemo(() => {
+    if (isLoading || nodes.length === 0) {
+      return { primaryNodes: [], contextNodes: [], edgesToDraw: [], viewBox: "0 0 100 100", nodesMap: new Map() };
+    }
+
     // Build a Map for O(1) node lookups
-    const nMap = new Map(NODES.map(n => [n.id, n]));
+    const nMap = new Map(nodes.map(n => [n.id, n]));
 
     // 1. Find the primary nodes that belong to this trail
-    const primary = NODES.filter(n =>
+    const primary = nodes.filter(n =>
       thinkerIds.some(t => {
         const query = t.toLowerCase();
         const id = n.id.toLowerCase();
@@ -25,20 +31,20 @@ const MiniConstellation: React.FC<MiniConstellationProps> = React.memo(({ thinke
     }
 
     let active = [...primary];
-    let edges: typeof EDGES = [];
-    let context: typeof NODES = [];
+    let edges = [];
+    let context = [];
 
     // 2. If it's a single-thinker trail, fetch their neighborhood (edges + connected nodes)
     if (primary.length === 1) {
       const pId = primary[0].id;
-      edges = EDGES.filter(e => e.from === pId || e.to === pId);
+      edges = graphEdges.filter(e => e.from === pId || e.to === pId);
       const connectedIds = new Set(edges.flatMap(e => [e.from, e.to]));
-      context = NODES.filter(n => connectedIds.has(n.id) && n.id !== pId);
+      context = nodes.filter(n => connectedIds.has(n.id) && n.id !== pId);
       active = [...primary, ...context];
     } else {
       // 3. For multi-thinker trails, only show edges between the primary nodes
       const primaryIds = new Set(primary.map(n => n.id));
-      edges = EDGES.filter(e => primaryIds.has(e.from) && primaryIds.has(e.to));
+      edges = graphEdges.filter(e => primaryIds.has(e.from) && primaryIds.has(e.to));
     }
 
     // 4. Find min/max x and y to calculate a tight bounding box
@@ -60,7 +66,7 @@ const MiniConstellation: React.FC<MiniConstellationProps> = React.memo(({ thinke
       viewBox: `${minX - paddingX} ${minY - paddingY} ${viewBoxWidth} ${viewBoxHeight}`,
       nodesMap: nMap
     };
-  }, [thinkerIds]);
+  }, [thinkerIds, nodes, graphEdges, isLoading]);
 
   if (primaryNodes.length === 0) return null;
 

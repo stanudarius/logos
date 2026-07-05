@@ -1,5 +1,7 @@
-import React, { useState, useCallback } from "react";
+import React, { useEffect } from "react";
 import { AnimatePresence } from "motion/react";
+import { Analytics } from '@vercel/analytics/react';
+import { SpeedInsights } from '@vercel/speed-insights/react';
 
 import { AppLayout } from "@/src/layouts/AppLayout";
 import { AuthScreen } from "@/src/features/auth/components/AuthScreen";
@@ -8,69 +10,18 @@ import ZenMode from "@/src/features/zen/components/ZenMode";
 import { ResetPasswordScreen } from "@/src/features/auth/components/ResetPasswordScreen";
 
 import { useAuth } from "@/src/features/auth/hooks/useAuth";
-import { useFeed } from "@/src/features/feed/hooks/useFeed";
-import { useVault } from "@/src/features/vault/hooks/useVault";
+import { NavigationProvider, useNavigation } from "@/src/providers/NavigationProvider";
+import { FeedProvider } from "@/src/features/feed/hooks/FeedProvider";
+import { VaultProvider } from "@/src/features/vault/hooks/VaultProvider";
 
 import { READING_TRAILS } from "@/src/data/trailsData";
+import { useFeedContext } from "@/src/features/feed/hooks/FeedProvider";
 
-export default function App() {
-  const [activeExploreIndex, setActiveExploreIndex] = useState(0);
-  const [activeTrailIndex, setActiveTrailIndex] = useState(0);
-  const [phoneTab, setPhoneTab] = useState<"explore" | "vault" | "trails" | "trail-view">("explore");
-  const activeCardIndex = phoneTab === "trail-view" ? activeTrailIndex : activeExploreIndex;
+const AuthenticatedApp = () => {
+  const { isConstellationOpen, setIsConstellationOpen, isZenModeOpen, setIsZenModeOpen, phoneTab, setPhoneTab, setActiveTrailIndex } = useNavigation();
+  const { handleStartTrail } = useFeedContext();
 
-  const [isConstellationOpen, setIsConstellationOpen] = useState(false);
-  const [isZenModeOpen, setIsZenModeOpen] = useState(false);
-
-  // ── Custom Hooks for Modularity ──
-  const { session, isRecoveringPassword, setIsRecoveringPassword } = useAuth();
-  
-  const { 
-    feedCards, activeTrailCards, isFetchingInfinite, isFeedExhausted, 
-    trackCardInteraction, fetchInfiniteFeed, handleStartTrail, feedCardsRef, activeTrailCardsRef
-  } = useFeed(phoneTab);
-
-  const {
-    savedVaultCards, savedVaultCardIds, toggleSaveToVault, deleteFromVault,
-    updateVaultCardAnnotation, assignToFolder
-  } = useVault(session, trackCardInteraction);
-
-  // ── Event Handlers ──
-  const handleActiveCardChange = useCallback((index: number) => {
-    if (phoneTab === "trail-view") {
-      setActiveTrailIndex(index);
-    } else {
-      setActiveExploreIndex(index);
-    }
-    trackCardInteraction(index, 1);
-  }, [phoneTab, trackCardInteraction]);
-
-  const handleToggleSaveToVaultWrapper = useCallback((index: number) => {
-    const currentDeck = phoneTab === "trail-view" ? activeTrailCardsRef.current : feedCardsRef.current;
-    const card = currentDeck[index];
-    if (card) toggleSaveToVault(card, index);
-  }, [phoneTab, toggleSaveToVault, activeTrailCardsRef, feedCardsRef]);
-
-  const handleOpenDeepDive = useCallback((index: number) => {
-    trackCardInteraction(index, 2);
-  }, [trackCardInteraction]);
-
-  const handleOpenChat = useCallback((index: number) => {
-    trackCardInteraction(index, 2);
-  }, [trackCardInteraction]);
-
-  const handleOpenConstellation = useCallback(() => setIsConstellationOpen(true), []);
-  const handleOpenZenMode = useCallback(() => setIsZenModeOpen(true), []);
-
-  const handleStartTrailWrapper = useCallback(async (trailId: string) => {
-    const success = await handleStartTrail(trailId);
-    if (success) {
-      setActiveTrailIndex(0);
-      setPhoneTab("trail-view");
-    }
-  }, [handleStartTrail]);
-
-  const filterByThinker = useCallback(async (thinkerName: string) => {
+  const filterByThinker = async (thinkerName: string) => {
     const trail = READING_TRAILS.find(t =>
       t.thinkerIds.some(tid =>
         tid.toLowerCase() === thinkerName.toLowerCase() ||
@@ -80,51 +31,19 @@ export default function App() {
     );
 
     if (trail) {
-      handleStartTrailWrapper(trail.id);
+      const success = await handleStartTrail(trail.id);
+      if (success) {
+        setActiveTrailIndex(0);
+        setPhoneTab("trail-view");
+      }
     }
-  }, [handleStartTrailWrapper]);
+  };
 
-  // ── Render Branches ──
-  if (isRecoveringPassword) {
-    return (
-      <div className="w-full h-[100dvh] bg-[#0A0A0A] flex items-center justify-center overflow-hidden p-4 sm:p-8">
-        <ResetPasswordScreen onPasswordReset={() => setIsRecoveringPassword(false)} />
-      </div>
-    );
-  }
 
-  if (!session) {
-    return (
-      <div className="w-full h-[100dvh] bg-[#0A0A0A] flex items-center justify-center overflow-hidden p-4 sm:p-8">
-        <AuthScreen />
-      </div>
-    );
-  }
 
   return (
     <div className="w-full h-[100dvh] bg-[#FAF8F3] flex overflow-hidden p-0">
-      <AppLayout
-        phoneTab={phoneTab}
-        feedCards={feedCards}
-        activeTrailCards={activeTrailCards}
-        activeCardIndex={activeCardIndex}
-        isFetchingMore={isFetchingInfinite}
-        isFeedExhausted={isFeedExhausted}
-        savedVaultCards={savedVaultCards}
-        onActiveCardChange={handleActiveCardChange}
-        onFetchMore={fetchInfiniteFeed}
-        onSetPhoneTab={setPhoneTab}
-        onToggleSaveToVault={handleToggleSaveToVaultWrapper}
-        savedVaultCardIds={savedVaultCardIds}
-        onDeleteFromVault={deleteFromVault}
-        onOpenConstellation={handleOpenConstellation}
-        onOpenZenMode={handleOpenZenMode}
-        onUpdateVaultCardAnnotation={updateVaultCardAnnotation}
-        onAssignToFolder={assignToFolder}
-        onOpenDeepDive={handleOpenDeepDive}
-        onOpenChat={handleOpenChat}
-        onStartTrail={handleStartTrailWrapper}
-      />
+      <AppLayout />
 
       <AnimatePresence>
         {isConstellationOpen && (
@@ -141,5 +60,63 @@ export default function App() {
         )}
       </AnimatePresence>
     </div>
+  );
+};
+
+export default function App() {
+  const { session, isRecoveringPassword, setIsRecoveringPassword, isLoading } = useAuth();
+
+  let content;
+  let currentRoute = "/";
+
+  if (isLoading) {
+    content = (
+      <div className="flex items-center justify-center h-[100dvh] w-full bg-[#FAF8F3]">
+        <div className="w-16 h-16 bg-[#F5F3ED] rounded-2xl flex items-center justify-center border border-[#E8E4DC] shadow-inner animate-pulse">
+          <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-9 h-9">
+            <path d="M8 40 L24 8 L40 40" stroke="#1C1C1E" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" opacity="0.9" />
+            <path d="M16 28 L34 28" stroke="#1C1C1E" strokeWidth="2" strokeLinecap="round" opacity="0.5" />
+          </svg>
+        </div>
+      </div>
+    );
+  } else if (isRecoveringPassword) {
+    currentRoute = "/reset-password";
+    content = (
+      <div className="w-full h-[100dvh] bg-[#FAF8F3] flex items-center justify-center overflow-hidden p-0">
+        <ResetPasswordScreen onPasswordReset={() => setIsRecoveringPassword(false)} />
+      </div>
+    );
+  } else if (!session) {
+    currentRoute = "/auth";
+    content = (
+      <div className="w-full h-[100dvh] bg-[#FAF8F3] flex items-center justify-center overflow-hidden p-0">
+        <AuthScreen />
+      </div>
+    );
+  } else {
+    content = (
+      <NavigationProvider>
+        <FeedProvider>
+          <VaultProvider>
+            <AuthenticatedApp />
+          </VaultProvider>
+        </FeedProvider>
+      </NavigationProvider>
+    );
+  }
+
+  useEffect(() => {
+    if (!isLoading && currentRoute !== "/") {
+      window.history.replaceState(null, '', currentRoute);
+    }
+  }, [currentRoute, isLoading]);
+
+  return (
+    <>
+      {content}
+      <Analytics />
+      <SpeedInsights />
+    </>
   );
 }

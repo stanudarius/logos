@@ -7,11 +7,7 @@ import { getInitials } from "@/src/utils/aesthetics";
 import SocraticChat from "@/src/features/chat/components/SocraticChat";
 import FocusLock from "react-focus-lock";
 
-import { InterstitialLayout } from "@/src/features/feed/components/ThoughtAtom/layouts/InterstitialLayout";
-import { ThesisLayout } from "@/src/features/feed/components/ThoughtAtom/layouts/ThesisLayout";
-import { BlockquoteLayout } from "@/src/features/feed/components/ThoughtAtom/layouts/BlockquoteLayout";
-import { FragmentLayout } from "@/src/features/feed/components/ThoughtAtom/layouts/FragmentLayout";
-import { EpigraphLayout } from "@/src/features/feed/components/ThoughtAtom/layouts/EpigraphLayout";
+import { LayoutRenderer } from "./LayoutRenderer";
 
 interface ThoughtAtomProps {
   card: FeedCard;
@@ -108,11 +104,7 @@ const ThoughtAtom: React.FC<ThoughtAtomProps> = ({
           )}
         </AnimatePresence>
 
-        {layoutVariant === "interstitial" && <InterstitialLayout card={card} />}
-        {layoutVariant === "thesis" && <ThesisLayout card={card} />}
-        {layoutVariant === "blockquote" && <BlockquoteLayout card={card} />}
-        {layoutVariant === "fragment" && <FragmentLayout card={card} />}
-        {(layoutVariant === "epigraph" || !layoutVariant) && <EpigraphLayout card={card} />}
+        <LayoutRenderer card={card} layoutVariant={layoutVariant} />
       </motion.div>
 
       {/* Author Footer (Clickable to open Deep Dive) */}

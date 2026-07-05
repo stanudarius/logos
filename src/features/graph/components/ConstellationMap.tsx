@@ -4,8 +4,7 @@ import { getInitials } from "@/src/utils/aesthetics";
 import { X } from "lucide-react";
 import type { GraphEdge, EdgeRelationship, Node } from "@/src/features/graph/types";
 
-import { NODES, EDGES } from "@/src/data/constellationData";
-
+import { useConstellation } from "@/src/features/graph/hooks/useConstellation";
 function getRelationshipColor(rel: EdgeRelationship): string {
   switch (rel) {
     case "Influenced": return "rgba(181, 164, 139, 0.8)";
@@ -166,6 +165,7 @@ interface ConstellationMapProps {
 }
 
 export const ConstellationMap: React.FC<ConstellationMapProps> = React.memo(({ onClose, onFilterByThinker }) => {
+  const { nodes, edges, isLoading } = useConstellation();
   const [hoveredNode, setHoveredNode] = useState<string | null>(null);
   const [selectedNode, setSelectedNode] = useState<string | null>(null);
 
@@ -182,20 +182,20 @@ export const ConstellationMap: React.FC<ConstellationMapProps> = React.memo(({ o
   // Pre-map node relationships to avoid repeated lookups
   const nodesMap = useMemo(() => {
     const map = new Map<string, Node>();
-    NODES.forEach(n => map.set(n.id, n));
+    nodes.forEach(n => map.set(n.id, n));
     return map;
-  }, []);
+  }, [nodes]);
 
   // Pre-compute the set of nodes adjacent to the hovered node for O(1) lookups
   const hoveredSet = useMemo(() => {
     if (!hoveredNode) return null;
     const set = new Set<string>([hoveredNode]);
-    EDGES.forEach(e => {
+    edges.forEach(e => {
       if (e.from === hoveredNode) set.add(e.to);
       if (e.to === hoveredNode) set.add(e.from);
     });
     return set;
-  }, [hoveredNode]);
+  }, [hoveredNode, edges]);
 
   return (
     <motion.div
@@ -232,37 +232,39 @@ export const ConstellationMap: React.FC<ConstellationMapProps> = React.memo(({ o
 
       <div className="relative w-full h-full min-w-[1000px] min-h-[800px] mt-24 mb-24 md:m-0">
         <svg className="absolute inset-0 w-full h-full z-0 pointer-events-none">
-          {EDGES.map((edge, idx) => {
-            const fromNode = nodesMap.get(edge.from);
-            const toNode = nodesMap.get(edge.to);
-            if (!fromNode || !toNode) return null;
+        {/* Edges */}
+        {edges.map((edge, idx) => {
+          const fromNode = nodesMap.get(edge.from);
+          const toNode = nodesMap.get(edge.to);
+          if (!fromNode || !toNode) return null;
 
-            const isHovered = hoveredSet ? (hoveredSet.has(edge.from) && hoveredSet.has(edge.to)) : false;
-            const isFaded = hoveredSet !== null && !isHovered;
+          const isHovered = hoveredSet !== null && hoveredSet.has(edge.from) && hoveredSet.has(edge.to);
+          const isFaded = hoveredSet !== null && !isHovered;
 
-            return (
-              <ConstellationEdge
-                key={`edge-${idx}`}
-                edge={edge}
-                fromNode={fromNode}
-                toNode={toNode}
-                isHovered={isHovered}
-                isFaded={isFaded}
-                idx={idx}
-              />
-            );
-          })}
+          return (
+            <ConstellationEdge
+              key={`${edge.from}-${edge.to}-${idx}`}
+              edge={edge}
+              fromNode={fromNode}
+              toNode={toNode}
+              isHovered={isHovered}
+              isFaded={isFaded}
+              idx={idx}
+            />
+          );
+        })}
         </svg>
 
-        {NODES.map((node, idx) => {
-          const isHovered = hoveredSet ? hoveredSet.has(node.id) : false;
-          const isFaded = hoveredSet !== null && !isHovered;
+        {/* Nodes */}
+        {nodes.map((node, idx) => {
+          const isHovered = hoveredNode === node.id;
+          const isFaded = hoveredSet !== null && !hoveredSet.has(node.id);
 
           return (
             <ConstellationNode
               key={node.id}
               node={node}
-              isHovered={hoveredNode === node.id}
+              isHovered={isHovered}
               isFaded={isFaded}
               idx={idx}
               onHover={handleHover}

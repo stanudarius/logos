@@ -39,14 +39,19 @@ export const ResetPasswordScreen: React.FC<ResetPasswordScreenProps> = ({ onPass
   };
 
   return (
-    <div className="flex flex-col items-center justify-center h-full w-full bg-[#0A0A0A] text-white p-8 absolute inset-0 z-50">
-      <div className="w-full max-w-sm">
-        <div className="flex flex-col items-center mb-10 text-center">
-          <div className="w-16 h-16 bg-white/10 rounded-2xl flex items-center justify-center mb-4 backdrop-blur-md border border-white/10 shadow-2xl">
-            <KeyRound className="w-8 h-8 text-white" />
+    <div className="flex flex-col items-center justify-center h-full w-full bg-[#FAF8F3] text-[#1C1C1E] p-4 relative overflow-hidden absolute inset-0 z-50">
+      {/* Decorative Orbs */}
+      <div className="absolute top-[10%] left-[20%] w-[40vw] h-[40vw] max-w-[500px] max-h-[500px] bg-[#B5A48B]/10 rounded-full blur-[80px] pointer-events-none mix-blend-multiply" />
+      <div className="absolute bottom-[10%] right-[20%] w-[35vw] h-[35vw] max-w-[400px] max-h-[400px] bg-[#D4CFC5]/20 rounded-full blur-[80px] pointer-events-none mix-blend-multiply" />
+      
+      <div className="w-full max-w-[380px] bg-white rounded-[2rem] p-8 sm:p-10 shadow-[0_8px_40px_-12px_rgba(0,0,0,0.06)] border border-[#E8E4DC]/80 relative z-10">
+        <div className="flex flex-col items-center mb-8 text-center">
+          <div className="w-16 h-16 bg-[#FAF8F3] rounded-2xl flex items-center justify-center mb-5 shadow-inner border border-[#E8E4DC] relative overflow-hidden">
+            <div className="absolute inset-0 bg-gradient-to-tr from-[#E8E4DC]/20 to-transparent" />
+            <KeyRound className="w-8 h-8 text-[#1C1C1E] relative z-10" />
           </div>
-          <h1 className="text-2xl font-serif italic font-semibold tracking-tight">Reset Password</h1>
-          <p className="text-neutral-400 text-sm mt-2">Enter your new password below.</p>
+          <h1 className="text-2xl font-serif italic font-semibold tracking-tight text-[#1C1C1E]">Reset Password</h1>
+          <p className="text-neutral-500 text-sm mt-2">Enter your new password below.</p>
         </div>
 
         <form onSubmit={handleUpdatePassword} className="space-y-4">
@@ -56,7 +61,7 @@ export const ResetPasswordScreen: React.FC<ResetPasswordScreenProps> = ({ onPass
               placeholder="New Password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder-neutral-500 focus:outline-none focus:ring-1 focus:ring-white/30 transition-all"
+              className="w-full bg-[#FAF8F3]/50 hover:bg-[#FAF8F3] focus:bg-white border border-[#E8E4DC] rounded-xl px-4 py-3.5 text-sm text-[#1C1C1E] placeholder-neutral-400 focus:outline-none focus:ring-2 focus:ring-[#B5A48B]/20 focus:border-[#B5A48B]/50 transition-all duration-300"
               required
             />
           </div>
@@ -66,17 +71,17 @@ export const ResetPasswordScreen: React.FC<ResetPasswordScreenProps> = ({ onPass
               placeholder="Confirm New Password"
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
-              className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder-neutral-500 focus:outline-none focus:ring-1 focus:ring-white/30 transition-all"
+              className="w-full bg-[#FAF8F3]/50 hover:bg-[#FAF8F3] focus:bg-white border border-[#E8E4DC] rounded-xl px-4 py-3.5 text-sm text-[#1C1C1E] placeholder-neutral-400 focus:outline-none focus:ring-2 focus:ring-[#B5A48B]/20 focus:border-[#B5A48B]/50 transition-all duration-300"
               required
             />
           </div>
           
-          {error && <p className="text-red-400 text-xs text-center">{error}</p>}
+          {error && <p className="text-red-600 text-xs text-center">{error}</p>}
           
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-white text-black font-semibold rounded-xl px-4 py-3 text-sm hover:bg-neutral-200 transition-colors active:scale-[0.98] disabled:opacity-50"
+            className="w-full bg-gradient-to-b from-[#2A2A2E] to-[#1C1C1E] text-white shadow-[0_2px_10px_rgba(28,28,30,0.12)] hover:shadow-[0_4px_14px_rgba(28,28,30,0.2)] hover:-translate-y-[1px] border border-[#1C1C1E] font-semibold rounded-xl px-4 py-3.5 text-sm transition-all active:scale-[0.98] disabled:opacity-50 mt-2"
           >
             {loading ? "Updating..." : "Update Password"}
           </button>

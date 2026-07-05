@@ -201,7 +201,7 @@ const ZenMode: React.FC<ZenModeProps> = ({ onClose, onSessionComplete }) => {
             {isComplete ? "Session Complete" : "Zen Mode"}
           </motion.h2>
           <p className="text-[10px] font-mono uppercase tracking-[0.2em] text-white/40">
-            {isComplete ? "You earned mastery points" : "Focused contemplation"}
+            {isComplete ? "Contemplation complete" : "Focused contemplation"}
           </p>
         </div>
 

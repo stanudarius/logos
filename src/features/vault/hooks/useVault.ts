@@ -140,12 +140,19 @@ export function useVault(session: Session | null, trackCardInteraction: (index: 
     }
   }, [session]);
 
-  return {
+  return useMemo(() => ({
     savedVaultCards,
     savedVaultCardIds,
     toggleSaveToVault,
     deleteFromVault,
     updateVaultCardAnnotation,
     assignToFolder
-  };
+  }), [
+    savedVaultCards,
+    savedVaultCardIds,
+    toggleSaveToVault,
+    deleteFromVault,
+    updateVaultCardAnnotation,
+    assignToFolder
+  ]);
 }

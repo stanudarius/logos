@@ -70,3 +70,33 @@ CREATE POLICY "Anyone can view feed cards"
   ON feed_cards FOR SELECT 
   USING ( true );
 
+-- 8. Create Constellation Nodes Table
+CREATE TABLE constellation_nodes (
+  id TEXT PRIMARY KEY,
+  label TEXT NOT NULL,
+  pos_x NUMERIC NOT NULL,
+  pos_y NUMERIC NOT NULL,
+  group_name TEXT NOT NULL
+);
+
+-- 9. Create Constellation Edges Table
+CREATE TABLE constellation_edges (
+  id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+  from_node TEXT REFERENCES constellation_nodes(id) ON DELETE CASCADE,
+  to_node TEXT REFERENCES constellation_nodes(id) ON DELETE CASCADE,
+  relationship TEXT NOT NULL,
+  dashed BOOLEAN DEFAULT false
+);
+
+-- 10. Set up RLS for Constellation tables
+ALTER TABLE constellation_nodes ENABLE ROW LEVEL SECURITY;
+ALTER TABLE constellation_edges ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Anyone can view constellation nodes" 
+  ON constellation_nodes FOR SELECT 
+  USING ( true );
+
+CREATE POLICY "Anyone can view constellation edges" 
+  ON constellation_edges FOR SELECT 
+  USING ( true );
+

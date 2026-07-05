@@ -1,43 +1,16 @@
-import React from "react";
+import React, { useCallback } from "react";
 import {
   BookOpen, Bookmark, Network, ArrowLeft, Timer, Waypoints
 } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
-import type { FeedCard } from "@/src/features/feed/types";
-import type { SavedVaultCard } from "@/src/features/vault/types";
 import ThoughtStream from "@/src/features/feed/components/ThoughtStream";
 import { ParallaxBackground } from "@/src/components/ui/ParallaxBackground";
 import CommonplaceBook from "@/src/features/vault/components/CommonplaceBook";
 import ReadingTrailsDashboard from "@/src/features/trails/components/ReadingTrailsDashboard";
 
-interface AppLayoutProps {
-  // Display state
-  phoneTab: "explore" | "vault" | "trails" | "trail-view";
-  feedCards: FeedCard[];
-  activeTrailCards: FeedCard[];
-  activeCardIndex: number;
-
-  isFetchingMore: boolean;
-  isFeedExhausted: boolean;
-
-  // Vault state
-  savedVaultCards: SavedVaultCard[];
-
-  // Callbacks
-  onActiveCardChange: (index: number) => void;
-  onFetchMore: () => void;
-  onSetPhoneTab: (tab: "explore" | "vault" | "trails" | "trail-view") => void;
-  onToggleSaveToVault: (idx: number) => void;
-  savedVaultCardIds: Set<string>;
-  onOpenConstellation?: () => void;
-  onOpenZenMode?: () => void;
-  onUpdateVaultCardAnnotation: (cardId: string, text: string) => void;
-  onAssignToFolder: (id: string, folderName: string | undefined) => void;
-  onDeleteFromVault: (id: string) => void;
-  onOpenDeepDive?: (index: number) => void;
-  onOpenChat?: (index: number) => void;
-  onStartTrail: (trailId: string) => void;
-}
+import { useNavigation } from "@/src/providers/NavigationProvider";
+import { useFeedContext } from "@/src/features/feed/hooks/FeedProvider";
+import { useVaultContext } from "@/src/features/vault/hooks/VaultProvider";
 
 const NAV_TABS = [
   { id: "explore", label: "Stream", Icon: BookOpen },
@@ -45,30 +18,71 @@ const NAV_TABS = [
   { id: "vault",   label: "Vault",  Icon: Bookmark },
 ] as const;
 
-export const AppLayout: React.FC<AppLayoutProps> = ({
-  phoneTab,
-  feedCards,
-  activeTrailCards,
-  isFetchingMore,
-  isFeedExhausted,
-  savedVaultCards,
-  savedVaultCardIds,
-  onActiveCardChange,
-  onFetchMore,
-  onSetPhoneTab,
-  onToggleSaveToVault,
-  onOpenConstellation,
-  onOpenZenMode,
-  onUpdateVaultCardAnnotation,
-  onAssignToFolder,
-  onDeleteFromVault,
-  onOpenDeepDive,
-  onOpenChat,
-  onStartTrail
-}) => {
+export const AppLayout: React.FC = () => {
+  const { 
+    phoneTab, 
+    setPhoneTab, 
+    setActiveExploreIndex, 
+    setActiveTrailIndex, 
+    setIsConstellationOpen, 
+    setIsZenModeOpen 
+  } = useNavigation();
+
+  const { 
+    feedCards, 
+    activeTrailCards, 
+    isFetchingInfinite, 
+    isFeedExhausted, 
+    fetchInfiniteFeed, 
+    trackCardInteraction, 
+    feedCardsRef, 
+    activeTrailCardsRef, 
+    handleStartTrail 
+  } = useFeedContext();
+
+  const { 
+    savedVaultCards, 
+    savedVaultCardIds, 
+    toggleSaveToVault, 
+    deleteFromVault, 
+    updateVaultCardAnnotation, 
+    assignToFolder 
+  } = useVaultContext();
+
   const activeTabId =
     (phoneTab === "trails" || phoneTab === "trail-view") ? "trails" :
     phoneTab === "vault" ? "vault" : "explore";
+
+  const handleActiveCardChange = useCallback((index: number) => {
+    if (phoneTab === "trail-view") {
+      setActiveTrailIndex(index);
+    } else {
+      setActiveExploreIndex(index);
+    }
+    trackCardInteraction(index, 1);
+  }, [phoneTab, trackCardInteraction, setActiveTrailIndex, setActiveExploreIndex]);
+
+  const handleToggleSaveToVaultWrapper = useCallback((index: number) => {
+    const currentDeck = phoneTab === "trail-view" ? activeTrailCardsRef.current : feedCardsRef.current;
+    const card = currentDeck[index];
+    if (card) toggleSaveToVault(card, index);
+  }, [phoneTab, toggleSaveToVault, activeTrailCardsRef, feedCardsRef]);
+
+  const handleOpenDeepDive = useCallback((index: number) => {
+    trackCardInteraction(index, 2);
+  }, [trackCardInteraction]);
+
+  const handleOpenChat = useCallback((index: number) => {
+    trackCardInteraction(index, 2);
+  }, [trackCardInteraction]);
+
+  const handleStartTrailWrapper = useCallback(async (trailId: string) => {
+    const success = await handleStartTrail(trailId);
+    if (success) {
+      setActiveTrailIndex(0);
+      setPhoneTab("trail-view");
+    }
+  }, [handleStartTrail, setActiveTrailIndex, setPhoneTab]);
 
   return (
     <div className="w-full h-[100dvh] bg-[#FAF8F3] flex flex-col sm:flex-row overflow-hidden transition-all duration-700 ease-out font-sans text-[#1C1C1E]">
@@ -92,7 +106,7 @@ export const AppLayout: React.FC<AppLayoutProps> = ({
             return (
               <button
                 key={id}
-                onClick={() => onSetPhoneTab(id as any)}
+                onClick={() => setPhoneTab(id as any)}
                 className={`flex items-center gap-3 px-4 py-3.5 rounded-xl transition-all text-left ${
                   isActive ? "bg-[#1C1C1E] text-white shadow-md scale-[1.02]" : "text-[#8A8A8E] hover:bg-[#E8E4DC]/60 hover:text-[#1C1C1E]"
                 }`}
@@ -113,14 +127,14 @@ export const AppLayout: React.FC<AppLayoutProps> = ({
         {(phoneTab === "explore" || phoneTab === "trail-view") && (
           <div className="mt-auto space-y-2 pt-4 border-t border-[#E8E4DC]/60">
             <button
-              onClick={onOpenConstellation}
+              onClick={() => setIsConstellationOpen(true)}
               className="w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all text-left text-[#8A8A8E] hover:bg-[#E8E4DC]/60 hover:text-[#1C1C1E]"
             >
               <Network className="w-5 h-5" />
               <span className="font-medium text-sm tracking-wide">Constellation</span>
             </button>
             <button
-              onClick={onOpenZenMode}
+              onClick={() => setIsZenModeOpen(true)}
               className="w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all text-left text-[#8A8A8E] hover:bg-[#E8E4DC]/60 hover:text-[#1C1C1E]"
             >
               <Timer className="w-5 h-5" />
@@ -145,10 +159,10 @@ export const AppLayout: React.FC<AppLayoutProps> = ({
            </div>
           {(phoneTab === "explore" || phoneTab === "trail-view") && (
             <div className="flex items-center gap-2">
-              <button onClick={onOpenZenMode} className="p-2 rounded-full bg-[#1C1C1E]/5 hover:bg-[#1C1C1E]/10 transition-colors">
+              <button onClick={() => setIsZenModeOpen(true)} className="p-2 rounded-full bg-[#1C1C1E]/5 hover:bg-[#1C1C1E]/10 transition-colors">
                 <Timer className="w-4 h-4 text-[#1C1C1E]" />
               </button>
-              <button onClick={onOpenConstellation} className="p-2 rounded-full bg-[#1C1C1E]/5 hover:bg-[#1C1C1E]/10 transition-colors">
+              <button onClick={() => setIsConstellationOpen(true)} className="p-2 rounded-full bg-[#1C1C1E]/5 hover:bg-[#1C1C1E]/10 transition-colors">
                 <Network className="w-4 h-4 text-[#1C1C1E]" />
               </button>
             </div>
@@ -163,14 +177,14 @@ export const AppLayout: React.FC<AppLayoutProps> = ({
           <div id="thought-stream-explore" className={`w-full h-full sm:h-[85vh] sm:max-h-[850px] sm:min-h-[600px] sm:max-w-[420px] sm:rounded-[32px] sm:shadow-[0_20px_60px_rgba(0,0,0,0.15),0_8px_20px_rgba(0,0,0,0.1)] overflow-hidden relative bg-[#FAF8F3] ${phoneTab === "explore" ? "block" : "hidden"}`}>
             <ThoughtStream
               cards={feedCards}
-              isLoading={isFetchingMore}
+              isLoading={isFetchingInfinite}
               isFeedExhausted={isFeedExhausted}
-              onActiveCardChange={onActiveCardChange}
-              onFetchMore={onFetchMore}
+              onActiveCardChange={handleActiveCardChange}
+              onFetchMore={fetchInfiniteFeed}
               savedVaultCardIds={savedVaultCardIds}
-              onToggleSave={onToggleSaveToVault}
-              onOpenDeepDive={onOpenDeepDive}
-              onOpenChat={onOpenChat}
+              onToggleSave={handleToggleSaveToVaultWrapper}
+              onOpenDeepDive={handleOpenDeepDive}
+              onOpenChat={handleOpenChat}
               isTrailMode={false}
               isActiveTab={phoneTab === "explore"}
             />
@@ -179,14 +193,14 @@ export const AppLayout: React.FC<AppLayoutProps> = ({
           <div id="thought-stream-trail-view" className={`w-full h-full sm:h-[85vh] sm:max-h-[850px] sm:min-h-[600px] sm:max-w-[420px] sm:rounded-[32px] sm:shadow-[0_20px_60px_rgba(0,0,0,0.15),0_8px_20px_rgba(0,0,0,0.1)] overflow-hidden relative bg-[#FAF8F3] ${phoneTab === "trail-view" ? "block" : "hidden"}`}>
             <ThoughtStream
               cards={activeTrailCards}
-              isLoading={isFetchingMore}
+              isLoading={isFetchingInfinite}
               isFeedExhausted={false}
-              onActiveCardChange={onActiveCardChange}
-              onFetchMore={onFetchMore}
+              onActiveCardChange={handleActiveCardChange}
+              onFetchMore={fetchInfiniteFeed}
               savedVaultCardIds={savedVaultCardIds}
-              onToggleSave={onToggleSaveToVault}
-              onOpenDeepDive={onOpenDeepDive}
-              onOpenChat={onOpenChat}
+              onToggleSave={handleToggleSaveToVaultWrapper}
+              onOpenDeepDive={handleOpenDeepDive}
+              onOpenChat={handleOpenChat}
               isTrailMode={phoneTab === "trail-view"}
               isActiveTab={phoneTab === "trail-view"}
             />
@@ -212,7 +226,7 @@ export const AppLayout: React.FC<AppLayoutProps> = ({
                   </div>
 
                   <button
-                    onClick={() => onSetPhoneTab("explore")}
+                    onClick={() => setPhoneTab("explore")}
                     className="group flex items-center gap-2 text-sm font-serif italic text-[#1C1C1E] hover:text-[#B5A48B] transition-all duration-300 mt-4"
                   >
                     <ArrowLeft className="w-4 h-4 transition-transform group-hover:-translate-x-1" />
@@ -224,9 +238,9 @@ export const AppLayout: React.FC<AppLayoutProps> = ({
               ) : (
                 <CommonplaceBook
                   cards={savedVaultCards}
-                  onUpdateAnnotation={onUpdateVaultCardAnnotation}
-                  onAssignToFolder={onAssignToFolder}
-                  onDeleteFromVault={onDeleteFromVault}
+                  onUpdateAnnotation={updateVaultCardAnnotation}
+                  onAssignToFolder={assignToFolder}
+                  onDeleteFromVault={deleteFromVault}
                 />
               )}
             </div>
@@ -234,7 +248,7 @@ export const AppLayout: React.FC<AppLayoutProps> = ({
 
           {phoneTab === "trails" && (
             <div className="h-full w-full max-w-5xl mx-auto sm:pt-6">
-               <ReadingTrailsDashboard onStartTrail={onStartTrail} />
+               <ReadingTrailsDashboard onStartTrail={handleStartTrailWrapper} />
             </div>
           )}
         </div>
@@ -250,7 +264,7 @@ export const AppLayout: React.FC<AppLayoutProps> = ({
             return (
               <button
                 key={id}
-                onClick={() => onSetPhoneTab(id as any)}
+                onClick={() => setPhoneTab(id as any)}
                 className="flex flex-col items-center gap-1.5 group active:scale-95 transition-all focus:outline-none min-w-[56px]"
               >
                 <div className={`w-11 h-11 rounded-xl flex items-center justify-center transition-all duration-300 relative ${
