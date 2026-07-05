@@ -4,6 +4,7 @@ import { BookOpen } from 'lucide-react';
 
 interface AuthScreenProps {
   onLoginSuccess: () => void;
+  onTriggerToast?: (message: string) => void;
 }
 
 async function checkPasswordPwned(password: string): Promise<boolean> {
@@ -28,7 +29,7 @@ async function checkPasswordPwned(password: string): Promise<boolean> {
   }
 }
 
-export const AuthScreen: React.FC<AuthScreenProps> = ({ onLoginSuccess }) => {
+export const AuthScreen: React.FC<AuthScreenProps> = ({ onLoginSuccess, onTriggerToast }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
@@ -51,14 +52,20 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({ onLoginSuccess }) => {
 
         const { error } = await supabase.auth.signUp({ email, password });
         if (error) throw error;
-        alert("Check your email for the confirmation link!");
+        if (onTriggerToast) {
+          onTriggerToast("Check your email for the confirmation link!");
+        } else {
+          alert("Check your email for the confirmation link!");
+        }
       } else {
         const { error } = await supabase.auth.signInWithPassword({ email, password });
         if (error) throw error;
         onLoginSuccess();
       }
     } catch (err: any) {
-      setError(err.message || "An error occurred during authentication.");
+      const msg = err.message || "An error occurred during authentication.";
+      setError(msg);
+      if (onTriggerToast) onTriggerToast(msg);
     } finally {
       setLoading(false);
     }

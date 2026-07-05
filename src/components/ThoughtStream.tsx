@@ -33,70 +33,62 @@ const ThoughtStream: React.FC<ThoughtStreamProps> = ({
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [activeIndex, setActiveIndex] = useState(0);
-  const [mouseX, setMouseX] = useState(0);
-  const [mouseY, setMouseY] = useState(0);
 
   const sentinelObserverRef = useRef<IntersectionObserver | null>(null);
   const sentinelRef = useRef<HTMLDivElement>(null);
 
-  // Global Parallax tracking
+  const cardObserverRef = useRef<IntersectionObserver | null>(null);
+
+  const isLoadingRef = useRef(isLoading);
   useEffect(() => {
-    let ticking = false;
+    isLoadingRef.current = isLoading;
+  }, [isLoading]);
 
-    const handleMouseMove = (e: MouseEvent) => {
-      if (!ticking) {
-        requestAnimationFrame(() => {
-          const x = (e.clientX / window.innerWidth - 0.5) * 20;
-          const y = (e.clientY / window.innerHeight - 0.5) * 20;
-          setMouseX(x);
-          setMouseY(y);
-          ticking = false;
-        });
-        ticking = true;
-      }
-    };
-
-    const handleDeviceOrientation = (e: DeviceOrientationEvent) => {
-      if (e.gamma === null || e.beta === null) return;
-      if (!ticking) {
-        requestAnimationFrame(() => {
-          const x = Math.min(Math.max(e.gamma! / 4.5, -10), 10);
-          const y = Math.min(Math.max((e.beta! - 45) / 4.5, -10), 10);
-          setMouseX(x);
-          setMouseY(y);
-          ticking = false;
-        });
-        ticking = true;
-      }
-    };
-
-    window.addEventListener("mousemove", handleMouseMove, { passive: true });
-    if (typeof window !== 'undefined' && window.DeviceOrientationEvent) {
-      window.addEventListener("deviceorientation", handleDeviceOrientation, { passive: true });
-    }
-
-    return () => {
-      window.removeEventListener("mousemove", handleMouseMove);
-      if (typeof window !== 'undefined' && window.DeviceOrientationEvent) {
-        window.removeEventListener("deviceorientation", handleDeviceOrientation);
-      }
-    };
-  }, []);
-
-  // Calculate active index on scroll
-  const handleScroll = useCallback(() => {
+  // Active card tracking via IntersectionObserver (O(1) performance instead of onScroll reflows)
+  useEffect(() => {
     const container = containerRef.current;
     if (!container) return;
-    
-    const cardHeight = container.clientHeight;
-    if (cardHeight === 0) return;
-    
-    const newIndex = Math.round(container.scrollTop / cardHeight);
-    if (newIndex !== activeIndex && newIndex >= 0 && newIndex < cards.length) {
-      setActiveIndex(newIndex);
-      onActiveCardChange(newIndex);
+
+    if (cardObserverRef.current) {
+      cardObserverRef.current.disconnect();
     }
-  }, [activeIndex, cards.length, onActiveCardChange]);
+
+    cardObserverRef.current = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) {
+            const indexStr = entry.target.getAttribute("data-card-index");
+            if (indexStr !== null) {
+              const newIndex = parseInt(indexStr, 10);
+              setActiveIndex((prev) => {
+                if (prev !== newIndex) {
+                  onActiveCardChange(newIndex);
+
+                  // Backup trigger
+                  if (newIndex >= cards.length - 2 && !isLoadingRef.current) {
+                    onFetchMoreRef.current();
+                  }
+                  return newIndex;
+                }
+                return prev;
+              });
+            }
+          }
+        }
+      },
+      { root: container, threshold: 0.6 } // Card is considered active when 60% visible
+    );
+
+    const atoms = container.querySelectorAll(".thought-atom");
+    atoms.forEach((atom) => cardObserverRef.current?.observe(atom));
+
+    return () => cardObserverRef.current?.disconnect();
+  }, [cards.length, onActiveCardChange]);
+
+  const onFetchMoreRef = useRef(onFetchMore);
+  useEffect(() => {
+    onFetchMoreRef.current = onFetchMore;
+  }, [onFetchMore]);
 
   useEffect(() => {
     const container = containerRef.current;
@@ -107,13 +99,14 @@ const ThoughtStream: React.FC<ThoughtStreamProps> = ({
       (entries) => {
         for (const entry of entries) {
           if (entry.isIntersecting) {
-            onFetchMore();
+            onFetchMoreRef.current();
           }
         }
       },
       {
         root: container,
-        threshold: 0.1,
+        threshold: 0,
+        rootMargin: "0px 0px 100% 0px", // Trigger fetch 1 full viewport height before hitting bottom
       }
     );
 
@@ -122,7 +115,7 @@ const ThoughtStream: React.FC<ThoughtStreamProps> = ({
     return () => {
       sentinelObserverRef.current?.disconnect();
     };
-  }, [onFetchMore]);
+  }, []);
 
   // Keyboard navigation for desktop (scroll by card height)
   const scrollToCard = useCallback(
@@ -172,7 +165,6 @@ const ThoughtStream: React.FC<ThoughtStreamProps> = ({
   return (
     <div
       ref={containerRef}
-      onScroll={handleScroll}
       className="thought-stream h-full w-full overflow-y-auto snap-y snap-mandatory scroll-smooth"
       style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }} // Hide scrollbar for a cleaner look
     >
@@ -184,8 +176,6 @@ const ThoughtStream: React.FC<ThoughtStreamProps> = ({
           index={index}
           isSaved={savedVaultCardIds.has(card.id)}
           isActive={index === activeIndex}
-          mouseX={mouseX}
-          mouseY={mouseY}
           onToggleSave={onToggleSave}
           onTriggerToast={onTriggerToast}
           onOpenDeepDive={onOpenDeepDive}

@@ -173,6 +173,9 @@ const ZenMode: React.FC<ZenModeProps> = ({ onClose, onSessionComplete }) => {
   }, [isRunning, selectedSound]);
 
   const handleStart = useCallback(() => {
+    if (getAudioContext().state === "suspended") {
+      getAudioContext().resume();
+    }
     setIsRunning(true);
     setHasStarted(true);
     setIsComplete(false);

@@ -3,6 +3,26 @@ import { Reorder, motion } from "motion/react";
 import { Network, FileText, Download, FolderPlus, Folder, Trash2 } from "lucide-react";
 import type { SavedVaultCard } from "../types";
 
+const AnnotationInput = React.memo(({ id, initialValue, onUpdate }: { id: string, initialValue: string, onUpdate: (id: string, text: string) => void }) => {
+  const [text, setText] = useState(initialValue);
+  
+  useEffect(() => {
+    setText(initialValue);
+  }, [initialValue]);
+
+  return (
+    <textarea
+      className="w-full bg-transparent border-t border-[#E8E4DC] pt-2 text-[10px] font-mono text-[#3A3A3E] placeholder:text-[#B5A48B]/50 resize-none outline-none focus:bg-white/50 transition-colors rounded-b"
+      placeholder="Your annotation..."
+      rows={2}
+      value={text}
+      onChange={(e) => setText(e.target.value)}
+      onBlur={() => onUpdate(id, text)}
+      onPointerDown={(e) => e.stopPropagation()} // Prevent drag when typing
+    />
+  );
+});
+
 interface CommonplaceBookProps {
   cards: SavedVaultCard[];
   onUpdateAnnotation: (id: string, text: string) => void;
@@ -20,7 +40,7 @@ const CommonplaceBook: React.FC<CommonplaceBookProps> = ({
 }) => {
   const [orderedCards, setOrderedCards] = useState(cards);
   const [isExporting, setIsExporting] = useState(false);
-  
+
   // Folder states
   const [activeFolder, setActiveFolder] = useState<string | null>(null);
   const [assigningCardId, setAssigningCardId] = useState<string | null>(null);
@@ -37,14 +57,26 @@ const CommonplaceBook: React.FC<CommonplaceBookProps> = ({
       const nextOrdered = prevOrdered
         .filter(c => newCardsMap.has(c.id))
         .map(c => newCardsMap.get(c.id)!);
-      
+
       // 2. Append newly saved cards to the end
       const existingIds = new Set(nextOrdered.map(c => c.id));
       const newlyAdded = cards.filter(c => !existingIds.has(c.id));
-      
+
       return [...nextOrdered, ...newlyAdded];
     });
   }, [cards]);
+
+  const handleReorder = React.useCallback((newOrder: SavedVaultCard[]) => {
+    if (activeFolder) return;
+    setOrderedCards(newOrder);
+  }, [activeFolder]);
+
+  const displayCardsWithRot = React.useMemo(() => {
+    return displayCards.map(card => ({
+      ...card,
+      _rot: (card.id.charCodeAt(0) % 7) - 3
+    }));
+  }, [displayCards]);
 
   const handleExport = async () => {
     if (orderedCards.length === 0) return;
@@ -57,7 +89,7 @@ const CommonplaceBook: React.FC<CommonplaceBookProps> = ({
         body: JSON.stringify({ cards: orderedCards }),
       });
       const data = await res.json();
-      
+
       // Create a downloadable text file
       const blob = new Blob([data.summary], { type: "text/markdown" });
       const url = URL.createObjectURL(blob);
@@ -79,9 +111,9 @@ const CommonplaceBook: React.FC<CommonplaceBookProps> = ({
     <div className="flex-1 flex flex-col overflow-hidden bg-[#EAE7DF] rounded-3xl border border-[#D4CFC5] shadow-inner relative">
       {/* Header Actions */}
       <div className="absolute top-2 left-2 right-2 z-20 flex justify-between items-center pointer-events-none">
-        
+
         {/* Folder Selector */}
-        <select 
+        <select
           className="pointer-events-auto bg-[#FAF8F3] text-[#1C1C1E] text-[10px] font-bold tracking-wider uppercase border border-[#D4CFC5] rounded-lg px-2 py-1.5 outline-none shadow-sm cursor-pointer hover:border-[#B5A48B] transition-colors"
           value={activeFolder || ""}
           onChange={(e) => setActiveFolder(e.target.value || null)}
@@ -102,27 +134,20 @@ const CommonplaceBook: React.FC<CommonplaceBookProps> = ({
         </button>
       </div>
 
-      {/* Corkboard Scroll Area */}
-      <div 
+      {/* Vault Scroll Area */}
+      <div
         className="flex-1 overflow-y-auto p-4 pt-12 relative z-10"
       >
-        <Reorder.Group 
-          axis="y" 
-          values={displayCards} 
-          onReorder={(newOrder) => {
-            // When filtering, we don't want to lose the non-displayed cards from orderedCards.
-            if (activeFolder) return; 
-            setOrderedCards(newOrder);
-          }}
+        <Reorder.Group
+          axis="y"
+          values={displayCards}
+          onReorder={handleReorder}
           className="space-y-4 pb-20"
         >
-          {orderedCards.map((card) => {
-            // Predictable random rotation based on ID so it stays consistent
-            const rot = (card.id.charCodeAt(0) % 7) - 3; // -3 to 3
-            
+          {displayCardsWithRot.map((card) => {
             return (
-              <Reorder.Item 
-                key={card.id} 
+              <Reorder.Item
+                key={card.id}
                 value={card}
                 id={`sticky-${card.id}`}
                 initial={{ opacity: 0, scale: 0.95 }}
@@ -131,19 +156,19 @@ const CommonplaceBook: React.FC<CommonplaceBookProps> = ({
                 transition={{ type: "spring", stiffness: 350, damping: 25 }}
                 whileDrag={{ scale: 1.05, zIndex: 50, rotate: 0, cursor: "grabbing" }}
                 className="bg-[#FFFCE8] p-3 rounded shadow-md border border-[#E8E4DC] cursor-grab relative"
-                style={{ rotate: `${rot}deg`, willChange: "transform" }}
+                style={{ rotate: `${card._rot}deg`, willChange: "transform" }}
               >
                 <div className="absolute top-1 right-1/2 translate-x-1/2 w-8 h-2 bg-red-400/20 rounded-full" />
-                
+
                 <div className="absolute top-2 right-2 flex items-center gap-0.5">
-                  <button 
+                  <button
                     onClick={() => onDeleteFromVault(card.id)}
                     className="p-1.5 text-[#B5A48B] hover:text-red-500 transition-colors rounded-full hover:bg-black/5"
                     title="Remove from Vault"
                   >
                     <Trash2 className="w-3.5 h-3.5" />
                   </button>
-                  <button 
+                  <button
                     onClick={() => setAssigningCardId(card.id)}
                     className="p-1.5 text-[#B5A48B] hover:text-[#1C1C1E] transition-colors rounded-full hover:bg-black/5"
                     title="Assign to Folder"
@@ -169,13 +194,10 @@ const CommonplaceBook: React.FC<CommonplaceBookProps> = ({
                   {card.explore_subtext}
                 </p>
 
-                <textarea
-                  className="w-full bg-transparent border-t border-[#E8E4DC] pt-2 text-[10px] font-mono text-[#3A3A3E] placeholder:text-[#B5A48B]/50 resize-none outline-none focus:bg-white/50 transition-colors rounded-b"
-                  placeholder="Your annotation..."
-                  rows={2}
-                  defaultValue={card.annotation || ""}
-                  onBlur={(e) => onUpdateAnnotation(card.id, e.target.value)}
-                  onPointerDown={(e) => e.stopPropagation()} // Prevent drag when typing
+                <AnnotationInput
+                  id={card.id}
+                  initialValue={card.annotation || ""}
+                  onUpdate={onUpdateAnnotation}
                 />
               </Reorder.Item>
             );
@@ -188,7 +210,7 @@ const CommonplaceBook: React.FC<CommonplaceBookProps> = ({
         <div className="absolute inset-0 z-50 bg-[#1C1C1E]/40 backdrop-blur-sm flex items-center justify-center p-4">
           <div className="bg-[#FAF8F3] rounded-2xl p-5 shadow-xl w-full max-w-[300px] border border-[#D4CFC5]">
             <h3 className="font-serif italic text-lg text-[#1C1C1E] mb-4">Assign to Folder</h3>
-            
+
             {folders.length > 0 && (
               <div className="mb-5 space-y-2">
                 <p className="text-[10px] font-mono text-[#B5A48B] uppercase tracking-widest">Existing Folders</p>
@@ -208,11 +230,11 @@ const CommonplaceBook: React.FC<CommonplaceBookProps> = ({
                 </div>
               </div>
             )}
-            
+
             <div className="space-y-2">
               <p className="text-[10px] font-mono text-[#B5A48B] uppercase tracking-widest">New Folder</p>
               <div className="flex gap-2">
-                <input 
+                <input
                   type="text"
                   value={newFolderName}
                   onChange={(e) => setNewFolderName(e.target.value)}
@@ -233,9 +255,9 @@ const CommonplaceBook: React.FC<CommonplaceBookProps> = ({
                 </button>
               </div>
             </div>
-            
+
             <div className="mt-6 flex justify-between border-t border-[#D4CFC5] pt-3">
-              <button 
+              <button
                 onClick={() => {
                   onAssignToFolder(assigningCardId, undefined);
                   setAssigningCardId(null);
@@ -244,7 +266,7 @@ const CommonplaceBook: React.FC<CommonplaceBookProps> = ({
               >
                 Remove from Folder
               </button>
-              <button 
+              <button
                 onClick={() => setAssigningCardId(null)}
                 className="text-xs text-[#6B6B6F] hover:text-[#1C1C1E] font-bold"
               >

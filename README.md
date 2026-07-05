@@ -1,6 +1,6 @@
 # Logos
 
-Logos is an intelligent application designed for microlearning.
+Logos is an intelligent application designed for philosophical thinking and cinematic presentation of ideas.
 
 ## Run Locally
 
