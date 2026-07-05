@@ -6,3 +6,8 @@ coverage/
 *.log
 .env*
 !.env.example
+
+graphify-out/
+AGENTS.md
+.graphifyignore
+.agents/

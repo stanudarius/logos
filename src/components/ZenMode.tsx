@@ -4,20 +4,35 @@ import { X, Play, Pause, RotateCcw } from "lucide-react";
 
 
 interface ZenModeProps {
-
   onClose: () => void;
   onSessionComplete: () => void;
 }
 
 const DURATION_PRESETS = [
-  { label: "5 min", seconds: 5 * 60 },
+  { label: "5 min",  seconds: 5  * 60 },
   { label: "15 min", seconds: 15 * 60 },
   { label: "25 min", seconds: 25 * 60 },
 ];
 
+/** SVG icons to replace emoji in soundscape selector */
+const RainIcon = () => (
+  <svg viewBox="0 0 16 16" fill="none" className="w-4 h-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round">
+    <path d="M3 9 Q8 3 13 9" />
+    <line x1="5"  y1="12" x2="4"  y2="14" />
+    <line x1="8"  y1="12" x2="7"  y2="14" />
+    <line x1="11" y1="12" x2="10" y2="14" />
+  </svg>
+);
+
+const SilenceIcon = () => (
+  <svg viewBox="0 0 16 16" fill="none" className="w-4 h-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round">
+    <line x1="3" y1="8" x2="13" y2="8" />
+  </svg>
+);
+
 const SOUNDSCAPES = [
-  { id: "rain", label: "Rain", emoji: "🌧️" },
-  { id: "silence", label: "Silence", emoji: "🤫" },
+  { id: "rain",    label: "Rain",    Icon: RainIcon    },
+  { id: "silence", label: "Silence", Icon: SilenceIcon },
 ];
 
 /**
@@ -158,7 +173,7 @@ const ZenMode: React.FC<ZenModeProps> = ({ onClose, onSessionComplete }) => {
       exit={{ opacity: 0 }}
       transition={{ duration: 0.4 }}
       className="fixed inset-0 z-[100] flex items-center justify-center"
-      style={{ backgroundColor: "rgba(10, 10, 10, 0.95)" }}
+      style={{ backgroundColor: "rgba(10, 10, 10, 0.97)" }}
     >
       <motion.div
         initial={{ scale: 0.9, opacity: 0 }}
@@ -192,6 +207,18 @@ const ZenMode: React.FC<ZenModeProps> = ({ onClose, onSessionComplete }) => {
 
         {/* Central Timer Ring */}
         <div className="relative flex items-center justify-center">
+          {/* Ambient radial glow — pulses while running */}
+          {isRunning && !isComplete && (
+            <div
+              className="absolute rounded-full animate-zen-glow pointer-events-none"
+              style={{
+                width: 300,
+                height: 300,
+                background: "radial-gradient(circle, rgba(181,164,139,0.18) 0%, transparent 70%)",
+              }}
+            />
+          )}
+
           <svg width="260" height="260" viewBox="0 0 260 260" className="transform -rotate-90">
             {/* Background ring */}
             <circle
@@ -199,7 +226,7 @@ const ZenMode: React.FC<ZenModeProps> = ({ onClose, onSessionComplete }) => {
               cy="130"
               r={radius}
               fill="none"
-              stroke="rgba(255,255,255,0.08)"
+              stroke="rgba(255,255,255,0.06)"
               strokeWidth="4"
             />
             {/* Progress ring */}
@@ -226,8 +253,12 @@ const ZenMode: React.FC<ZenModeProps> = ({ onClose, onSessionComplete }) => {
                 transition={{ type: "spring", damping: 10, stiffness: 200 }}
                 className="text-center space-y-2"
               >
-                <span className="text-5xl">🧘</span>
-                <p className="text-lg font-serif italic text-[#5CB888]">+15 XP</p>
+                <div className="w-14 h-14 rounded-full bg-[#5CB888]/20 flex items-center justify-center mx-auto mb-2">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="#5CB888" strokeWidth="2" strokeLinecap="round" className="w-7 h-7">
+                    <polyline points="20 6 9 17 4 12" />
+                  </svg>
+                </div>
+                <p className="text-lg font-serif italic text-[#5CB888]">Well Done</p>
               </motion.div>
             ) : (
               <>
@@ -235,8 +266,14 @@ const ZenMode: React.FC<ZenModeProps> = ({ onClose, onSessionComplete }) => {
                   {minutes.toString().padStart(2, "0")}:{seconds.toString().padStart(2, "0")}
                 </span>
                 <span className="text-[9px] font-mono uppercase tracking-[0.15em] text-white/30 mt-2">
-                  {isRunning ? "Contemplating..." : hasStarted ? "Paused" : "Ready"}
+                  {isRunning ? "Contemplating…" : hasStarted ? "Paused" : "Ready"}
                 </span>
+                {/* Breath guide dot — only while running */}
+                {isRunning && (
+                  <div
+                    className="w-1.5 h-1.5 rounded-full bg-[#B5A48B]/60 mt-4 animate-breathe"
+                  />
+                )}
               </>
             )}
           </div>
@@ -257,8 +294,8 @@ const ZenMode: React.FC<ZenModeProps> = ({ onClose, onSessionComplete }) => {
                   onClick={() => handleDurationChange(preset.seconds)}
                   className={`px-4 py-1.5 rounded-full text-[11px] font-semibold transition-all ${
                     selectedDuration === preset.seconds
-                      ? "bg-white/15 text-white border border-white/20"
-                      : "bg-white/5 text-white/40 border border-transparent hover:bg-white/10 hover:text-white/60"
+                      ? "bg-white/90 text-[#0A0A0A]"
+                      : "bg-white/8 text-white/40 border border-white/10 hover:bg-white/12 hover:text-white/60"
                   }`}
                 >
                   {preset.label}
@@ -269,19 +306,19 @@ const ZenMode: React.FC<ZenModeProps> = ({ onClose, onSessionComplete }) => {
 
           {/* Soundscape selector */}
           {!isComplete && (
-            <div className="flex justify-center gap-2">
-              {SOUNDSCAPES.map(sound => (
+            <div className="flex justify-center gap-3">
+              {SOUNDSCAPES.map(({ id, label, Icon }) => (
                 <button
-                  key={sound.id}
-                  onClick={() => setSelectedSound(sound.id)}
-                  className={`flex flex-col items-center gap-1 px-3 py-2 rounded-xl text-[9px] font-bold uppercase tracking-wider transition-all ${
-                    selectedSound === sound.id
-                      ? "bg-white/10 text-white/80 border border-white/15"
+                  key={id}
+                  onClick={() => setSelectedSound(id)}
+                  className={`flex items-center gap-1.5 px-4 py-2 rounded-xl text-[10px] font-bold uppercase tracking-wider transition-all ${
+                    selectedSound === id
+                      ? "bg-white/12 text-white/80 border border-white/15"
                       : "bg-transparent text-white/30 border border-transparent hover:text-white/50"
                   }`}
                 >
-                  <span className="text-base">{sound.emoji}</span>
-                  <span>{sound.label}</span>
+                  <Icon />
+                  <span>{label}</span>
                 </button>
               ))}
             </div>

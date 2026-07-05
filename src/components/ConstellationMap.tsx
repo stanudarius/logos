@@ -187,6 +187,17 @@ export const ConstellationMap: React.FC<ConstellationMapProps> = React.memo(({ o
     return map;
   }, []);
 
+  // Pre-compute the set of nodes adjacent to the hovered node for O(1) lookups
+  const hoveredSet = useMemo(() => {
+    if (!hoveredNode) return null;
+    const set = new Set<string>([hoveredNode]);
+    EDGES.forEach(e => {
+      if (e.from === hoveredNode) set.add(e.to);
+      if (e.to === hoveredNode) set.add(e.from);
+    });
+    return set;
+  }, [hoveredNode]);
+
   return (
     <motion.div
       initial={{ opacity: 0, scale: 1.1 }}
@@ -227,8 +238,8 @@ export const ConstellationMap: React.FC<ConstellationMapProps> = React.memo(({ o
             const toNode = nodesMap.get(edge.to);
             if (!fromNode || !toNode) return null;
 
-            const isHovered = hoveredNode === edge.from || hoveredNode === edge.to;
-            const isFaded = hoveredNode !== null && !isHovered;
+            const isHovered = hoveredSet ? (hoveredSet.has(edge.from) && hoveredSet.has(edge.to)) : false;
+            const isFaded = hoveredSet !== null && !isHovered;
 
             return (
               <ConstellationEdge
@@ -245,14 +256,14 @@ export const ConstellationMap: React.FC<ConstellationMapProps> = React.memo(({ o
         </svg>
 
         {NODES.map((node, idx) => {
-          const isHovered = hoveredNode === node.id;
-          const isFaded = hoveredNode !== null && !isHovered;
+          const isHovered = hoveredSet ? hoveredSet.has(node.id) : false;
+          const isFaded = hoveredSet !== null && !isHovered;
 
           return (
             <ConstellationNode
               key={node.id}
               node={node}
-              isHovered={isHovered}
+              isHovered={hoveredNode === node.id}
               isFaded={isFaded}
               idx={idx}
               onHover={handleHover}

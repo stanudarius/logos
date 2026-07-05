@@ -6,7 +6,10 @@ interface MiniConstellationProps {
 }
 
 const MiniConstellation: React.FC<MiniConstellationProps> = React.memo(({ thinkerIds }) => {
-  const { primaryNodes, contextNodes, edgesToDraw, viewBox } = React.useMemo(() => {
+  const { primaryNodes, contextNodes, edgesToDraw, viewBox, nodesMap } = React.useMemo(() => {
+    // Build a Map for O(1) node lookups
+    const nMap = new Map(NODES.map(n => [n.id, n]));
+
     // 1. Find the primary nodes that belong to this trail
     const primary = NODES.filter(n =>
       thinkerIds.some(t => {
@@ -18,7 +21,7 @@ const MiniConstellation: React.FC<MiniConstellationProps> = React.memo(({ thinke
     );
 
     if (primary.length === 0) {
-      return { primaryNodes: [], contextNodes: [], edgesToDraw: [], viewBox: "0 0 100 100" };
+      return { primaryNodes: [], contextNodes: [], edgesToDraw: [], viewBox: "0 0 100 100", nodesMap: nMap };
     }
 
     let active = [...primary];
@@ -54,7 +57,8 @@ const MiniConstellation: React.FC<MiniConstellationProps> = React.memo(({ thinke
       primaryNodes: primary,
       contextNodes: context,
       edgesToDraw: edges,
-      viewBox: `${minX - paddingX} ${minY - paddingY} ${viewBoxWidth} ${viewBoxHeight}`
+      viewBox: `${minX - paddingX} ${minY - paddingY} ${viewBoxWidth} ${viewBoxHeight}`,
+      nodesMap: nMap
     };
   }, [thinkerIds]);
 
@@ -69,8 +73,8 @@ const MiniConstellation: React.FC<MiniConstellationProps> = React.memo(({ thinke
       >
         {/* Draw edges */}
         {edgesToDraw.map((edge, idx) => {
-          const fromNode = NODES.find(n => n.id === edge.from);
-          const toNode = NODES.find(n => n.id === edge.to);
+          const fromNode = nodesMap.get(edge.from);
+          const toNode = nodesMap.get(edge.to);
           if (!fromNode || !toNode) return null;
 
           return (

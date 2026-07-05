@@ -1,6 +1,6 @@
 import React, { useState, useCallback, useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
-import { motion, AnimatePresence, useTransform, Variants, useMotionValue, useSpring } from "motion/react";
+import { motion, AnimatePresence, useMotionValue, useSpring } from "motion/react";
 
 import { BookOpen, X, MessageCircle, Heart } from "lucide-react";
 import type { FeedCard, LayoutVariant, ReadingPart } from "../types";
@@ -20,7 +20,7 @@ interface ThoughtAtomProps {
   isTrailMode?: boolean;
 }
 
-const ParallaxBackground = () => {
+export const ParallaxBackground = () => {
   const motionX = useMotionValue(0);
   const motionY = useMotionValue(0);
   const smoothX = useSpring(motionX, { damping: 40, stiffness: 150 });
@@ -123,7 +123,7 @@ const ThoughtAtom: React.FC<ThoughtAtomProps> = ({
         if (heartTimeoutRef.current) clearTimeout(heartTimeoutRef.current);
         heartTimeoutRef.current = setTimeout(() => {
           if (isMountedRef.current) setShowHeart(false);
-        }, 800);
+        }, 1000);
       }
 
       // Haptic feedback (Double Pop)
@@ -151,17 +151,16 @@ const ThoughtAtom: React.FC<ThoughtAtomProps> = ({
         className={`h-full w-full bg-[#FAF8F3] flex flex-col relative select-none layout-${layoutVariant}`}
         onDoubleClick={handleDoubleTap}
       >
-        {/* Subtle grain texture overlay with cinematic parallax (ONLY rendered when active to save GPU texture memory) */}
-        {isActive && <ParallaxBackground />}
+        {/* Subtle grain texture overlay with cinematic parallax is rendered once at PhoneEmulator level */}
 
         {/* Double Tap Heart Overlay */}
         <AnimatePresence>
           {showHeart && (
             <motion.div
               initial={{ scale: 0.5, opacity: 0, rotate: -15 }}
-              animate={{ scale: 1.5, opacity: 0.8, rotate: 0 }}
-              exit={{ scale: 2, opacity: 0 }}
-              transition={{ type: "spring", stiffness: 200, damping: 15 }}
+              animate={{ scale: 1.8, opacity: 0.85, rotate: 0 }}
+              exit={{ scale: 2.2, opacity: 0 }}
+              transition={{ type: "spring", stiffness: 220, damping: 14 }}
               className="absolute inset-0 z-50 flex items-center justify-center pointer-events-none"
             >
               <Heart className="w-32 h-32 text-red-500 fill-current drop-shadow-2xl" />
@@ -224,9 +223,13 @@ const ThoughtAtom: React.FC<ThoughtAtomProps> = ({
             id={`bookmark-toggle-btn-${index}`}
             onClick={() => onToggleSave(index)}
             aria-label={isSaved ? "Remove from Vault" : "Save to Vault"}
-            className="group flex flex-col items-center gap-1 active:scale-90 transition-transform"
+            className="group flex flex-col items-center gap-1 active:scale-90 hover:scale-110 transition-transform duration-200"
           >
-            <div className="w-10 h-10 rounded-full bg-white/80 backdrop-blur-md shadow-lg border border-[#E8E4DC] flex items-center justify-center">
+            <div className={`w-10 h-10 rounded-full backdrop-blur-md shadow-lg border flex items-center justify-center transition-all ${
+              isSaved
+                ? "bg-red-50/90 border-red-200"
+                : "bg-white/80 border-[#E8E4DC]"
+            }`}>
               {isSaved ? <Heart className="w-5 h-5 text-red-500 fill-current" /> : <Heart className="w-5 h-5 text-[#1C1C1E]" />}
             </div>
             <span className="text-[9px] font-bold text-[#1C1C1E] drop-shadow-sm">Save</span>
@@ -238,7 +241,7 @@ const ThoughtAtom: React.FC<ThoughtAtomProps> = ({
               onOpenDeepDive?.(index);
             }}
             aria-label="Read Deep Dive Essay"
-            className="group flex flex-col items-center gap-1 active:scale-90 transition-transform"
+            className="group flex flex-col items-center gap-1 active:scale-90 hover:scale-110 transition-transform duration-200"
           >
             <div className="w-10 h-10 rounded-full bg-white/80 backdrop-blur-md shadow-lg border border-[#E8E4DC] flex items-center justify-center">
               <BookOpen className="w-4 h-4 text-[#1C1C1E]" />
@@ -252,7 +255,7 @@ const ThoughtAtom: React.FC<ThoughtAtomProps> = ({
               onOpenChat?.(index);
             }}
             aria-label="Debate with AI"
-            className="group flex flex-col items-center gap-1 active:scale-90 transition-transform"
+            className="group flex flex-col items-center gap-1 active:scale-90 hover:scale-110 transition-transform duration-200"
           >
             <div className="w-10 h-10 rounded-full bg-white/80 backdrop-blur-md shadow-lg border border-[#E8E4DC] flex items-center justify-center">
               <MessageCircle className="w-4 h-4 text-[#1C1C1E]" />
@@ -270,10 +273,14 @@ const ThoughtAtom: React.FC<ThoughtAtomProps> = ({
               animate={{ y: 0, opacity: 1, borderRadius: "0px" }}
               exit={{ y: "100%", opacity: 0, borderRadius: "40px" }}
               transition={{ type: "spring", damping: 25, stiffness: 200, mass: 0.8 }}
-              className="absolute inset-0 z-[60] bg-[#FAF8F3] flex flex-col shadow-[0_-10px_30px_rgba(0,0,0,0.1)] pointer-events-auto"
-              style={{ willChange: "transform, opacity, border-radius" }}
+              className="absolute inset-0 z-[60] flex flex-col shadow-[0_-10px_30px_rgba(0,0,0,0.1)] pointer-events-auto"
+              style={{
+                willChange: "transform, opacity, border-radius",
+                background: "linear-gradient(to bottom, #F5F3ED 0%, #FFFFFF 60%)",
+                borderTop: "3px solid #B5A48B",
+              }}
               onClick={(e) => e.stopPropagation()}
-              onWheel={(e) => e.stopPropagation()} // Stop scroll bubbling
+              onWheel={(e) => e.stopPropagation()}
               onTouchMove={(e) => e.stopPropagation()}
             >
               <FocusLock returnFocus className="flex flex-col h-full w-full">

@@ -5,9 +5,10 @@ import { GoogleGenAI } from "@google/genai";
 import dotenv from "dotenv";
 import fs from "fs";
 import helmet from "helmet";
+import rateLimit from "express-rate-limit";
 import { z } from "zod";
 
-dotenv.config({ quiet: true } as any);
+dotenv.config();
 
 // Initialize express app
 const app = express();
@@ -27,6 +28,11 @@ app.use(helmet({
   },
 }));
 app.use(express.json());
+
+// Rate limiting for Gemini-powered endpoints
+const geminiLimiter = rateLimit({ windowMs: 60_000, max: 20, message: { error: "Too many requests, please try again later." } });
+app.use('/api/chat', geminiLimiter);
+app.use('/api/export', geminiLimiter);
 
 // Initialize Gemini SDK server-side (Kept strictly for Socratic Tutor & Export features)
 const ai = new GoogleGenAI({
@@ -71,15 +77,14 @@ const chatSchema = z.object({
   }))
 });
 
-// Helper for shuffling array
-function shuffleArray(array: any[]) {
-  const newArr = [...array];
-  for (let i = newArr.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [newArr[i], newArr[j]] = [newArr[j], newArr[i]];
-  }
-  return newArr;
-}
+const exportSchema = z.object({
+  cards: z.array(z.object({
+    philosopher: z.string(),
+    explore_title: z.string(),
+    explore_subtext: z.string(),
+    annotation: z.string().optional()
+  })).min(1, "At least one card is required")
+});
 
 app.post("/api/generate", (req, res) => {
   try {
@@ -152,7 +157,6 @@ app.post("/api/generate", (req, res) => {
         const card = chosenStack[cardIndex];
         returnedCards.push(card);
         lastPhilosopher = card.philosopher;
-        chosenStack.splice(cardIndex, 1);
       } else {
         break;
       }
@@ -181,6 +185,7 @@ app.get("/api/trail/:trailId", (req, res) => {
    
    const uniqueTrail = trailCards.map((card: any) => ({
         ...card,
+        base_id: card.id,
         id: `${card.id}_${Date.now()}`
    }));
    
@@ -247,16 +252,18 @@ ${essayContext ? `\nESSAY BEING DISCUSSED:\n${essayContext}` : ""}`;
 // ------------------------------------------------------------------
 app.post("/api/export", async (req, res) => {
   try {
+    const parsed = exportSchema.safeParse(req.body);
+    if (!parsed.success) {
+      return res.status(400).json({ error: "Invalid request payload", details: parsed.error.issues });
+    }
+
     if (!process.env.GEMINI_API_KEY) {
       return res.status(500).json({ error: "GEMINI_API_KEY is not configured." });
     }
 
-    const { cards } = req.body;
-    if (!cards || cards.length === 0) {
-      return res.json({ summary: "Your commonplace book is empty." });
-    }
+    const { cards } = parsed.data;
 
-    const cardsContext = cards.map((c: any) =>
+    const cardsContext = cards.map((c) =>
       `Thinker: ${c.philosopher}\nIdea: ${c.explore_title}\nInsight: ${c.explore_subtext}\nMy Annotation: ${c.annotation || "None"}\n`
     ).join("\n---\n");
 

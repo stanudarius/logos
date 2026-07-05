@@ -32,6 +32,7 @@ export interface FeedCard {
 
 export interface SavedVaultCard {
   id: string;
+  base_id?: string;
   stack_id: string;
   topic: string;
   philosopher: string;
