@@ -56,9 +56,9 @@ const SocraticChat: React.FC<SocraticChatProps> = ({
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
   }, [messages]);
 
-  useEffect(() => {
-    inputRef.current?.focus();
-  }, []);
+  // We intentionally do NOT auto-focus the input on mount. 
+  // Auto-focusing an input on iOS immediately pulls up the keyboard and zooms the screen, 
+  // which is jarring and ruins the slide-up animation.
 
   const handleSend = useCallback(async (overrideInput?: string) => {
     const textToUse = overrideInput || input;
@@ -120,27 +120,21 @@ const SocraticChat: React.FC<SocraticChatProps> = ({
   const initials = getInitials(philosopher);
 
   return (
-      <motion.div
-        initial={{ y: "100%" }}
-        animate={{ y: 0 }}
-        exit={{ y: "100%" }}
-        transition={{ type: "spring", damping: 28, stiffness: 280 }}
-        className="absolute inset-x-0 bottom-0 top-[4%] bg-[#0F0F11] z-[60] flex flex-col rounded-t-[28px] shadow-[0_-8px_40px_rgba(0,0,0,0.4)] border-t border-[#2A2A2E]"
-      >
-    <FocusLock returnFocus className="flex flex-col h-full w-full">
+    <div className="flex-1 bg-[#FAF8F3] flex flex-col w-full h-full relative z-[60]">
+      <FocusLock returnFocus autoFocus={false} className="flex flex-col h-full w-full">
         {/* Handle */}
         <div className="flex justify-center pt-3 pb-1">
-        <div className="w-10 h-1 rounded-full bg-[#3A3A3E]" />
+        <div className="w-10 h-1 rounded-full bg-[#E8E4DC]" />
       </div>
 
       {/* Header */}
-      <div className="flex items-center justify-between px-5 pb-3 border-b border-[#2A2A2E]">
+      <div className="flex items-center justify-between px-5 pb-3 border-b border-[#E8E4DC]">
         <div className="flex items-center gap-2.5">
-          <div className="w-8 h-8 rounded-full bg-[#B5A48B] flex items-center justify-center text-[#0F0F11] text-[10px] font-serif italic font-bold">
+          <div className="w-8 h-8 rounded-full bg-[#B5A48B] flex items-center justify-center text-[#FAF8F3] text-[10px] font-serif italic font-bold">
             {initials}
           </div>
           <div>
-            <p className="text-[11px] font-semibold text-white/90 tracking-tight leading-none">
+            <p className="text-[11px] font-semibold text-[#1C1C1E] tracking-tight leading-none">
               {philosopher}
             </p>
             <p className="text-[8px] font-mono uppercase tracking-[0.15em] text-[#B5A48B] mt-0.5">
@@ -151,7 +145,7 @@ const SocraticChat: React.FC<SocraticChatProps> = ({
         <button
           onClick={(e) => { e.stopPropagation(); onClose(); }}
           aria-label="Close Chat"
-          className="w-7 h-7 rounded-full bg-[#2A2A2E] hover:bg-[#3A3A3E] flex items-center justify-center text-white/60 hover:text-white transition-all"
+          className="w-7 h-7 rounded-full bg-[#F5F3ED] hover:bg-[#E8E4DC] flex items-center justify-center text-[#1C1C1E]/60 hover:text-[#1C1C1E] transition-all"
         >
           <X className="w-3.5 h-3.5" />
         </button>
@@ -178,10 +172,10 @@ const SocraticChat: React.FC<SocraticChatProps> = ({
                 </div>
               )}
               <div
-                className={`max-w-[80%] px-3.5 py-2.5 rounded-2xl text-[11px] leading-relaxed ${
+                className={`max-w-[80%] px-3.5 py-2.5 rounded-2xl text-[11px] leading-relaxed shadow-sm ${
                   msg.role === "user"
-                    ? "bg-[#B5A48B] text-[#0F0F11] rounded-br-md font-medium"
-                    : "bg-[#1C1C20] text-white/85 rounded-bl-md font-serif italic border border-[#2A2A2E]"
+                    ? "bg-[#B5A48B] text-[#FAF8F3] rounded-br-md font-medium"
+                    : "bg-[#FFFFFF] text-[#3A3A3E] rounded-bl-md font-serif italic border border-[#E8E4DC]"
                 }`}
               >
                 {msg.text}
@@ -208,7 +202,7 @@ const SocraticChat: React.FC<SocraticChatProps> = ({
                 onClick={() => {
                   handleSend(starter);
                 }}
-                className="bg-[#1C1C20] border border-[#2A2A2E] text-white/70 hover:text-white hover:bg-[#2A2A2E] px-4 py-2 rounded-full text-[10px] transition-all active:scale-95"
+                className="bg-[#FFFFFF] border border-[#E8E4DC] text-[#1C1C1E]/70 hover:text-[#1C1C1E] hover:bg-[#F5F3ED] px-4 py-2 rounded-full text-[10px] shadow-sm transition-all active:scale-95"
               >
                 {starter}
               </button>
@@ -226,12 +220,12 @@ const SocraticChat: React.FC<SocraticChatProps> = ({
             <div className="w-6 h-6 rounded-full bg-[#B5A48B]/20 flex items-center justify-center text-[8px] font-serif italic text-[#B5A48B] flex-shrink-0 mt-0.5">
               {initials.charAt(0)}
             </div>
-            <div className="bg-[#1C1C20] border border-[#2A2A2E] px-4 py-3 rounded-2xl rounded-bl-md space-y-2 min-w-[160px]">
+            <div className="bg-[#FFFFFF] shadow-sm border border-[#E8E4DC] px-4 py-3 rounded-2xl rounded-bl-md space-y-2 min-w-[160px]">
               <p className="text-[9px] font-serif italic text-[#B5A48B]/70">
                 {philosopher.split(" ").pop()} is contemplating...
               </p>
               {/* Shimmer bar */}
-              <div className="w-full h-[2px] bg-[#2A2A2E] rounded-full overflow-hidden">
+              <div className="w-full h-[2px] bg-[#E8E4DC] rounded-full overflow-hidden">
                 <div
                   className="h-full bg-gradient-to-r from-[#B5A48B]/0 via-[#B5A48B]/60 to-[#B5A48B]/0 rounded-full"
                   style={{ width: "40%", animation: "shimmer 1.8s ease-in-out infinite" }}
@@ -253,32 +247,30 @@ const SocraticChat: React.FC<SocraticChatProps> = ({
       </div>
 
       {/* Input area */}
-      <div className="px-4 py-3 border-t border-[#2A2A2E] bg-[#0F0F11]">
+      <div className="px-4 py-2 border-t border-[#E8E4DC] bg-[#FAF8F3]">
         <div className="relative flex items-end gap-2">
           <textarea
             ref={inputRef}
             value={input}
             onChange={e => setInput(e.target.value)}
             onKeyDown={handleKeyDown}
-            placeholder={`Challenge ${philosopher}...`}
+            placeholder=""
             rows={1}
-            className="flex-1 text-[11px] text-white/90 bg-[#1C1C20] border border-[#2A2A2E] rounded-xl px-3.5 py-2.5 resize-none focus:outline-none focus:border-[#B5A48B]/50 placeholder:text-white/25 transition-colors leading-relaxed"
+            className="flex-1 text-base text-[#1C1C1E] bg-[#FFFFFF] shadow-inner border border-[#E8E4DC] rounded-[20px] px-4 py-1.5 resize-none focus:outline-none focus:border-[#B5A48B]/50 placeholder:text-[#1C1C1E]/30 transition-colors leading-tight"
             style={{ maxHeight: "80px" }}
           />
           <button
             onClick={handleSend}
             disabled={!input.trim() || isLoading}
-            className="p-2.5 rounded-xl bg-[#B5A48B] text-[#0F0F11] hover:bg-[#C4B39A] disabled:opacity-30 disabled:cursor-not-allowed transition-all active:scale-90 flex-shrink-0"
+            className="p-2 rounded-full bg-[#B5A48B] text-[#FAF8F3] hover:bg-[#C4B39A] disabled:opacity-30 disabled:cursor-not-allowed transition-all active:scale-90 flex-shrink-0 shadow-sm mb-0.5"
           >
             <Send className="w-3.5 h-3.5" />
           </button>
         </div>
-        <p className="text-[7px] font-mono text-white/20 text-center mt-2 uppercase tracking-widest">
-          AI persona · Not the actual philosopher
-        </p>
+
       </div>
-    </FocusLock>
-      </motion.div>
+      </FocusLock>
+    </div>
   );
 };
 

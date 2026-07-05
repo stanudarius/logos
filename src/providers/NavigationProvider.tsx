@@ -13,6 +13,8 @@ interface NavigationContextType {
   setIsConstellationOpen: (open: boolean) => void;
   isZenModeOpen: boolean;
   setIsZenModeOpen: (open: boolean) => void;
+  isDeepDiveOpen: boolean;
+  setIsDeepDiveOpen: (open: boolean) => void;
 }
 
 const NavigationContext = createContext<NavigationContextType | undefined>(undefined);
@@ -24,6 +26,7 @@ export const NavigationProvider: React.FC<{ children: ReactNode }> = ({ children
   
   const [isConstellationOpen, setIsConstellationOpen] = useState(false);
   const [isZenModeOpen, setIsZenModeOpen] = useState(false);
+  const [isDeepDiveOpen, setIsDeepDiveOpen] = useState(false);
 
   useEffect(() => {
     let route = `/${phoneTab}`;
@@ -44,13 +47,16 @@ export const NavigationProvider: React.FC<{ children: ReactNode }> = ({ children
     isConstellationOpen,
     setIsConstellationOpen,
     isZenModeOpen,
-    setIsZenModeOpen
+    setIsZenModeOpen,
+    isDeepDiveOpen,
+    setIsDeepDiveOpen
   }), [
     phoneTab,
     activeExploreIndex,
     activeTrailIndex,
     isConstellationOpen,
-    isZenModeOpen
+    isZenModeOpen,
+    isDeepDiveOpen
   ]);
 
   return (

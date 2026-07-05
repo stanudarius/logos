@@ -38,7 +38,6 @@ const CommonplaceBook: React.FC<CommonplaceBookProps> = ({
   onDeleteFromVault
 }) => {
   const [orderedCards, setOrderedCards] = useState(cards);
-  const [isExporting, setIsExporting] = useState(false);
 
   // Folder states
   const [activeFolder, setActiveFolder] = useState<string | null>(null);
@@ -73,35 +72,11 @@ const CommonplaceBook: React.FC<CommonplaceBookProps> = ({
     }));
   }, [displayCards]);
 
-  const handleExport = async () => {
-    if (orderedCards.length === 0) return;
-    setIsExporting(true);
-    try {
-      const { data, error } = await supabase.functions.invoke('export', {
-        body: { cards: orderedCards }
-      });
-      
-      if (error) throw error;
-      
-      const blob = new Blob([data.summary], { type: "text/markdown" });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = "My_Commonplace_Book.md";
-      a.click();
-      URL.revokeObjectURL(url);
-    } catch (err) {
-      console.error(err);
-    } finally {
-      setIsExporting(false);
-    }
-  };
-
   return (
-    <div className="flex-1 flex flex-col overflow-hidden bg-[#EAE7DF] rounded-3xl border border-[#D4CFC5] shadow-inner relative">
+    <div className="flex-1 flex flex-col overflow-hidden bg-transparent relative">
 
       {/* ── Sticky vault header ── */}
-      <div className="flex-shrink-0 px-4 pt-3 pb-2 flex justify-between items-center border-b border-[#D4CFC5]/60 bg-[#EAE7DF] z-20">
+      <div className="flex-shrink-0 px-4 pt-4 pb-3 flex justify-between items-center border-b border-[#D4CFC5]/60 bg-transparent z-20">
         <div>
           <h3 className="text-sm font-serif italic text-[#1C1C1E] font-semibold leading-tight">
             Commonplace Book
@@ -238,18 +213,6 @@ const CommonplaceBook: React.FC<CommonplaceBookProps> = ({
           ))}
           </Reorder.Group>
         )}
-      </div>
-
-      {/* ── Export CTA — full-width at bottom ── */}
-      <div className="flex-shrink-0 px-4 pb-4 pt-2 border-t border-[#D4CFC5]/60 bg-[#EAE7DF]/95 backdrop-blur-sm z-20">
-        <button
-          onClick={handleExport}
-          disabled={isExporting || orderedCards.length === 0}
-          className="w-full py-2.5 bg-[#1C1C1E] text-[#FAF8F3] text-[11px] font-bold rounded-xl active:scale-95 transition-all disabled:opacity-40 flex items-center justify-center gap-2 hover:bg-[#2C2C2E]"
-        >
-          <Download className="w-3.5 h-3.5" />
-          {isExporting ? "Synthesizing…" : "Export as Markdown"}
-        </button>
       </div>
 
       {/* ── Assign to Folder Modal ── */}

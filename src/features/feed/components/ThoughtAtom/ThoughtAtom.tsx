@@ -1,12 +1,17 @@
 import React, { useState, useCallback, useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "motion/react";
-import { BookOpen, X, MessageCircle, Heart } from "lucide-react";
+import { BookOpen, X, MessageCircle, Heart, Share as ShareIcon, Timer } from "lucide-react";
+import { toPng } from 'html-to-image';
+import { Capacitor } from '@capacitor/core';
+import { Share } from '@capacitor/share';
+import { Filesystem, Directory } from '@capacitor/filesystem';
 import type { FeedCard, LayoutVariant, ReadingPart } from "@/src/features/feed/types";
 import { getInitials } from "@/src/utils/aesthetics";
 import SocraticChat from "@/src/features/chat/components/SocraticChat";
 import FocusLock from "react-focus-lock";
 
+import { useNavigation } from "@/src/providers/NavigationProvider";
 import { LayoutRenderer } from "./LayoutRenderer";
 
 interface ThoughtAtomProps {
@@ -29,14 +34,16 @@ const ThoughtAtom: React.FC<ThoughtAtomProps> = ({
   onToggleSave,
   onOpenDeepDive,
   onOpenChat,
-  isActive,
+  isActive = false,
   isTrailMode = false
 }) => {
-  const [isDeepDiveOpen, setIsDeepDiveOpen] = useState(false);
+  const { setIsZenModeOpen, isDeepDiveOpen, setIsDeepDiveOpen } = useNavigation();
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [showHeart, setShowHeart] = useState(false);
+  const [isExporting, setIsExporting] = useState(false);
   const heartTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const isMountedRef = useRef(true);
+  const cardRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     isMountedRef.current = true;
@@ -45,6 +52,8 @@ const ThoughtAtom: React.FC<ThoughtAtomProps> = ({
       if (heartTimeoutRef.current) clearTimeout(heartTimeoutRef.current);
     };
   }, []);
+
+
 
   const handleDoubleTap = useCallback(
     (e: React.MouseEvent) => {
@@ -73,6 +82,78 @@ const ThoughtAtom: React.FC<ThoughtAtomProps> = ({
   const handleCloseDeepDive = useCallback(() => setIsDeepDiveOpen(false), []);
   const handleCloseChat = useCallback(() => setIsChatOpen(false), []);
 
+  const handleExportImage = useCallback(async () => {
+    if (!containerRef.current) return;
+    try {
+      setIsExporting(true);
+      // Wait a tiny bit for UI state to settle
+      await new Promise(r => setTimeout(r, 100));
+      
+      const rect = containerRef.current.getBoundingClientRect();
+      
+      const exportOptions = {
+        quality: 1.0, 
+        pixelRatio: 3, // Dropped to 3x to avoid Safari sub-pixel tracking bugs at 4x
+        width: rect.width,     // Lock exact width to prevent flex-wrap reflows
+        height: rect.height,   // Lock exact height
+        backgroundColor: '#FAF8F3',
+        cacheBust: true, // helps with web fonts
+        style: { transform: 'scale(1)', transformOrigin: 'top left' }, // Prevent scaling artifacts
+        filter: (node: any) => {
+          if (node instanceof HTMLElement) {
+            if (node.classList.contains('action-bar-exclude')) return false;
+          }
+          return true;
+        }
+      };
+
+      // Safari hack: first pass often fails to embed Google Fonts. We render once and discard.
+      try { await toPng(containerRef.current, exportOptions); } catch (e) {}
+      
+      // Second pass has a much higher success rate with fonts on iOS
+      const dataUrl = await toPng(containerRef.current, exportOptions);
+      
+      const fileName = `logos-card-${card.philosopher?.replace(/\s+/g, '-').toLowerCase() || 'export'}.png`;
+
+      if (Capacitor.isNativePlatform()) {
+        const { uri } = await Filesystem.writeFile({
+          path: fileName,
+          data: dataUrl.split(',')[1],
+          directory: Directory.Cache,
+        });
+        await Share.share({
+          title: 'Logos Card',
+          url: uri,
+          dialogTitle: 'Share this card',
+        });
+      } else {
+        try {
+          const blob = await (await fetch(dataUrl)).blob();
+          const file = new File([blob], fileName, { type: 'image/png' });
+          if (navigator.canShare && navigator.canShare({ files: [file] })) {
+            await navigator.share({
+              files: [file],
+              title: 'Logos Card'
+            });
+            return; // Web share succeeded
+          }
+        } catch (e) {
+          console.warn("Web Share API failed, falling back to download", e);
+        }
+        
+        // Fallback to standard anchor download
+        const link = document.createElement('a');
+        link.download = fileName;
+        link.href = dataUrl;
+        link.click();
+      }
+    } catch (err) {
+      console.error('Failed to export image', err);
+    } finally {
+      setIsExporting(false);
+    }
+  }, [card.philosopher]);
+
   const containerRef = useRef<HTMLDivElement>(null);
 
   return (
@@ -84,6 +165,7 @@ const ThoughtAtom: React.FC<ThoughtAtomProps> = ({
     >
       {/* Main Card Surface */}
       <motion.div
+        ref={cardRef}
         className={`h-full w-full bg-[#FAF8F3] flex flex-col relative select-none layout-${layoutVariant}`}
         onDoubleClick={handleDoubleTap}
       >
@@ -110,16 +192,16 @@ const ThoughtAtom: React.FC<ThoughtAtomProps> = ({
       {/* Author Footer (Clickable to open Deep Dive) */}
       {layoutVariant !== "interstitial" && (
         <div
-          className="absolute bottom-6 left-5 right-16 z-40 pointer-events-auto"
+          className={`absolute bottom-5 left-5 z-40 pointer-events-auto transition-all duration-300 ${isExporting ? 'right-5' : 'right-16'}`}
           onClick={(e) => {
             e.stopPropagation();
             setIsDeepDiveOpen(true);
             onOpenDeepDive?.(index);
           }}
         >
-          <div className="flex items-center justify-between border-t border-[#E8E4DC] pt-3 w-full cursor-pointer group">
+          <div className="flex items-center justify-between w-full cursor-pointer group">
             <div className="flex items-center gap-2.5">
-              <div className="w-9 h-9 rounded-full bg-[#1C1C1E] flex items-center justify-center text-[#FAF8F3] text-[11px] font-serif italic shadow-sm flex-shrink-0 group-active:scale-95 transition-transform">
+              <div className="w-9 h-9 rounded-full bg-[#1C1C1E] flex items-center justify-center text-[#FAF8F3] text-[11px] font-serif italic flex-shrink-0 group-active:scale-95 transition-transform">
                 {getInitials(card.philosopher)}
               </div>
               <div>
@@ -150,22 +232,32 @@ const ThoughtAtom: React.FC<ThoughtAtomProps> = ({
       )}
 
       {/* Vertical Action Bar */}
-      {layoutVariant !== "interstitial" && (
-        <div className="absolute right-3 bottom-24 z-40 flex flex-col gap-5 pointer-events-auto">
+      {layoutVariant !== "interstitial" && isActive && (
+        <div className="absolute right-3 bottom-[88px] z-40 flex flex-col gap-3.5 pointer-events-auto action-bar-exclude">
           <button
             id={`bookmark-toggle-btn-${index}`}
             onClick={() => onToggleSave(index)}
             aria-label={isSaved ? "Remove from Vault" : "Save to Vault"}
             className="group flex flex-col items-center gap-1 active:scale-90 hover:scale-110 transition-transform duration-200"
           >
-            <div className={`w-10 h-10 rounded-full backdrop-blur-md shadow-lg border flex items-center justify-center transition-all ${
+            <div className={`w-9 h-9 rounded-full backdrop-blur-md shadow-lg border flex items-center justify-center transition-all ${
               isSaved
                 ? "bg-red-50/90 border-red-200"
                 : "bg-white/80 border-[#E8E4DC]"
             }`}>
-              {isSaved ? <Heart className="w-5 h-5 text-red-500 fill-current" /> : <Heart className="w-5 h-5 text-[#1C1C1E]" />}
+              {isSaved ? <Heart className="w-4 h-4 text-red-500 fill-current" /> : <Heart className="w-4 h-4 text-[#1C1C1E]" />}
             </div>
-            <span className="text-[9px] font-bold text-[#1C1C1E] drop-shadow-sm">Save</span>
+          </button>
+
+          <button
+            onClick={handleExportImage}
+            disabled={isExporting}
+            aria-label="Export as Image"
+            className={`group flex flex-col items-center gap-1 active:scale-90 hover:scale-110 transition-transform duration-200 ${isExporting ? 'opacity-50 pointer-events-none' : ''}`}
+          >
+            <div className="w-9 h-9 rounded-full bg-white/80 backdrop-blur-md shadow-lg border border-[#E8E4DC] flex items-center justify-center">
+              <ShareIcon className="w-3.5 h-3.5 text-[#1C1C1E] ml-px" />
+            </div>
           </button>
 
           <button
@@ -176,39 +268,24 @@ const ThoughtAtom: React.FC<ThoughtAtomProps> = ({
             aria-label="Read Deep Dive Essay"
             className="group flex flex-col items-center gap-1 active:scale-90 hover:scale-110 transition-transform duration-200"
           >
-            <div className="w-10 h-10 rounded-full bg-white/80 backdrop-blur-md shadow-lg border border-[#E8E4DC] flex items-center justify-center">
-              <BookOpen className="w-4 h-4 text-[#1C1C1E]" />
+            <div className="w-9 h-9 rounded-full bg-white/80 backdrop-blur-md shadow-lg border border-[#E8E4DC] flex items-center justify-center">
+              <BookOpen className="w-3.5 h-3.5 text-[#1C1C1E]" />
             </div>
-            <span className="text-[9px] font-bold text-[#1C1C1E] drop-shadow-sm">Read</span>
-          </button>
-
-          <button
-            onClick={() => {
-              setIsChatOpen(true);
-              onOpenChat?.(index);
-            }}
-            aria-label="Debate with AI"
-            className="group flex flex-col items-center gap-1 active:scale-90 hover:scale-110 transition-transform duration-200"
-          >
-            <div className="w-10 h-10 rounded-full bg-white/80 backdrop-blur-md shadow-lg border border-[#E8E4DC] flex items-center justify-center">
-              <MessageCircle className="w-4 h-4 text-[#1C1C1E]" />
-            </div>
-            <span className="text-[9px] font-bold text-[#1C1C1E] drop-shadow-sm">Debate</span>
           </button>
         </div>
       )}
 
-      {isActive && createPortal(
+      {isActive && (
         <AnimatePresence>
           {isDeepDiveOpen && (
             <motion.div
-              initial={{ y: "100%", opacity: 0, borderRadius: "40px" }}
-              animate={{ y: 0, opacity: 1, borderRadius: "0px" }}
-              exit={{ y: "100%", opacity: 0, borderRadius: "40px" }}
-              transition={{ type: "spring", damping: 25, stiffness: 200, mass: 0.8 }}
+              initial={{ y: "100%" }}
+              animate={{ y: 0 }}
+              exit={{ y: "100%" }}
+              transition={{ type: "tween", duration: 0.25, ease: "easeOut" }}
               className="absolute inset-0 z-[60] flex flex-col shadow-[0_-10px_30px_rgba(0,0,0,0.1)] pointer-events-auto"
               style={{
-                willChange: "transform, opacity, border-radius",
+                willChange: "transform",
                 background: "linear-gradient(to bottom, #F5F3ED 0%, #FFFFFF 60%)",
                 borderTop: "3px solid #B5A48B",
               }}
@@ -216,7 +293,7 @@ const ThoughtAtom: React.FC<ThoughtAtomProps> = ({
               onWheel={(e) => e.stopPropagation()}
               onTouchMove={(e) => e.stopPropagation()}
             >
-              <FocusLock returnFocus className="flex flex-col h-full w-full">
+              <FocusLock returnFocus autoFocus={false} className="flex flex-col h-full w-full">
                 {/* Header */}
                 <div className="flex items-center justify-between px-5 py-4 border-b border-[#E8E4DC]">
                   <div className="flex items-center gap-2">
@@ -277,22 +354,7 @@ const ThoughtAtom: React.FC<ThoughtAtomProps> = ({
               </FocusLock>
             </motion.div>
           )}
-        </AnimatePresence>,
-        document.getElementById("phone-device-emulation") || document.body
-      )}
-
-      {isActive && createPortal(
-        <AnimatePresence>
-          {isChatOpen && (
-            <SocraticChat
-              philosopher={card.philosopher}
-              topic={card.topic}
-              essayContext={card.presentation?.reading_parts?.map(p => p.text).join(" ") || ""}
-              onClose={() => setIsChatOpen(false)}
-            />
-          )}
-        </AnimatePresence>,
-        document.getElementById("phone-device-emulation") || document.body
+        </AnimatePresence>
       )}
     </div>
   );

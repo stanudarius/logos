@@ -20,7 +20,7 @@ const createInterstitial = (id: string, title: string, subtext: string): FeedCar
   }
 });
 
-export const INTERSTITIAL_CARDS: FeedCard[] = [
+const INTERSTITIAL_CARDS: FeedCard[] = [
   createInterstitial(
     "interstitial_theseus",
     "The Ship of Theseus",

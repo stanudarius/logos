@@ -71,7 +71,7 @@ const MiniConstellation: React.FC<MiniConstellationProps> = React.memo(({ thinke
   if (primaryNodes.length === 0) return null;
 
   return (
-    <div className="w-full h-24 rounded-xl bg-[#F5F3ED] overflow-hidden relative mb-4 border border-[#E8E4DC] flex items-center justify-center">
+    <div className="w-full h-[72px] rounded-xl bg-[#F5F3ED] overflow-hidden relative border border-[#E8E4DC] flex items-center justify-center">
       <svg
         viewBox={viewBox}
         className="w-full h-full opacity-80"

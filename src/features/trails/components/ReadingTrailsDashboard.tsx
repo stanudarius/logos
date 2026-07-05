@@ -75,13 +75,13 @@ const ReadingTrailsDashboard: React.FC<ReadingTrailsDashboardProps> = React.memo
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, scale: 0.95 }}
                 transition={{ duration: 0.35, ease: "easeOut", delay: idx * 0.04 }}
-                className="group bg-white border border-[#E8E4DC] rounded-2xl p-4 shadow-[0_2px_12px_rgba(0,0,0,0.03)] hover:shadow-[0_6px_24px_rgba(0,0,0,0.07)] transition-shadow duration-300 flex flex-col overflow-hidden"
+                className="group bg-white border border-[#E8E4DC] rounded-2xl p-3.5 shadow-[0_2px_12px_rgba(0,0,0,0.03)] hover:shadow-[0_6px_24px_rgba(0,0,0,0.07)] transition-shadow duration-300 flex flex-col overflow-hidden"
                 style={{ borderLeft: `3px solid ${accent}` }}
               >
                 {/* Trail info */}
-                <div className="mb-3">
+                <div className="mb-2.5">
                   <h3 className="text-sm font-bold text-[#1C1C1E] tracking-tight">{trail.title}</h3>
-                  <p className="text-[11px] text-[#8A8A8E] leading-relaxed mt-1">
+                  <p className="text-xs text-[#8A8A8E] leading-relaxed mt-1">
                     {trail.description}
                   </p>
                 </div>
@@ -90,7 +90,7 @@ const ReadingTrailsDashboard: React.FC<ReadingTrailsDashboardProps> = React.memo
                 <MiniConstellation thinkerIds={trail.thinkerIds} />
 
                 {/* Thinker sequence */}
-                <div className="flex items-center gap-1 flex-wrap mb-4 justify-center">
+                <div className="flex items-center gap-1 flex-wrap mb-3.5 mt-2 justify-center">
                   {trail.thinkerIds.map((thinker, tIdx) => (
                     <React.Fragment key={thinker}>
                       <div className="text-[#1C1C1E] text-[9px] font-bold uppercase tracking-wider font-mono opacity-80">

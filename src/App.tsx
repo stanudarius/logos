@@ -1,7 +1,8 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { AnimatePresence } from "motion/react";
 import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from '@vercel/speed-insights/react';
+import { Capacitor } from '@capacitor/core';
 
 import { AppLayout } from "@/src/layouts/AppLayout";
 import { AuthScreen } from "@/src/features/auth/components/AuthScreen";
@@ -9,7 +10,7 @@ import { ConstellationMap } from "@/src/features/graph/components/ConstellationM
 import ZenMode from "@/src/features/zen/components/ZenMode";
 import { ResetPasswordScreen } from "@/src/features/auth/components/ResetPasswordScreen";
 
-import { useAuth } from "@/src/features/auth/hooks/useAuth";
+import { useAppRouter } from "@/src/hooks/useAppRouter";
 import { NavigationProvider, useNavigation } from "@/src/providers/NavigationProvider";
 import { FeedProvider } from "@/src/features/feed/hooks/FeedProvider";
 import { VaultProvider } from "@/src/features/vault/hooks/VaultProvider";
@@ -39,8 +40,6 @@ const AuthenticatedApp = () => {
     }
   };
 
-
-
   return (
     <div className="w-full h-[100dvh] bg-[#FAF8F3] flex overflow-hidden p-0">
       <AppLayout />
@@ -64,10 +63,9 @@ const AuthenticatedApp = () => {
 };
 
 export default function App() {
-  const { session, isRecoveringPassword, setIsRecoveringPassword, isLoading } = useAuth();
+  const { session, isRecoveringPassword, setIsRecoveringPassword, isLoading } = useAppRouter();
 
   let content;
-  let currentRoute = "/";
 
   if (isLoading) {
     content = (
@@ -81,14 +79,12 @@ export default function App() {
       </div>
     );
   } else if (isRecoveringPassword) {
-    currentRoute = "/reset-password";
     content = (
       <div className="w-full h-[100dvh] bg-[#FAF8F3] flex items-center justify-center overflow-hidden p-0">
         <ResetPasswordScreen onPasswordReset={() => setIsRecoveringPassword(false)} />
       </div>
     );
   } else if (!session) {
-    currentRoute = "/auth";
     content = (
       <div className="w-full h-[100dvh] bg-[#FAF8F3] flex items-center justify-center overflow-hidden p-0">
         <AuthScreen />
@@ -106,17 +102,14 @@ export default function App() {
     );
   }
 
-  useEffect(() => {
-    if (!isLoading && currentRoute !== "/") {
-      window.history.replaceState(null, '', currentRoute);
-    }
-  }, [currentRoute, isLoading]);
+  // Only render Vercel analytics on web platform, as Capacitor may cause CORS or origin issues with Vercel APIs.
+  const isWeb = !Capacitor.isNativePlatform();
 
   return (
     <>
       {content}
-      <Analytics />
-      <SpeedInsights />
+      {isWeb && <Analytics />}
+      {isWeb && <SpeedInsights />}
     </>
   );
 }

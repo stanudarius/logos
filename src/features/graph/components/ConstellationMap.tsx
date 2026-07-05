@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from "motion/react";
 import { getInitials } from "@/src/utils/aesthetics";
 import { X } from "lucide-react";
 import type { GraphEdge, EdgeRelationship, Node } from "@/src/features/graph/types";
+import { PHILOSOPHER_BIOS } from "@/src/data/philosopherBios";
 
 import { useConstellation } from "@/src/features/graph/hooks/useConstellation";
 function getRelationshipColor(rel: EdgeRelationship): string {
@@ -169,6 +170,14 @@ export const ConstellationMap: React.FC<ConstellationMapProps> = React.memo(({ o
   const [hoveredNode, setHoveredNode] = useState<string | null>(null);
   const [selectedNode, setSelectedNode] = useState<string | null>(null);
 
+  const selectedNodeData = useMemo(() => {
+    if (!selectedNode) return null;
+    const node = nodes.find(n => n.label === selectedNode);
+    if (!node) return null;
+    const bio = PHILOSOPHER_BIOS[selectedNode];
+    return { node, bio };
+  }, [selectedNode, nodes]);
+
   const handleNodeClick = useCallback(
     (nodeLabel: string) => {
       setSelectedNode(nodeLabel);
@@ -304,9 +313,32 @@ export const ConstellationMap: React.FC<ConstellationMapProps> = React.memo(({ o
                   <X className="w-4 h-4" />
                 </button>
               </div>
-              <p className="text-sm text-white/60 font-light leading-relaxed mb-8">
-                Explore the thoughts, influences, and legacies connected to {selectedNode}. This will redirect you to a curated stream of their ideas.
-              </p>
+              
+              {selectedNodeData?.bio && (
+                <div className="mb-6 space-y-4">
+                  {selectedNodeData.bio.years && (
+                    <div className="text-xs text-[#B5A48B] font-mono tracking-widest">{selectedNodeData.bio.years}</div>
+                  )}
+                  {selectedNodeData.bio.position && (
+                    <p className="text-sm text-white/80 font-light leading-relaxed">
+                      {selectedNodeData.bio.position}
+                    </p>
+                  )}
+                  {selectedNodeData.bio.keyWorks && selectedNodeData.bio.keyWorks.length > 0 && (
+                    <div>
+                      <span className="text-[10px] font-mono uppercase tracking-[0.15em] text-white/40 mb-2 block">Key Works</span>
+                      <ul className="text-sm text-white/70 italic font-serif space-y-1">
+                        {selectedNodeData.bio.keyWorks.map(work => (
+                          <li key={work}>• {work}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                </div>
+              )}
+
+
+
               <div className="flex gap-3">
                 <button
                   onClick={() => setSelectedNode(null)}

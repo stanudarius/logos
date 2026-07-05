@@ -94,7 +94,8 @@ export function useFeed(phoneTab: "explore" | "vault" | "trails" | "trail-view")
       const { data: trailCards, error } = await supabase
         .from('feed_cards')
         .select('*')
-        .eq('stack_id', trailId);
+        .eq('stack_id', trailId)
+        .order('id', { ascending: true });
 
       if (error) throw error;
       if (!trailCards || trailCards.length === 0) return false;
