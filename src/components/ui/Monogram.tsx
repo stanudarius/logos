@@ -1,6 +1,6 @@
 import React from "react";
 import { motion } from "motion/react";
-import { getInitials } from "../../utils/aesthetics";
+import { getInitials } from "@/src/utils/aesthetics";
 
 export const Monogram = ({ philosopher }: { philosopher: string }) => (
   <motion.span
