@@ -4,5 +4,5 @@ export interface ReadingTrail {
   category: "philosophy" | "arts" | "literature";
   title: string;
   description: string;
-  thinkerIds: string[]; // e.g. ["epictetus", "marcus", "seneca"]
+  thinkerIds: string[];
 }

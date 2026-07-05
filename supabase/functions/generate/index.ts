@@ -6,7 +6,7 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 }
 
-serve(async (req) => {
+serve(async (req: any) => {
   if (req.method === 'OPTIONS') {
     return new Response('ok', { headers: corsHeaders })
   }
@@ -51,16 +51,16 @@ serve(async (req) => {
       matchingStacks = availableStacks.filter(stack => {
         const first = stack[0]
         const str = `${first.topic} ${first.philosopher} ${first.category}`.toLowerCase()
-        return contextString.split(" ").some(kw => str.includes(kw))
+        return contextString.split(" ").some((kw: string) => str.includes(kw))
       })
       nonMatchingStacks = availableStacks.filter(stack => !matchingStacks.includes(stack))
     }
 
-    const returnedCards = []
+    const returnedCards: any[] = []
     let lastPhilosopher = ""
 
     for (let i = 0; i < 4; i++) {
-      let chosenStack
+      let chosenStack: any[] | undefined
       const roll = Math.random()
       
       const validMatching = matchingStacks.filter(s => s.length > 0 && s[0].philosopher !== lastPhilosopher)
@@ -81,6 +81,7 @@ serve(async (req) => {
       if (chosenStack && chosenStack.length > 0) {
         const cardIndex = Math.floor(Math.random() * chosenStack.length)
         const card = chosenStack[cardIndex]
+        chosenStack.splice(cardIndex, 1) // Remove the card so it can't be picked again in this batch
         returnedCards.push(card)
         lastPhilosopher = card.philosopher
       } else {

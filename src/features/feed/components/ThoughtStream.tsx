@@ -53,7 +53,6 @@ const ThoughtStream: React.FC<ThoughtStreamProps> = ({
     onFetchMoreRef.current = onFetchMore;
   }, [onFetchMore]);
 
-  // Active card tracking via IntersectionObserver (O(1) performance instead of onScroll reflows)
   useEffect(() => {
     if (!isActiveTab) {
       if (cardObserverRef.current) {
@@ -81,7 +80,6 @@ const ThoughtStream: React.FC<ThoughtStreamProps> = ({
                 if (prev !== newIndex) {
                   onActiveCardChange(newIndex);
 
-                  // Backup trigger
                   if (newIndex >= cards.length - 2 && !isLoadingRef.current) {
                     onFetchMoreRef.current();
                   }
@@ -93,7 +91,7 @@ const ThoughtStream: React.FC<ThoughtStreamProps> = ({
           }
         }
       },
-      { root: container, threshold: 0.6 } // Card is considered active when 60% visible
+      { root: container, threshold: 0.6 }
     );
 
     const atoms = container.querySelectorAll(".thought-atom");
@@ -132,7 +130,7 @@ const ThoughtStream: React.FC<ThoughtStreamProps> = ({
       {
         root: container,
         threshold: 0,
-        rootMargin: "0px 0px 100% 0px", // Trigger fetch 1 full viewport height before hitting bottom
+        rootMargin: "0px 0px 100% 0px",
       }
     );
 
@@ -145,7 +143,6 @@ const ThoughtStream: React.FC<ThoughtStreamProps> = ({
     };
   }, [isActiveTab]);
 
-  // Keyboard navigation for desktop (scroll by card height)
   const activeIndexRef = useRef(activeIndex);
   activeIndexRef.current = activeIndex;
 
@@ -186,12 +183,11 @@ const ThoughtStream: React.FC<ThoughtStreamProps> = ({
   }, [scrollToCard]);
 
   useEffect(() => {
-    // Reset scroll position when cards array is re-ordered (filter by thinker)
     const container = containerRef.current;
     if (container) {
       container.scrollTo({ top: 0, behavior: "instant" as ScrollBehavior });
     }
-  }, [cards[0]?.id]); // Re-run when the first card changes (i.e., re-sorted)
+  }, [cards[0]?.id]);
 
   return (
     <div

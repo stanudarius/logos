@@ -1,7 +1,7 @@
 import { ReadingTrail } from "@/src/features/trails/types";
 
 export const READING_TRAILS: ReadingTrail[] = [
-  // ================= PHILOSOPHY =================
+
   {
     id: "stoic-control_epictetus",
     category: "philosophy",
@@ -38,7 +38,7 @@ export const READING_TRAILS: ReadingTrail[] = [
     thinkerIds: ["Jean Baudrillard"]
   },
 
-  // ================= ARTS =================
+
   {
     id: "cubist-fracture_picasso",
     category: "arts",
@@ -75,7 +75,7 @@ export const READING_TRAILS: ReadingTrail[] = [
     thinkerIds: ["Marina Abramović"]
   },
 
-  // ================= LITERATURE =================
+
   {
     id: "modernist-void_kafka",
     category: "literature",
@@ -112,7 +112,7 @@ export const READING_TRAILS: ReadingTrail[] = [
     thinkerIds: ["Jorge Luis Borges"]
   },
 
-  // ================= NEW PHILOSOPHY =================
+
   {
     id: "socratic-method_socrates",
     category: "philosophy",
@@ -191,7 +191,7 @@ export const READING_TRAILS: ReadingTrail[] = [
     thinkerIds: ["Kant"]
   },
 
-  // ================= NEW LITERATURE =================
+
   {
     id: "epic-journey_homer",
     category: "literature",
@@ -235,7 +235,6 @@ export const READING_TRAILS: ReadingTrail[] = [
     thinkerIds: ["George Orwell"]
   },
 
-  // ================= NEW ARTS =================
   {
     id: "renaissance-man_davinci",
     category: "arts",

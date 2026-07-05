@@ -18,6 +18,8 @@ import { VaultProvider } from "@/src/features/vault/hooks/VaultProvider";
 import { READING_TRAILS } from "@/src/data/trailsData";
 import { useFeedContext } from "@/src/features/feed/hooks/FeedProvider";
 
+import { QuizScreen } from "@/src/features/quiz/components/QuizScreen";
+
 const AuthenticatedApp = () => {
   const { isConstellationOpen, setIsConstellationOpen, isZenModeOpen, setIsZenModeOpen, phoneTab, setPhoneTab, setActiveTrailIndex } = useNavigation();
   const { handleStartTrail } = useFeedContext();
@@ -63,7 +65,7 @@ const AuthenticatedApp = () => {
 };
 
 export default function App() {
-  const { session, isRecoveringPassword, setIsRecoveringPassword, isLoading } = useAppRouter();
+  const { session, isRecoveringPassword, setIsRecoveringPassword, isLoading, hasCompletedQuiz, completeQuiz } = useAppRouter();
 
   let content;
 
@@ -90,6 +92,8 @@ export default function App() {
         <AuthScreen />
       </div>
     );
+  } else if (!hasCompletedQuiz) {
+    content = <QuizScreen onComplete={completeQuiz} />;
   } else {
     content = (
       <NavigationProvider>
@@ -102,7 +106,6 @@ export default function App() {
     );
   }
 
-  // Only render Vercel analytics on web platform, as Capacitor may cause CORS or origin issues with Vercel APIs.
   const isWeb = !Capacitor.isNativePlatform();
 
   return (

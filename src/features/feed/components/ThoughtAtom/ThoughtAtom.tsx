@@ -2,10 +2,6 @@ import React, { useState, useCallback, useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "motion/react";
 import { BookOpen, X, MessageCircle, Heart, Share as ShareIcon, Timer } from "lucide-react";
-import { toPng } from 'html-to-image';
-import { Capacitor } from '@capacitor/core';
-import { Share } from '@capacitor/share';
-import { Filesystem, Directory } from '@capacitor/filesystem';
 import type { FeedCard, LayoutVariant, ReadingPart } from "@/src/features/feed/types";
 import { getInitials } from "@/src/utils/aesthetics";
 import SocraticChat from "@/src/features/chat/components/SocraticChat";
@@ -13,6 +9,7 @@ import FocusLock from "react-focus-lock";
 
 import { useNavigation } from "@/src/providers/NavigationProvider";
 import { LayoutRenderer } from "./LayoutRenderer";
+import { useCardExport } from "@/src/features/feed/hooks/useCardExport";
 
 interface ThoughtAtomProps {
   card: FeedCard;
@@ -40,7 +37,6 @@ const ThoughtAtom: React.FC<ThoughtAtomProps> = ({
   const { setIsZenModeOpen, isDeepDiveOpen, setIsDeepDiveOpen } = useNavigation();
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [showHeart, setShowHeart] = useState(false);
-  const [isExporting, setIsExporting] = useState(false);
   const heartTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const isMountedRef = useRef(true);
   const cardRef = useRef<HTMLDivElement>(null);
@@ -71,7 +67,6 @@ const ThoughtAtom: React.FC<ThoughtAtomProps> = ({
         }, 1000);
       }
 
-      // Haptic feedback (Double Pop)
       if (typeof navigator !== 'undefined' && navigator.vibrate) {
         navigator.vibrate([30, 50, 30]);
       }
@@ -82,79 +77,8 @@ const ThoughtAtom: React.FC<ThoughtAtomProps> = ({
   const handleCloseDeepDive = useCallback(() => setIsDeepDiveOpen(false), []);
   const handleCloseChat = useCallback(() => setIsChatOpen(false), []);
 
-  const handleExportImage = useCallback(async () => {
-    if (!containerRef.current) return;
-    try {
-      setIsExporting(true);
-      // Wait a tiny bit for UI state to settle
-      await new Promise(r => setTimeout(r, 100));
-      
-      const rect = containerRef.current.getBoundingClientRect();
-      
-      const exportOptions = {
-        quality: 1.0, 
-        pixelRatio: 3, // Dropped to 3x to avoid Safari sub-pixel tracking bugs at 4x
-        width: rect.width,     // Lock exact width to prevent flex-wrap reflows
-        height: rect.height,   // Lock exact height
-        backgroundColor: '#FAF8F3',
-        cacheBust: true, // helps with web fonts
-        style: { transform: 'scale(1)', transformOrigin: 'top left' }, // Prevent scaling artifacts
-        filter: (node: any) => {
-          if (node instanceof HTMLElement) {
-            if (node.classList.contains('action-bar-exclude')) return false;
-          }
-          return true;
-        }
-      };
-
-      // Safari hack: first pass often fails to embed Google Fonts. We render once and discard.
-      try { await toPng(containerRef.current, exportOptions); } catch (e) {}
-      
-      // Second pass has a much higher success rate with fonts on iOS
-      const dataUrl = await toPng(containerRef.current, exportOptions);
-      
-      const fileName = `logos-card-${card.philosopher?.replace(/\s+/g, '-').toLowerCase() || 'export'}.png`;
-
-      if (Capacitor.isNativePlatform()) {
-        const { uri } = await Filesystem.writeFile({
-          path: fileName,
-          data: dataUrl.split(',')[1],
-          directory: Directory.Cache,
-        });
-        await Share.share({
-          title: 'Logos Card',
-          url: uri,
-          dialogTitle: 'Share this card',
-        });
-      } else {
-        try {
-          const blob = await (await fetch(dataUrl)).blob();
-          const file = new File([blob], fileName, { type: 'image/png' });
-          if (navigator.canShare && navigator.canShare({ files: [file] })) {
-            await navigator.share({
-              files: [file],
-              title: 'Logos Card'
-            });
-            return; // Web share succeeded
-          }
-        } catch (e) {
-          console.warn("Web Share API failed, falling back to download", e);
-        }
-        
-        // Fallback to standard anchor download
-        const link = document.createElement('a');
-        link.download = fileName;
-        link.href = dataUrl;
-        link.click();
-      }
-    } catch (err) {
-      console.error('Failed to export image', err);
-    } finally {
-      setIsExporting(false);
-    }
-  }, [card.philosopher]);
-
   const containerRef = useRef<HTMLDivElement>(null);
+  const { isExporting, handleExportImage } = useCardExport(card, containerRef);
 
   return (
     <div

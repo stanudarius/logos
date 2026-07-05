@@ -5,7 +5,7 @@ export interface PhilosopherBio {
 }
 
 export const PHILOSOPHER_BIOS: Record<string, PhilosopherBio> = {
-  // Ancient
+
   "Socrates": {
     years: "470–399 BC",
     position: "Foundational ancient Greek philosopher who shifted focus to ethics.",
@@ -27,7 +27,7 @@ export const PHILOSOPHER_BIOS: Record<string, PhilosopherBio> = {
     keyWorks: ["(No written works)"]
   },
 
-  // Stoic
+
   "Zeno of Citium": {
     years: "c. 334–262 BC",
     position: "Founder of Stoicism, taught that peace of mind comes from living in accordance with nature.",
@@ -49,7 +49,7 @@ export const PHILOSOPHER_BIOS: Record<string, PhilosopherBio> = {
     keyWorks: ["Meditations"]
   },
 
-  // Existential / Modern
+
   "Kierkegaard": {
     years: "1813–1855",
     position: "Father of existentialism, focused on individual choice and religious faith.",
@@ -91,7 +91,7 @@ export const PHILOSOPHER_BIOS: Record<string, PhilosopherBio> = {
     keyWorks: ["Simulacra and Simulation", "The System of Objects"]
   },
 
-  // Literature
+
   "Homer": {
     years: "c. 8th Century BC",
     position: "Legendary author of the foundational epic poems of ancient Greece.",
@@ -148,7 +148,7 @@ export const PHILOSOPHER_BIOS: Record<string, PhilosopherBio> = {
     keyWorks: ["Ficciones", "The Aleph"]
   },
 
-  // Arts
+
   "Da Vinci": {
     years: "1452–1519",
     position: "Italian polymath of the High Renaissance who exemplified the humanist ideal.",
@@ -178,5 +178,45 @@ export const PHILOSOPHER_BIOS: Record<string, PhilosopherBio> = {
     years: "1881–1973",
     position: "Spanish painter and sculptor who co-founded the Cubist movement.",
     keyWorks: ["Guernica", "Les Demoiselles d'Avignon"]
+  },
+  "Salvador Dalí": {
+    years: "1904–1989",
+    position: "Spanish Surrealist painter known for his technical skill and bizarre images.",
+    keyWorks: ["The Persistence of Memory", "Swans Reflecting Elephants"]
+  },
+  "Mark Rothko": {
+    years: "1903–1970",
+    position: "American abstract painter, known for his color field paintings.",
+    keyWorks: ["No. 61 (Rust and Blue)", "Four Darks in Red"]
+  },
+  "Andy Warhol": {
+    years: "1928–1987",
+    position: "American visual artist, leading figure in the pop art movement.",
+    keyWorks: ["Campbell's Soup Cans", "Marilyn Diptych"]
+  },
+  "Marina Abramović": {
+    years: "1946–present",
+    position: "Serbian conceptual and performance artist.",
+    keyWorks: ["Rhythm 0", "The Artist Is Present"]
+  },
+  "Frida Kahlo": {
+    years: "1907–1954",
+    position: "Mexican painter known for her many portraits, self-portraits, and works inspired by the nature and artifacts of Mexico.",
+    keyWorks: ["The Two Fridas", "Self-Portrait with Thorn Necklace and Hummingbird"]
+  },
+  "Gaudi": {
+    years: "1852–1926",
+    position: "Catalan architect known as the greatest exponent of Catalan Modernism.",
+    keyWorks: ["Sagrada Família", "Park Güell"]
+  },
+  "Frank Lloyd Wright": {
+    years: "1867–1959",
+    position: "American architect, designer, writer, and educator.",
+    keyWorks: ["Fallingwater", "Guggenheim Museum"]
+  },
+  "Le Corbusier": {
+    years: "1887–1965",
+    position: "Swiss-French architect, designer, urbanist, and pioneer of modern architecture.",
+    keyWorks: ["Villa Savoye", "Unité d'habitation"]
   }
 };

@@ -58,7 +58,6 @@ function createSoundscape(type: string, volume: number): (() => void) | null {
     gain.connect(ctx.destination);
 
     if (type === "rain") {
-      // Rain: band-pass filtered white noise
       const bufferSize = 2 * ctx.sampleRate;
       const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
       const data = buffer.getChannelData(0);
@@ -92,7 +91,6 @@ const ZenMode: React.FC<ZenModeProps> = ({ onClose, onSessionComplete }) => {
   const cleanupAudioRef = useRef<(() => void) | null>(null);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
-  // Timer countdown logic
   useEffect(() => {
     if (isRunning && timeRemaining > 0) {
       intervalRef.current = setInterval(() => {
@@ -112,7 +110,6 @@ const ZenMode: React.FC<ZenModeProps> = ({ onClose, onSessionComplete }) => {
     };
   }, [isRunning, timeRemaining, onSessionComplete]);
 
-  // Audio management — procedural Web Audio API
   useEffect(() => {
     if (cleanupAudioRef.current) {
       cleanupAudioRef.current();
@@ -161,7 +158,6 @@ const ZenMode: React.FC<ZenModeProps> = ({ onClose, onSessionComplete }) => {
   const seconds = timeRemaining % 60;
   const progress = 1 - timeRemaining / selectedDuration;
 
-  // SVG circle properties
   const radius = 110;
   const circumference = 2 * Math.PI * radius;
   const dashOffset = circumference * (1 - progress);

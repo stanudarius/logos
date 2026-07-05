@@ -6,13 +6,41 @@ export function useAuth() {
   const [session, setSession] = useState<Session | null>(null);
   const [isRecoveringPassword, setIsRecoveringPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [hasCompletedQuiz, setHasCompletedQuiz] = useState(false);
 
   useEffect(() => {
     let isMounted = true;
+    
+    const fetchProfile = async (userId: string) => {
+      try {
+        const { data, error } = await supabase
+          .from('profiles')
+          .select('has_completed_quiz')
+          .eq('id', userId)
+          .single();
+          
+        if (error && error.code !== 'PGRST116') {
+          console.error("Error fetching profile:", error);
+        }
+        
+        if (isMounted && data) {
+          setHasCompletedQuiz(!!data.has_completed_quiz);
+        }
+      } catch (err) {
+        console.error("Profile fetch error:", err);
+      }
+    };
+
     supabase.auth.getSession().then(({ data: { session } }) => {
       if (isMounted) {
         setSession(session);
-        setIsLoading(false);
+        if (session?.user) {
+          fetchProfile(session.user.id).finally(() => {
+            if (isMounted) setIsLoading(false);
+          });
+        } else {
+          setIsLoading(false);
+        }
       }
     });
 
@@ -24,6 +52,15 @@ export function useAuth() {
         if (event === 'PASSWORD_RECOVERY') {
           setIsRecoveringPassword(true);
         }
+        if (session?.user) {
+          setIsLoading(true);
+          fetchProfile(session.user.id).finally(() => {
+            if (isMounted) setIsLoading(false);
+          });
+        } else {
+          setHasCompletedQuiz(false);
+          setIsLoading(false);
+        }
       }
     });
 
@@ -33,5 +70,24 @@ export function useAuth() {
     };
   }, []);
 
-  return { session, isRecoveringPassword, setIsRecoveringPassword, isLoading };
+  const completeQuiz = async (preferences: any) => {
+    if (!session?.user) return;
+    try {
+      const { error } = await supabase
+        .from('profiles')
+        .update({
+          has_completed_quiz: true,
+          quiz_preferences: preferences
+        })
+        .eq('id', session.user.id);
+        
+      if (error) throw error;
+      setHasCompletedQuiz(true);
+    } catch (err) {
+      console.error("Failed to update quiz status:", err);
+      setHasCompletedQuiz(true); 
+    }
+  };
+
+  return { session, isRecoveringPassword, setIsRecoveringPassword, isLoading, hasCompletedQuiz, completeQuiz };
 }

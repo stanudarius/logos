@@ -3,7 +3,6 @@ import {createRoot} from 'react-dom/client';
 import App from '@/src/App.tsx';
 import './index.css';
 
-// Register the PWA Service Worker for offline capabilities
 import { registerSW } from 'virtual:pwa-register';
 
 if ('serviceWorker' in navigator) {

@@ -56,15 +56,12 @@ export const AuthScreen: React.FC<AuthScreenProps> = () => {
 
     try {
       if (isDelete) {
-        // Step 1: Authenticate to prove identity
         const { error: signInError } = await supabase.auth.signInWithPassword({ email, password });
         if (signInError) throw new Error("Invalid email or password. Cannot delete account.");
         
-        // Step 2: Delete via RPC
         const { error: rpcError } = await supabase.rpc('delete_user');
         if (rpcError) throw new Error("Failed to delete account. Did you run the SQL setup script?");
         
-        // Step 3: Clean up session
         await supabase.auth.signOut();
         
         setSuccess("Your account has been permanently deleted.");

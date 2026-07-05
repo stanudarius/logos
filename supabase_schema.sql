@@ -3,7 +3,9 @@
 -- 1. Create Profiles Table
 CREATE TABLE profiles (
   id UUID REFERENCES auth.users NOT NULL PRIMARY KEY,
-  created_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc', NOW())
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc', NOW()),
+  has_completed_quiz BOOLEAN DEFAULT false,
+  quiz_preferences JSONB
 );
 
 -- 2. Create Vault Cards Table

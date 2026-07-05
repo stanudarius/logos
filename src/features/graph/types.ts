@@ -1,8 +1,8 @@
 export interface Node {
   id: string;
   label: string;
-  x: number; // Percentage 0-100
-  y: number; // Percentage 0-100
+  x: number;
+  y: number;
   group: "ancient" | "stoic" | "existential" | "literature" | "arts";
 }
 

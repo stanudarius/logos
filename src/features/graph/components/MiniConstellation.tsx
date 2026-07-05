@@ -13,10 +13,8 @@ const MiniConstellation: React.FC<MiniConstellationProps> = React.memo(({ thinke
       return { primaryNodes: [], contextNodes: [], edgesToDraw: [], viewBox: "0 0 100 100", nodesMap: new Map() };
     }
 
-    // Build a Map for O(1) node lookups
     const nMap = new Map(nodes.map(n => [n.id, n]));
 
-    // 1. Find the primary nodes that belong to this trail
     const primary = nodes.filter(n =>
       thinkerIds.some(t => {
         const query = t.toLowerCase();
@@ -34,7 +32,6 @@ const MiniConstellation: React.FC<MiniConstellationProps> = React.memo(({ thinke
     let edges = [];
     let context = [];
 
-    // 2. If it's a single-thinker trail, fetch their neighborhood (edges + connected nodes)
     if (primary.length === 1) {
       const pId = primary[0].id;
       edges = graphEdges.filter(e => e.from === pId || e.to === pId);
@@ -42,18 +39,15 @@ const MiniConstellation: React.FC<MiniConstellationProps> = React.memo(({ thinke
       context = nodes.filter(n => connectedIds.has(n.id) && n.id !== pId);
       active = [...primary, ...context];
     } else {
-      // 3. For multi-thinker trails, only show edges between the primary nodes
       const primaryIds = new Set(primary.map(n => n.id));
       edges = graphEdges.filter(e => primaryIds.has(e.from) && primaryIds.has(e.to));
     }
 
-    // 4. Find min/max x and y to calculate a tight bounding box
     const minX = Math.min(...active.map(n => n.x));
     const maxX = Math.max(...active.map(n => n.x));
     const minY = Math.min(...active.map(n => n.y));
     const maxY = Math.max(...active.map(n => n.y));
 
-    // Add padding
     const paddingX = 15;
     const paddingY = 15;
     const viewBoxWidth = (maxX - minX) + paddingX * 2;

@@ -19,7 +19,7 @@ const AnnotationInput = React.memo(({ id, initialValue, onUpdate }: { id: string
       value={text}
       onChange={(e) => setText(e.target.value)}
       onBlur={() => onUpdate(id, text)}
-      onPointerDown={(e) => e.stopPropagation()} // Prevent drag when typing
+      onPointerDown={(e) => e.stopPropagation()}
     />
   );
 });
@@ -39,7 +39,6 @@ const CommonplaceBook: React.FC<CommonplaceBookProps> = ({
 }) => {
   const [orderedCards, setOrderedCards] = useState(cards);
 
-  // Folder states
   const [activeFolder, setActiveFolder] = useState<string | null>(null);
   const [assigningCardId, setAssigningCardId] = useState<string | null>(null);
   const [newFolderName, setNewFolderName] = useState("");
@@ -47,7 +46,6 @@ const CommonplaceBook: React.FC<CommonplaceBookProps> = ({
   const folders = Array.from(new Set(cards.map(c => c.user_folder).filter(Boolean))) as string[];
   const displayCards = activeFolder ? orderedCards.filter(c => c.user_folder === activeFolder) : orderedCards;
 
-  // Sync incoming cards while preserving custom order
   useEffect(() => {
     setOrderedCards(prevOrdered => {
       const newCardsMap = new Map(cards.map(c => [c.id, c]));

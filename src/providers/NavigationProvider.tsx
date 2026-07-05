@@ -33,7 +33,6 @@ export const NavigationProvider: React.FC<{ children: ReactNode }> = ({ children
     if (isZenModeOpen) route = "/zen-mode";
     else if (isConstellationOpen) route = "/constellation";
     
-    // Silently update the URL so Vercel Analytics tracks page views
     window.history.replaceState(null, '', route);
   }, [phoneTab, isZenModeOpen, isConstellationOpen]);
 

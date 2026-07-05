@@ -21,7 +21,6 @@ export function useVault(session: Session | null, trackCardInteraction: (index: 
     let isMounted = true;
     const fetchVault = async () => {
       try {
-        // Ensure profile exists
         const { data: profile, error: profileError } = await supabase.from('profiles').select('id').eq('id', session.user.id).single();
         if (profileError && profileError.code !== 'PGRST116') {
           console.error("Failed to fetch profile", profileError);

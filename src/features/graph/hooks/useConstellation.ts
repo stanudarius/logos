@@ -14,7 +14,6 @@ export function useConstellation() {
         setIsLoading(true);
         setError(null);
 
-        // Fetch nodes and edges in parallel
         const [nodesResponse, edgesResponse] = await Promise.all([
           supabase.from("constellation_nodes").select("*"),
           supabase.from("constellation_edges").select("*"),

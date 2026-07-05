@@ -188,14 +188,12 @@ export const ConstellationMap: React.FC<ConstellationMapProps> = React.memo(({ o
   const handleHover = useCallback((id: string) => setHoveredNode(id), []);
   const handleLeave = useCallback(() => setHoveredNode(null), []);
 
-  // Pre-map node relationships to avoid repeated lookups
   const nodesMap = useMemo(() => {
     const map = new Map<string, Node>();
     nodes.forEach(n => map.set(n.id, n));
     return map;
   }, [nodes]);
 
-  // Pre-compute the set of nodes adjacent to the hovered node for O(1) lookups
   const hoveredSet = useMemo(() => {
     if (!hoveredNode) return null;
     const set = new Set<string>([hoveredNode]);
