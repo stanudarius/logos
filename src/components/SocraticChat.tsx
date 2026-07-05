@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from "motion/react";
 import { X, Send, MessageCircle } from "lucide-react";
 import FocusLock from "react-focus-lock";
 import { getInitials } from "../utils/aesthetics";
+import { supabase } from "../lib/supabase";
 
 interface ChatMessage {
   id: string;
@@ -74,24 +75,20 @@ const SocraticChat: React.FC<SocraticChatProps> = ({
       abortControllerRef.current = new AbortController();
       const timeoutId = setTimeout(() => abortControllerRef.current?.abort(), 30000); // 30s timeout
 
-      const res = await fetch("/api/chat", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
+      const { data, error: invokeError } = await supabase.functions.invoke('chat', {
+        body: {
           philosopher,
           topic,
           essayContext,
           messages: updatedMessages,
-        }),
-        signal: abortControllerRef.current.signal,
+        }
       });
 
       clearTimeout(timeoutId);
 
-      if (!res.ok) throw new Error("Failed to reach the philosopher.");
+      if (invokeError) throw invokeError;
 
-      const data = await res.json();
-      if (isMountedRef.current) {
+      if (isMountedRef.current && data) {
         setMessages(prev => [...prev, { id: nextMsgId(), role: "model", text: data.reply }]);
       }
     } catch (err: any) {

@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { Reorder, motion, AnimatePresence } from "motion/react";
 import { Network, FileText, Download, FolderPlus, Folder, Trash2, BookMarked, X } from "lucide-react";
 import type { SavedVaultCard } from "../types/vault";
+import { supabase } from "../lib/supabase";
 
 const AnnotationInput = React.memo(({ id, initialValue, onUpdate }: { id: string, initialValue: string, onUpdate: (id: string, text: string) => void }) => {
   const [text, setText] = useState(initialValue);
@@ -76,12 +77,12 @@ const CommonplaceBook: React.FC<CommonplaceBookProps> = ({
     if (orderedCards.length === 0) return;
     setIsExporting(true);
     try {
-      const res = await fetch("/api/export", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ cards: orderedCards }),
+      const { data, error } = await supabase.functions.invoke('export', {
+        body: { cards: orderedCards }
       });
-      const data = await res.json();
+      
+      if (error) throw error;
+      
       const blob = new Blob([data.summary], { type: "text/markdown" });
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
