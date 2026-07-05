@@ -11,6 +11,7 @@ export default defineConfig(() => {
       tailwindcss(),
       VitePWA({
         registerType: 'autoUpdate',
+        includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'masked-icon.svg'],
         manifest: {
           name: 'Logos Microlearning',
           short_name: 'Logos',
@@ -21,9 +22,33 @@ export default defineConfig(() => {
           icons: [
             {
               src: 'https://cdn-icons-png.flaticon.com/512/3246/3246101.png',
+              sizes: '192x192',
+              type: 'image/png'
+            },
+            {
+              src: 'https://cdn-icons-png.flaticon.com/512/3246/3246101.png',
               sizes: '512x512',
               type: 'image/png',
               purpose: 'any maskable'
+            }
+          ]
+        },
+        workbox: {
+          globPatterns: ['**/*.{js,css,html,ico,png,svg}'],
+          runtimeCaching: [
+            {
+              urlPattern: /^https:\/\/fonts\.googleapis\.com\/.*/i,
+              handler: 'CacheFirst',
+              options: {
+                cacheName: 'google-fonts-cache',
+                expiration: {
+                  maxEntries: 10,
+                  maxAgeSeconds: 60 * 60 * 24 * 365
+                },
+                cacheableResponse: {
+                  statuses: [0, 200]
+                }
+              }
             }
           ]
         }

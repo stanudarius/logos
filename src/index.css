@@ -1,10 +1,10 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Space+Grotesk:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,450;0,600;1,450;1,600&family=JetBrains+Mono:wght@400;500&display=swap');
 @import "tailwindcss";
 
 @theme {
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
   --font-display: "Space Grotesk", sans-serif;
   --font-serif: "Playfair Display", Georgia, Cambria, "Times New Roman", Times, serif;
+  --font-literary: "Cormorant Garamond", "Playfair Display", Georgia, serif;
   --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
 }
 
@@ -30,4 +30,269 @@ body {
   background-color: #FDFCF8;
   color: #1A1A1A;
   overflow-x: hidden;
+}
+
+/* ================================================
+   THOUGHT STREAM — Vertical Scroll-Snap Container
+   ================================================ */
+.thought-stream {
+  display: flex;
+  flex-direction: column;
+  scroll-snap-type: y mandatory;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  overscroll-behavior-y: contain;
+}
+
+.thought-stream::-webkit-scrollbar {
+  display: none;
+}
+
+.thought-atom {
+  flex: 0 0 100%;
+  scroll-snap-align: center;
+  scroll-snap-stop: always;
+  height: 100%;
+  min-height: 100%;
+  will-change: transform;
+  contain: layout style paint;
+}
+
+/* ================================================
+   TYPOGRAPHIC LAYOUT VARIANTS
+   The Thought Stream's visual richness via 4 poster layouts
+   ================================================ */
+
+/* Layout A: Thesis — Centered, oversized provocative statement */
+.layout-thesis {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 2.5rem 2rem;
+}
+
+.layout-thesis .atom-title {
+  font-family: var(--font-serif);
+  font-size: 2rem;
+  line-height: 1.08;
+  font-weight: 600;
+  font-style: italic;
+  letter-spacing: -0.02em;
+  color: #1C1C1E;
+  margin-bottom: 1.25rem;
+}
+
+.layout-thesis .atom-subtext {
+  font-family: var(--font-sans);
+  font-size: 0.8125rem;
+  line-height: 1.7;
+  color: #6B6B6F;
+  font-weight: 300;
+  max-width: 85%;
+}
+
+/* Layout B: Blockquote — Right-aligned with giant monogram watermark */
+.layout-blockquote {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: right;
+  padding: 2rem 2rem 2rem 3rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.layout-blockquote .atom-monogram {
+  position: absolute;
+  left: -1.5rem;
+  top: 50%;
+  transform: translateY(-50%);
+  font-family: var(--font-literary);
+  font-size: 16rem;
+  font-weight: 600;
+  color: #1C1C1E;
+  opacity: 0.035;
+  line-height: 1;
+  pointer-events: none;
+  user-select: none;
+}
+
+.layout-blockquote .atom-title {
+  font-family: var(--font-literary);
+  font-size: 1.375rem;
+  line-height: 1.35;
+  font-weight: 400;
+  font-style: italic;
+  color: #1C1C1E;
+  margin-bottom: 1rem;
+  position: relative;
+  z-index: 1;
+}
+
+.layout-blockquote .atom-subtext {
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  line-height: 1.65;
+  color: #6B6B6F;
+  font-weight: 300;
+  position: relative;
+  z-index: 1;
+}
+
+/* Layout C: Fragment — Justified, tight letter-spacing, fills viewport */
+.layout-fragment {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 2rem 1.75rem;
+}
+
+.layout-fragment .atom-title {
+  font-family: var(--font-sans);
+  font-size: 1.125rem;
+  line-height: 1.6;
+  font-weight: 500;
+  letter-spacing: -0.025em;
+  color: #1C1C1E;
+  text-align: justify;
+  hyphens: auto;
+  margin-bottom: 1.25rem;
+}
+
+.layout-fragment .atom-subtext {
+  font-family: var(--font-serif);
+  font-size: 0.8125rem;
+  line-height: 1.6;
+  color: #8A8A8E;
+  font-weight: 400;
+  font-style: italic;
+  text-align: justify;
+}
+
+/* Layout D: Epigraph — Small-caps label, centered italic pull-quote */
+.layout-epigraph {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 2.5rem 2.25rem;
+}
+
+.layout-epigraph .atom-label {
+  font-family: var(--font-sans);
+  font-size: 0.625rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.25em;
+  color: #B5A48B;
+  margin-bottom: 1.5rem;
+}
+
+.layout-epigraph .atom-rule {
+  width: 2.5rem;
+  height: 1px;
+  background: #D4CFC5;
+  margin-bottom: 1.5rem;
+}
+
+.layout-epigraph .atom-title {
+  font-family: var(--font-literary);
+  font-size: 1.5rem;
+  line-height: 1.35;
+  font-weight: 400;
+  font-style: italic;
+  color: #1C1C1E;
+  margin-bottom: 1.5rem;
+}
+
+.layout-epigraph .atom-rule-bottom {
+  width: 2.5rem;
+  height: 1px;
+  background: #D4CFC5;
+  margin-bottom: 1rem;
+}
+
+.layout-epigraph .atom-subtext {
+  font-family: var(--font-sans);
+  font-size: 0.6875rem;
+  line-height: 1.7;
+  color: #8A8A8E;
+  font-weight: 300;
+  max-width: 90%;
+}
+
+
+
+/* ================================================
+   DEEP DIVE DRAWER
+   ================================================ */
+.deep-dive-drawer {
+  will-change: transform;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+/* ================================================
+   CONSTELLATION EDGE LABELS
+   ================================================ */
+.edge-label {
+  font-family: var(--font-mono);
+  font-size: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  fill: rgba(255, 255, 255, 0.65);
+  pointer-events: none;
+  transition: opacity 0.4s ease;
+}
+
+/* ================================================
+   SHARED MICRO-ANIMATION UTILITIES
+   ================================================ */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes revealPop {
+  0% {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+  60% {
+    transform: scale(1.08);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.animate-reveal-pop {
+  animation: revealPop 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+/* ================================================
+   LOADING INDICATOR — Shimmer progress bar
+   ================================================ */
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(350%);
+  }
 }

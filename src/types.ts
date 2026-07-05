@@ -20,9 +20,10 @@ export interface Preset {
 export interface CardData {
   explore_title: string;
   explore_subtext: string;
-  vault_question: string;
-  vault_answer: string;
 }
+
+/** Typographic layout variants for the Thought Stream poster cards */
+export type LayoutVariant = "thesis" | "blockquote" | "fragment" | "epigraph";
 
 export interface FeedCard {
   id: string;
@@ -32,10 +33,10 @@ export interface FeedCard {
   visual_mood: string;
   explore_title: string;
   explore_subtext: string;
-  vault_question: string;
-  vault_answer: string;
   presentation: Presentation;
   stack_id?: string;
+  /** Assigned programmatically — cycles through 4 typographic layouts */
+  layoutVariant?: LayoutVariant;
 }
 
 export interface ContentStack {
@@ -56,11 +57,10 @@ export interface SavedVaultCard {
   visual_mood: string;
   explore_title: string;
   explore_subtext: string;
-  vault_question: string;
-  vault_answer: string;
-  savedAt: string;
-  reviewCount: number;
-  masteryLevel: string;
+  presentation: Presentation;
+  date_added: string;
+  /** Personal annotation for the Commonplace Book */
+  annotation?: string;
 }
 
 export interface MoodAesthetic {
@@ -74,4 +74,15 @@ export interface MoodAesthetic {
   btnColor: string;
   badgeColor: string;
   display: string;
+}
+
+/** Relationship types for Knowledge Constellation edges */
+export type EdgeRelationship = "Influenced" | "Critiqued" | "Contradicts" | "Contemporaries" | "Inspired";
+
+/** Graph edge with philosophical relationship metadata */
+export interface GraphEdge {
+  from: string;
+  to: string;
+  relationship: EdgeRelationship;
+  dashed?: boolean;
 }

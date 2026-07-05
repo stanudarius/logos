@@ -23,6 +23,42 @@ const ai = new GoogleGenAI({
   },
 });
 
+const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+
+// Robust fallback generator with exponential backoff
+async function generateWithFallback(params: any) {
+  const models = ["gemini-2.5-flash", "gemini-3.5-flash", "gemini-2.0-flash", "gemini-flash-latest", "gemini-2.5-flash-lite"];
+  let lastError;
+
+  for (const modelName of models) {
+    let retries = 3;
+    let delay = 1500; // start with 1.5s delay
+    
+    while (retries > 0) {
+      try {
+        return await ai.models.generateContent({ ...params, model: modelName });
+      } catch (e: any) {
+        if (e.status === 429 || e.status === 503) {
+          retries--;
+          console.warn(`[${modelName}] rate limited (Status: ${e.status}). Retries left: ${retries}. Waiting ${delay}ms...`);
+          lastError = e;
+          if (retries > 0) {
+            await sleep(delay);
+            delay *= 2; // exponential backoff
+          }
+        } else if (e.status === 404 || e.status === 400) {
+          console.warn(`[${modelName}] unsupported or not found (Status: ${e.status}). Skipping model...`);
+          lastError = e;
+          break; // break the retry loop and try the next model
+        } else {
+          throw e; // throw unhandled errors
+        }
+      }
+    }
+  }
+  throw lastError || new Error("All Gemini models failed after retries.");
+}
+
 // JSON Schema
 const microlearningSchema = {
   type: Type.OBJECT,
@@ -60,17 +96,9 @@ const microlearningSchema = {
           explore_subtext: {
             type: Type.STRING,
             description: "A beautiful, deep explanation (1-2 sentences, max 25 words)."
-          },
-          vault_question: {
-            type: Type.STRING,
-            description: "Anki active recall test question based on this slide's core knowledge."
-          },
-          vault_answer: {
-            type: Type.STRING,
-            description: "Bite-sized direct answer to the active recall question."
           }
         },
-        required: ["explore_title", "explore_subtext", "vault_question", "vault_answer"]
+        required: ["explore_title", "explore_subtext"]
       }
     },
     presentation: {
@@ -140,8 +168,7 @@ app.post("/api/generate", async (req, res) => {
     `;
 
     // Query Gemini 2.5 Flash for high performance and structured accuracy
-    const response = await ai.models.generateContent({
-      model: "gemini-2.5-flash",
+    const response = await generateWithFallback({
       contents: prompt,
       config: {
         temperature: 0.5,
@@ -167,6 +194,91 @@ app.post("/api/generate", async (req, res) => {
   }
 });
 
+// Socratic AI Tutor — conversational debate endpoint
+app.post("/api/chat", async (req, res) => {
+  try {
+    const { philosopher, topic, essayContext, messages } = req.body;
+
+    if (!process.env.GEMINI_API_KEY) {
+      return res.status(500).json({ error: "GEMINI_API_KEY is not configured." });
+    }
+
+    if (!philosopher || !topic) {
+      return res.status(400).json({ error: "philosopher and topic are required." });
+    }
+
+    const systemInstruction = `You are ${philosopher}, the great thinker. You are having an intimate, intellectually rigorous philosophical conversation with a curious student.
+
+PERSONA RULES:
+- Speak in first person AS ${philosopher}. Use "I" and refer to your own works and ideas directly.
+- Be warm but intellectually challenging — push the student to think deeper.
+- Use the Socratic method: answer questions with provocative counter-questions when appropriate.
+- Reference your actual philosophical positions, works, and historical context accurately.
+- Keep responses concise (2-4 sentences max) to maintain a natural conversational rhythm.
+- If the student disagrees, engage genuinely — don't just agree. Defend your positions.
+- Occasionally use a memorable aphorism or quote from your actual writings.
+
+TOPIC CONTEXT: The conversation is about "${topic}".
+${essayContext ? `\nESSAY BEING DISCUSSED:\n${essayContext}` : ""}`;
+
+    // Build conversation history for Gemini
+    const contents = (messages || []).map((msg: { role: string; text: string }) => ({
+      role: msg.role === "user" ? "user" : "model",
+      parts: [{ text: msg.text }],
+    }));
+
+    const response = await generateWithFallback({
+      contents,
+      config: {
+        temperature: 0.8,
+        systemInstruction,
+        maxOutputTokens: 800,
+      },
+    });
+
+    const text = response.text;
+    if (!text) {
+      throw new Error("No response received from the philosopher.");
+    }
+
+    res.json({ reply: text.trim() });
+  } catch (error: any) {
+    console.error("Socratic Chat Error:", error);
+    res.status(500).json({
+      error: error.message || "The philosopher is momentarily lost in thought."
+    });
+  }
+});
+
+// Commonplace Book API: Export Essay
+app.post("/api/export", async (req, res) => {
+  try {
+    const { cards } = req.body;
+    if (!cards || cards.length === 0) {
+      return res.json({ summary: "Your commonplace book is empty." });
+    }
+
+    const cardsContext = cards.map((c: any) => 
+      `Thinker: ${c.philosopher}\nIdea: ${c.explore_title}\nInsight: ${c.explore_subtext}\nMy Annotation: ${c.annotation || "None"}\n`
+    ).join("\n---\n");
+
+    const prompt = `Act as an eloquent editor compiling a personal 'Commonplace Book'. Weave the following saved ideas and personal annotations into a cohesive, beautifully written summary essay (about 300-500 words). Draw connections between the distinct thoughts.\n\nHere are the notes:\n${cardsContext}`;
+
+    const response = await generateWithFallback({
+      contents: prompt,
+      config: {
+        temperature: 0.7,
+        systemInstruction: "You are a thoughtful writer synthesizing disparate ideas into a profound narrative essay. Use markdown formatting.",
+      },
+    });
+
+    res.json({ summary: response.text.trim() });
+  } catch (error: any) {
+    console.error("Export API Error:", error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
 // Configure Vite middleware / asset-serving depending on NODE_ENV
 async function configureServer() {
   if (process.env.NODE_ENV !== "production") {
@@ -183,6 +295,7 @@ async function configureServer() {
     });
   }
 
+// trigger reload to fix hanging requests
   app.listen(PORT, "0.0.0.0", () => {
     console.log(`[Logos] Running on http://localhost:${PORT}`);
   });

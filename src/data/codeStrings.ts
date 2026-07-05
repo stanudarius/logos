@@ -28,8 +28,6 @@ genai.configure(api_key=api_key)
 class Card(BaseModel):
     explore_title: str = Field(description="Punchy, poetic, or dramatic title for this card (max 5 words).")
     explore_subtext: str = Field(description="Fascinating explanation or elaboration. Max 25 words.")
-    vault_question: str = Field(description="Anki-style active recall question for the Vault testing layer.")
-    vault_answer: str = Field(description="Anki-style direct answer to check correctness.")
 
 class ReadingPart(BaseModel):
     part_number: int = Field(description="Sequential number starting from 1 for deep dive reading.")
@@ -97,7 +95,7 @@ values (
   'Philosophy of the Absurd',
   'Albert Camus',
   'blinding_sunlight',
-  '[{"explore_title": "The Silence of the World", "explore_subtext": "The Absurd is born out of the clash between our desperate search for meaning and the silent universe.", "vault_question": "How is the Absurd born according to Camus?", "vault_answer": "Through the direct confrontation between the human desire for meaning and the cold, irrational silence of the world."}]'::jsonb,
+  '[{"explore_title": "The Silence of the World", "explore_subtext": "The Absurd is born out of the clash between our desperate search for meaning and the silent universe."}]'::jsonb,
   '{"title": "The Myth of Sisyphus", "reading_parts": [{"part_number": 1, "text": "Albert Camus introduces the concept of the Absurd as an invitation to human lucidity in the face of modern existential disorientation..."}]}'::jsonb
 );
 `;

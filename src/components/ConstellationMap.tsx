@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import { motion } from "motion/react";
-import { X, ZoomIn } from "lucide-react";
+import { X } from "lucide-react";
+import type { GraphEdge, EdgeRelationship } from "../types";
 
 interface Node {
   id: string;
@@ -10,18 +11,12 @@ interface Node {
   group: "ancient" | "stoic" | "existential" | "literature" | "arts" | "architecture";
 }
 
-interface Edge {
-  from: string;
-  to: string;
-  dashed?: boolean;
-}
-
 const NODES: Node[] = [
   // Ancient
   { id: "socrates", label: "Socrates", x: 50, y: 20, group: "ancient" },
   { id: "plato", label: "Plato", x: 35, y: 35, group: "ancient" },
   { id: "aristotle", label: "Aristotle", x: 65, y: 30, group: "ancient" },
-  
+
   // Stoic
   { id: "zeno", label: "Zeno of Citium", x: 20, y: 50, group: "stoic" },
   { id: "epictetus", label: "Epictetus", x: 15, y: 70, group: "stoic" },
@@ -51,40 +46,62 @@ const NODES: Node[] = [
   { id: "corbusier", label: "Le Corbusier", x: 15, y: 95, group: "architecture" },
 ];
 
-const EDGES: Edge[] = [
-  { from: "socrates", to: "plato" },
-  { from: "plato", to: "aristotle" },
-  
-  { from: "socrates", to: "zeno", dashed: true },
-  { from: "zeno", to: "epictetus" },
-  { from: "zeno", to: "seneca" },
-  { from: "epictetus", to: "marcus" },
-  { from: "seneca", to: "marcus" },
+const EDGES: GraphEdge[] = [
+  { from: "socrates", to: "plato", relationship: "Influenced" },
+  { from: "plato", to: "aristotle", relationship: "Influenced" },
 
-  { from: "socrates", to: "kierkegaard", dashed: true },
-  { from: "kierkegaard", to: "nietzsche" },
-  { from: "nietzsche", to: "sartre" },
-  { from: "nietzsche", to: "camus" },
-  { from: "sartre", to: "camus" },
-  { from: "sartre", to: "beauvoir" },
+  { from: "socrates", to: "zeno", relationship: "Influenced", dashed: true },
+  { from: "zeno", to: "epictetus", relationship: "Influenced" },
+  { from: "zeno", to: "seneca", relationship: "Influenced" },
+  { from: "epictetus", to: "marcus", relationship: "Influenced" },
+  { from: "seneca", to: "marcus", relationship: "Contemporaries" },
 
-  { from: "davinci", to: "michelangelo" },
-  { from: "socrates", to: "davinci", dashed: true },
-  { from: "shakespeare", to: "dostoevsky", dashed: true },
-  { from: "dostoevsky", to: "kafka" },
-  { from: "dostoevsky", to: "nietzsche", dashed: true },
-  { from: "kierkegaard", to: "kafka", dashed: true },
-  { from: "vangogh", to: "camus", dashed: true },
-  { from: "gaudi", to: "vangogh", dashed: true },
-  { from: "wright", to: "corbusier" },
+  { from: "socrates", to: "kierkegaard", relationship: "Influenced", dashed: true },
+  { from: "kierkegaard", to: "nietzsche", relationship: "Critiqued" },
+  { from: "nietzsche", to: "sartre", relationship: "Influenced" },
+  { from: "nietzsche", to: "camus", relationship: "Influenced" },
+  { from: "sartre", to: "camus", relationship: "Contradicts" },
+  { from: "sartre", to: "beauvoir", relationship: "Contemporaries" },
+
+  { from: "davinci", to: "michelangelo", relationship: "Contemporaries" },
+  { from: "socrates", to: "davinci", relationship: "Inspired", dashed: true },
+  { from: "shakespeare", to: "dostoevsky", relationship: "Inspired", dashed: true },
+  { from: "dostoevsky", to: "kafka", relationship: "Inspired" },
+  { from: "dostoevsky", to: "nietzsche", relationship: "Inspired", dashed: true },
+  { from: "kierkegaard", to: "kafka", relationship: "Inspired", dashed: true },
+  { from: "vangogh", to: "camus", relationship: "Inspired", dashed: true },
+  { from: "gaudi", to: "vangogh", relationship: "Contemporaries", dashed: true },
+  { from: "wright", to: "corbusier", relationship: "Critiqued" },
 ];
+
+/** Color mapping for relationship types */
+function getRelationshipColor(rel: EdgeRelationship): string {
+  switch (rel) {
+    case "Influenced": return "rgba(181, 164, 139, 0.8)";
+    case "Critiqued": return "rgba(239, 68, 68, 0.7)";
+    case "Contradicts": return "rgba(249, 115, 22, 0.7)";
+    case "Contemporaries": return "rgba(147, 197, 253, 0.7)";
+    case "Inspired": return "rgba(167, 139, 250, 0.7)";
+  }
+}
 
 interface ConstellationMapProps {
   onClose: () => void;
+  onFilterByThinker?: (thinkerName: string) => void;
 }
 
-export const ConstellationMap: React.FC<ConstellationMapProps> = ({ onClose }) => {
+export const ConstellationMap: React.FC<ConstellationMapProps> = ({ onClose, onFilterByThinker }) => {
   const [hoveredNode, setHoveredNode] = useState<string | null>(null);
+
+  const handleNodeClick = useCallback(
+    (nodeLabel: string) => {
+      if (onFilterByThinker) {
+        onFilterByThinker(nodeLabel);
+        onClose();
+      }
+    },
+    [onFilterByThinker, onClose]
+  );
 
   return (
     <motion.div
@@ -102,14 +119,24 @@ export const ConstellationMap: React.FC<ConstellationMapProps> = ({ onClose }) =
       <div className="absolute top-8 left-8 right-8 flex justify-between items-center z-20">
         <div>
           <h2 className="text-white text-2xl font-serif italic tracking-tight mb-1">Knowledge Constellation</h2>
-          <p className="text-white/40 text-xs tracking-widest uppercase font-mono">Map of Human Thought</p>
+          <p className="text-white/40 text-xs tracking-widest uppercase font-mono">Tap a thinker to filter the Stream</p>
         </div>
-        <button 
+        <button
           onClick={onClose}
           className="p-3 rounded-full bg-white/5 border border-white/10 hover:bg-white/10 text-white/50 hover:text-white transition-all backdrop-blur-md"
         >
           <X className="w-6 h-6" />
         </button>
+      </div>
+
+      {/* Legend */}
+      <div className="absolute bottom-8 left-8 z-20 flex flex-wrap gap-3">
+        {(["Influenced", "Critiqued", "Contradicts", "Contemporaries", "Inspired"] as EdgeRelationship[]).map((rel) => (
+          <div key={rel} className="flex items-center gap-1.5">
+            <div className="w-3 h-0.5 rounded-full" style={{ backgroundColor: getRelationshipColor(rel) }} />
+            <span className="text-[9px] font-mono text-white/40 uppercase tracking-wider">{rel}</span>
+          </div>
+        ))}
       </div>
 
       {/* The Map */}
@@ -124,22 +151,57 @@ export const ConstellationMap: React.FC<ConstellationMapProps> = ({ onClose }) =
             const isHovered = hoveredNode === edge.from || hoveredNode === edge.to;
             const isFaded = hoveredNode && !isHovered;
 
+            // Midpoint for label positioning
+            const midX = (fromNode.x + toNode.x) / 2;
+            const midY = (fromNode.y + toNode.y) / 2;
+
+            // Calculate angle for label rotation
+            const dx = toNode.x - fromNode.x;
+            const dy = toNode.y - fromNode.y;
+            const angle = Math.atan2(dy, dx) * (180 / Math.PI);
+            // Keep text readable (not upside down)
+            const adjustedAngle = angle > 90 || angle < -90 ? angle + 180 : angle;
+
             return (
-              <motion.line
-                key={`edge-${idx}`}
-                x1={`${fromNode.x}%`}
-                y1={`${fromNode.y}%`}
-                x2={`${toNode.x}%`}
-                y2={`${toNode.y}%`}
-                stroke={isHovered ? "rgba(255,255,255,0.6)" : "rgba(255,255,255,0.15)"}
-                strokeWidth={isHovered ? 2 : 1}
-                strokeDasharray={edge.dashed ? "4 4" : "none"}
-                className="transition-all duration-500"
-                style={{ opacity: isFaded ? 0.1 : 1 }}
-                initial={{ pathLength: 0, opacity: 0 }}
-                animate={{ pathLength: 1, opacity: isFaded ? 0.1 : 1 }}
-                transition={{ duration: 1.5, delay: 0.5 + idx * 0.05 }}
-              />
+              <g key={`edge-${idx}`}>
+                <motion.line
+                  x1={`${fromNode.x}%`}
+                  y1={`${fromNode.y}%`}
+                  x2={`${toNode.x}%`}
+                  y2={`${toNode.y}%`}
+                  stroke={isHovered ? getRelationshipColor(edge.relationship) : "rgba(255,255,255,0.12)"}
+                  strokeWidth={isHovered ? 2 : 1}
+                  strokeDasharray={edge.dashed ? "4 4" : "none"}
+                  className="transition-all duration-500"
+                  style={{ opacity: isFaded ? 0.05 : 1 }}
+                  initial={{ pathLength: 0, opacity: 0 }}
+                  animate={{ pathLength: 1, opacity: isFaded ? 0.05 : 1 }}
+                  transition={{ duration: 1.5, delay: 0.5 + idx * 0.05 }}
+                />
+
+                {/* Edge relationship label — visible on hover */}
+                {isHovered && (
+                  <text
+                    x={`${midX}%`}
+                    y={`${midY}%`}
+                    textAnchor="middle"
+                    dominantBaseline="middle"
+                    className="edge-label"
+                    fill={getRelationshipColor(edge.relationship)}
+                    transform={`rotate(${adjustedAngle}, ${midX}%, ${midY}%)`}
+                    style={{ opacity: 0 }}
+                  >
+                    <animate
+                      attributeName="opacity"
+                      from="0"
+                      to="1"
+                      dur="0.4s"
+                      fill="freeze"
+                    />
+                    {edge.relationship}
+                  </text>
+                )}
+              </g>
             );
           })}
         </svg>
@@ -175,26 +237,38 @@ export const ConstellationMap: React.FC<ConstellationMapProps> = ({ onClose }) =
               initial={{ scale: 0, opacity: 0 }}
               animate={{ scale: 1, opacity: isFaded ? 0.2 : 1 }}
               transition={{ duration: 0.5, delay: 0.2 + idx * 0.05 }}
-              className="absolute transform -translate-x-1/2 -translate-y-1/2 cursor-default z-10"
+              className="absolute transform -translate-x-1/2 -translate-y-1/2 cursor-pointer z-10"
               style={{ left: `${node.x}%`, top: `${node.y}%` }}
               onMouseEnter={() => setHoveredNode(node.id)}
               onMouseLeave={() => setHoveredNode(null)}
+              onClick={() => handleNodeClick(node.label)}
             >
               <div className="relative group flex flex-col items-center justify-center">
                 {/* Ping animation for active look */}
                 {isHovered && (
-                  <span className={`absolute flex h-6 w-6 -translate-x-1/2 -translate-y-1/2 left-1/2 top-1/2`}>
+                  <span className="absolute flex h-6 w-6 -translate-x-1/2 -translate-y-1/2 left-1/2 top-1/2">
                     <span className={`animate-ping absolute inline-flex h-full w-full rounded-full opacity-40 ${colorClass}`}></span>
                   </span>
                 )}
-                
+
                 {/* The Star */}
                 <div className={`w-3 h-3 rounded-full ${colorClass} ${glowClass} transition-transform duration-300 ${isHovered ? 'scale-150' : 'scale-100'}`} />
-                
+
                 {/* Label */}
                 <div className={`absolute top-5 whitespace-nowrap text-sm font-semibold transition-all duration-300 ${isHovered ? 'text-white' : 'text-white/60'}`}>
                   {node.label}
                 </div>
+
+                {/* Click hint on hover */}
+                {isHovered && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 4 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="absolute top-10 whitespace-nowrap text-[8px] font-mono text-white/30 uppercase tracking-wider"
+                  >
+                    Tap to filter stream
+                  </motion.div>
+                )}
               </div>
             </motion.div>
           );
