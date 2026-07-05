@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Reorder, motion, AnimatePresence } from "motion/react";
 import { Network, FileText, Download, FolderPlus, Folder, Trash2, BookMarked, X } from "lucide-react";
-import type { SavedVaultCard } from "../types";
+import type { SavedVaultCard } from "../types/vault";
 
 const AnnotationInput = React.memo(({ id, initialValue, onUpdate }: { id: string, initialValue: string, onUpdate: (id: string, text: string) => void }) => {
   const [text, setText] = useState(initialValue);
@@ -148,12 +148,33 @@ const CommonplaceBook: React.FC<CommonplaceBookProps> = ({
 
       {/* ── Vault Scroll Area ── */}
       <div className="flex-1 overflow-y-auto p-4 pb-24 relative z-10">
-        <Reorder.Group
-          axis="y"
-          values={displayCards}
-          onReorder={handleReorder}
-          className="space-y-4"
-        >
+        {displayCards.length === 0 && activeFolder ? (
+          <div className="flex flex-col items-center justify-center h-full space-y-4 opacity-70">
+            <div className="w-12 h-12 rounded-full border border-[#D4CFC5] flex items-center justify-center mb-2">
+              <Folder className="w-5 h-5 text-[#B5A48B]" />
+            </div>
+            <p className="text-sm font-serif italic text-[#1C1C1E]">This folder is empty.</p>
+            <button
+              onClick={() => {
+                const firstUnassigned = orderedCards.find(c => !c.user_folder);
+                if (firstUnassigned) {
+                  setAssigningCardId(firstUnassigned.id);
+                } else if (orderedCards.length > 0) {
+                  setAssigningCardId(orderedCards[0].id);
+                }
+              }}
+              className="px-4 py-1.5 rounded-full border border-[#D4CFC5] text-[10px] uppercase font-bold tracking-wider text-[#6B6B6F] hover:bg-black/5 transition-all"
+            >
+              Move cards here
+            </button>
+          </div>
+        ) : (
+          <Reorder.Group
+            axis="y"
+            values={displayCards}
+            onReorder={handleReorder}
+            className="space-y-4"
+          >
           {displayCardsWithRot.map((card) => (
             <Reorder.Item
               key={card.id}
@@ -214,7 +235,8 @@ const CommonplaceBook: React.FC<CommonplaceBookProps> = ({
               />
             </Reorder.Item>
           ))}
-        </Reorder.Group>
+          </Reorder.Group>
+        )}
       </div>
 
       {/* ── Export CTA — full-width at bottom ── */}

@@ -30,8 +30,24 @@ const SilenceIcon = () => (
   </svg>
 );
 
+const ForestIcon = () => (
+  <svg viewBox="0 0 16 16" fill="none" className="w-4 h-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round">
+    <path d="M8 2 L3 8 L6 8 L2 14 L14 14 L10 8 L13 8 Z" />
+  </svg>
+);
+
+const FireIcon = () => (
+  <svg viewBox="0 0 16 16" fill="none" className="w-4 h-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round">
+    <path d="M8 14 C11.3 14 14 11.3 14 8 C14 4.7 11.3 2 8 2 C4.7 2 2 4.7 2 8 C2 11.3 4.7 14 8 14 Z" />
+    <path d="M8 14 C9.65 14 11 12.65 11 11 C11 9.35 9.65 8 8 8 C6.35 8 5 9.35 5 11 C5 12.65 6.35 14 8 14 Z" />
+    <path d="M8 14 L8 8" />
+  </svg>
+);
+
 const SOUNDSCAPES = [
   { id: "rain",    label: "Rain",    Icon: RainIcon    },
+  { id: "forest",  label: "Forest",  Icon: ForestIcon  },
+  { id: "fire",    label: "Fire",    Icon: FireIcon    },
   { id: "silence", label: "Silence", Icon: SilenceIcon },
 ];
 
@@ -74,6 +90,80 @@ function createSoundscape(type: string, volume: number): (() => void) | null {
       bandpass.connect(gain);
       source.start();
       return () => { source.stop(); gain.disconnect(); };
+    }
+
+    if (type === "forest") {
+      // Forest: lower band-pass + occasional chirp
+      const bufferSize = 2 * ctx.sampleRate;
+      const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+      const data = buffer.getChannelData(0);
+      for (let i = 0; i < bufferSize; i++) data[i] = Math.random() * 2 - 1;
+      const source = ctx.createBufferSource();
+      source.buffer = buffer;
+      source.loop = true;
+      const bandpass = ctx.createBiquadFilter();
+      bandpass.type = "bandpass";
+      bandpass.frequency.value = 400; // Lower pitch
+      bandpass.Q.value = 0.8;
+      source.connect(bandpass);
+      bandpass.connect(gain);
+      source.start();
+      
+      // Basic chirp oscillator
+      let chirpInterval: ReturnType<typeof setInterval>;
+      const playChirp = () => {
+        const osc = ctx.createOscillator();
+        const chirpGain = ctx.createGain();
+        osc.type = "sine";
+        osc.frequency.setValueAtTime(3000 + Math.random() * 1000, ctx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(1000, ctx.currentTime + 0.1);
+        
+        chirpGain.gain.setValueAtTime(0, ctx.currentTime);
+        chirpGain.gain.linearRampToValueAtTime(0.05, ctx.currentTime + 0.05);
+        chirpGain.gain.linearRampToValueAtTime(0, ctx.currentTime + 0.15);
+        
+        osc.connect(chirpGain);
+        chirpGain.connect(gain);
+        osc.start();
+        osc.stop(ctx.currentTime + 0.2);
+        
+        chirpInterval = setTimeout(playChirp, 2000 + Math.random() * 8000);
+      };
+      playChirp();
+      
+      return () => { source.stop(); gain.disconnect(); clearTimeout(chirpInterval); };
+    }
+
+    if (type === "fire") {
+      // Fire: low rumble + amplitude LFO
+      const bufferSize = 2 * ctx.sampleRate;
+      const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+      const data = buffer.getChannelData(0);
+      for (let i = 0; i < bufferSize; i++) data[i] = Math.random() * 2 - 1;
+      const source = ctx.createBufferSource();
+      source.buffer = buffer;
+      source.loop = true;
+      const bandpass = ctx.createBiquadFilter();
+      bandpass.type = "lowpass";
+      bandpass.frequency.value = 150;
+      source.connect(bandpass);
+      
+      const lfo = ctx.createOscillator();
+      lfo.type = "sine";
+      lfo.frequency.value = 1.5; // Flutter speed
+      const lfoGain = ctx.createGain();
+      lfoGain.gain.value = 0.5; // LFO depth
+      lfo.connect(lfoGain.gain);
+      
+      const flutterGain = ctx.createGain();
+      flutterGain.gain.value = 0.5;
+      bandpass.connect(flutterGain);
+      lfoGain.connect(flutterGain);
+      flutterGain.connect(gain);
+      
+      source.start();
+      lfo.start();
+      return () => { source.stop(); lfo.stop(); gain.disconnect(); };
     }
 
     return null;
@@ -254,11 +344,13 @@ const ZenMode: React.FC<ZenModeProps> = ({ onClose, onSessionComplete }) => {
                 className="text-center space-y-2"
               >
                 <div className="w-14 h-14 rounded-full bg-[#5CB888]/20 flex items-center justify-center mx-auto mb-2">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="#5CB888" strokeWidth="2" strokeLinecap="round" className="w-7 h-7">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="#5CB888" strokeWidth="2" strokeLinecap="round" className="w-7 h-7" style={{ strokeDasharray: 30, strokeDashoffset: 30, animation: "drawCheck 0.5s ease-out 0.2s forwards" }}>
                     <polyline points="20 6 9 17 4 12" />
                   </svg>
+                  <style>{`@keyframes drawCheck { to { stroke-dashoffset: 0; } }`}</style>
                 </div>
-                <p className="text-lg font-serif italic text-[#5CB888]">Well Done</p>
+                <p className="text-lg font-serif italic text-[#5CB888]">Session complete.</p>
+                <p className="text-[11px] text-white/50">The silence remains.</p>
               </motion.div>
             ) : (
               <>
@@ -327,13 +419,21 @@ const ZenMode: React.FC<ZenModeProps> = ({ onClose, onSessionComplete }) => {
           {/* Play / Pause / Reset controls */}
           <div className="flex justify-center gap-3">
             {isComplete ? (
-              <button
-                onClick={handleReset}
-                className="flex items-center gap-2 px-6 py-2.5 bg-white/10 hover:bg-white/15 text-white/80 rounded-2xl text-xs font-semibold transition-all active:scale-95 border border-white/10"
-              >
-                <RotateCcw className="w-4 h-4" />
-                <span>New Session</span>
-              </button>
+              <div className="flex gap-3">
+                <button
+                  onClick={handleReset}
+                  className="flex items-center gap-2 px-6 py-2.5 bg-white/10 hover:bg-white/15 text-white/80 rounded-2xl text-xs font-semibold transition-all active:scale-95 border border-white/10"
+                >
+                  <RotateCcw className="w-4 h-4" />
+                  <span>New Session</span>
+                </button>
+                <button
+                  onClick={onClose}
+                  className="flex items-center gap-2 px-6 py-2.5 bg-[#B5A48B] hover:bg-[#C4B39A] text-[#0F0F11] rounded-2xl text-xs font-semibold transition-all active:scale-95"
+                >
+                  <span>Return</span>
+                </button>
+              </div>
             ) : (
               <>
                 <button

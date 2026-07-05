@@ -1,4 +1,4 @@
-import { ReadingTrail } from "../types";
+import { ReadingTrail } from "../types/trails";
 
 export const READING_TRAILS: ReadingTrail[] = [
   // ================= PHILOSOPHY =================

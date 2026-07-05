@@ -59,8 +59,9 @@ const SocraticChat: React.FC<SocraticChatProps> = ({
     inputRef.current?.focus();
   }, []);
 
-  const handleSend = useCallback(async () => {
-    const trimmed = input.trim();
+  const handleSend = useCallback(async (overrideInput?: string) => {
+    const textToUse = overrideInput || input;
+    const trimmed = textToUse.trim();
     if (!trimmed || isLoading) return;
 
     const userMsg: ChatMessage = { id: nextMsgId(), role: "user", text: trimmed };
@@ -191,6 +192,32 @@ const SocraticChat: React.FC<SocraticChatProps> = ({
             </motion.div>
           ))}
         </AnimatePresence>
+
+        {/* ── Conversation Starters ── */}
+        {messages.length === 1 && !isLoading && (
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.5, duration: 0.4 }}
+            className="flex flex-col gap-2 pt-2 items-end"
+          >
+            {[
+              "What is your strongest argument?",
+              "Where do you contradict yourself?",
+              "How does this apply today?"
+            ].map((starter, idx) => (
+              <button
+                key={idx}
+                onClick={() => {
+                  handleSend(starter);
+                }}
+                className="bg-[#1C1C20] border border-[#2A2A2E] text-white/70 hover:text-white hover:bg-[#2A2A2E] px-4 py-2 rounded-full text-[10px] transition-all active:scale-95"
+              >
+                {starter}
+              </button>
+            ))}
+          </motion.div>
+        )}
 
         {/* Thinking indicator */}
         {isLoading && (

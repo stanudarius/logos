@@ -3,9 +3,10 @@ import {
   BookOpen, Bookmark, Network, ArrowLeft, Timer, Waypoints
 } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
-import type { FeedCard, SavedVaultCard } from "../types";
+import type { FeedCard } from "../types/feed";
+import type { SavedVaultCard } from "../types/vault";
 import ThoughtStream from "./ThoughtStream";
-import { ParallaxBackground } from "./ThoughtAtom";
+import { ParallaxBackground } from "./ui/ParallaxBackground";
 import CommonplaceBook from "./CommonplaceBook";
 import ReadingTrailsDashboard from "./ReadingTrailsDashboard";
 
@@ -17,6 +18,7 @@ interface PhoneEmulatorProps {
   activeCardIndex: number;
 
   isFetchingMore: boolean;
+  isFeedExhausted: boolean;
 
   // Vault state
   savedVaultCards: SavedVaultCard[];
@@ -49,6 +51,7 @@ const PhoneEmulator: React.FC<PhoneEmulatorProps> = ({
   activeTrailCards,
   activeCardIndex,
   isFetchingMore,
+  isFeedExhausted,
   savedVaultCards,
   savedVaultCardIds,
   onActiveCardChange,
@@ -66,8 +69,8 @@ const PhoneEmulator: React.FC<PhoneEmulatorProps> = ({
 }) => {
 
   const activeTabId =
-    phoneTab === "trail-view" ? "trails" :
-    phoneTab === "vault"      ? "vault"  : "explore";
+    (phoneTab === "trails" || phoneTab === "trail-view") ? "trails" :
+    phoneTab === "vault" ? "vault" : "explore";
 
   return (
     <div
@@ -107,6 +110,7 @@ const PhoneEmulator: React.FC<PhoneEmulatorProps> = ({
           <ThoughtStream
             cards={feedCards}
             isLoading={isFetchingMore}
+            isFeedExhausted={isFeedExhausted}
             onActiveCardChange={onActiveCardChange}
             onFetchMore={onFetchMore}
             savedVaultCardIds={savedVaultCardIds}
@@ -122,6 +126,7 @@ const PhoneEmulator: React.FC<PhoneEmulatorProps> = ({
           <ThoughtStream
             cards={activeTrailCards}
             isLoading={isFetchingMore}
+            isFeedExhausted={false} // Trails are static and don't infinite scroll
             onActiveCardChange={onActiveCardChange}
             onFetchMore={onFetchMore}
             savedVaultCardIds={savedVaultCardIds}
@@ -185,9 +190,7 @@ const PhoneEmulator: React.FC<PhoneEmulatorProps> = ({
       <div className="relative z-20 border-t border-[#E8E4DC]/70 bg-[#FAF8F3]/95 backdrop-blur-sm">
         <div className="flex items-end justify-around pt-3 pb-2 px-2">
           {NAV_TABS.map(({ id, label, Icon }) => {
-            const isActive =
-              id === "trails" ? (phoneTab === "trails" || phoneTab === "trail-view") :
-              id === activeTabId;
+            const isActive = id === activeTabId;
 
             const showBadge = id === "vault" && savedVaultCards.length > 0;
 
@@ -220,8 +223,6 @@ const PhoneEmulator: React.FC<PhoneEmulatorProps> = ({
           })}
         </div>
 
-        {/* Home bar indicator */}
-        <div className="absolute bottom-1.5 left-1/2 -translate-x-1/2 w-28 h-[4px] bg-[#D4CFC5]/70 rounded-full select-none pointer-events-none hidden sm:block" />
       </div>
     </div>
   );

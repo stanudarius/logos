@@ -1,5 +1,5 @@
 import React, { useRef, useEffect, useCallback, useState, memo } from "react";
-import type { FeedCard, LayoutVariant } from "../types";
+import type { FeedCard, LayoutVariant } from "../types/feed";
 import ThoughtAtom from "./ThoughtAtom";
 
 const LAYOUT_CYCLE: LayoutVariant[] = ["thesis", "blockquote", "fragment", "epigraph"];
@@ -7,6 +7,7 @@ const LAYOUT_CYCLE: LayoutVariant[] = ["thesis", "blockquote", "fragment", "epig
 interface ThoughtStreamProps {
   cards: FeedCard[];
   isLoading: boolean;
+  isFeedExhausted?: boolean;
   onActiveCardChange: (index: number) => void;
   onFetchMore: () => void;
   savedVaultCardIds: Set<string>;
@@ -24,6 +25,7 @@ interface ThoughtStreamProps {
 const ThoughtStream: React.FC<ThoughtStreamProps> = ({
   cards,
   isLoading,
+  isFeedExhausted = false,
   onActiveCardChange,
   onFetchMore,
   savedVaultCardIds,
@@ -211,12 +213,48 @@ const ThoughtStream: React.FC<ThoughtStreamProps> = ({
           isTrailMode={isTrailMode}
         />
       ))}
+
+      {/* ── Skeleton Loading State (Initial Load) ── */}
       {cards.length === 0 && isLoading && (
-        <div className="absolute inset-0 flex flex-col items-center justify-center opacity-50 space-y-4">
-          <div className="w-6 h-6 border-2 border-[#1C1C1E] border-t-transparent rounded-full animate-spin" />
-          <p className="text-[10px] font-mono tracking-widest uppercase text-[#1C1C1E]">Summoning Thoughts...</p>
+        <div className="w-full h-full flex flex-col items-center justify-center space-y-12 snap-center shrink-0">
+          {[1, 2].map((i) => (
+            <div key={i} className="w-full h-full sm:h-[80%] max-w-[420px] mx-auto p-8 sm:p-12 flex flex-col items-center justify-center opacity-40">
+              <div className="w-24 h-[9px] bg-gradient-to-r from-[#E8E4DC] via-[#D4CFC5] to-[#E8E4DC] rounded-sm mb-12 animate-pulse" />
+              <div className="w-full max-w-[280px] h-8 bg-gradient-to-r from-[#E8E4DC] via-[#D4CFC5] to-[#E8E4DC] rounded-sm mb-4 animate-pulse" />
+              <div className="w-3/4 max-w-[200px] h-8 bg-gradient-to-r from-[#E8E4DC] via-[#D4CFC5] to-[#E8E4DC] rounded-sm mb-16 animate-pulse" />
+              <div className="w-full max-w-[300px] space-y-3">
+                <div className="w-full h-[13px] bg-gradient-to-r from-[#E8E4DC] via-[#D4CFC5] to-[#E8E4DC] rounded-sm animate-pulse" />
+                <div className="w-[90%] h-[13px] bg-gradient-to-r from-[#E8E4DC] via-[#D4CFC5] to-[#E8E4DC] rounded-sm animate-pulse" />
+                <div className="w-[75%] h-[13px] bg-gradient-to-r from-[#E8E4DC] via-[#D4CFC5] to-[#E8E4DC] rounded-sm animate-pulse" />
+              </div>
+            </div>
+          ))}
         </div>
       )}
+
+      {/* ── Background Pagination Loading Spinner ── */}
+      {cards.length > 0 && isLoading && !isFeedExhausted && (
+        <div className="h-32 w-full flex-shrink-0 flex flex-col items-center justify-center opacity-50 space-y-4 snap-center">
+          <div className="w-5 h-5 border-2 border-[#1C1C1E] border-t-transparent rounded-full animate-spin" />
+          <p className="text-[9px] font-mono tracking-widest uppercase text-[#1C1C1E]">Summoning Thoughts...</p>
+        </div>
+      )}
+
+      {/* ── End of Stream Card ── */}
+      {isFeedExhausted && cards.length > 0 && !isTrailMode && (
+        <div className="w-full h-full snap-start shrink-0 flex flex-col items-center justify-center bg-[#FAF8F3] px-8 text-center">
+          <div className="w-12 h-12 rounded-full border border-[#D4CFC5] flex items-center justify-center mb-6">
+            <div className="w-2 h-2 rounded-full bg-[#1C1C1E] opacity-20" />
+          </div>
+          <h2 className="text-2xl font-serif italic font-semibold text-[#1C1C1E] mb-4">
+            The Stream Ebbs
+          </h2>
+          <p className="text-sm font-sans font-light text-[#8A8A8E] max-w-[240px] leading-relaxed">
+            You have reached the limits of the current constellation. Return later as more thoughts coalesce.
+          </p>
+        </div>
+      )}
+
       <div ref={sentinelRef} className="h-4 w-full flex-shrink-0" aria-hidden="true" />
     </div>
   );

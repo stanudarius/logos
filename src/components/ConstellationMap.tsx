@@ -1,7 +1,8 @@
 import React, { useState, useCallback, useMemo } from "react";
-import { motion } from "motion/react";
+import { motion, AnimatePresence } from "motion/react";
+import { getInitials } from "../utils/aesthetics";
 import { X } from "lucide-react";
-import type { GraphEdge, EdgeRelationship, Node } from "../types";
+import type { GraphEdge, EdgeRelationship, Node } from "../types/graph";
 
 import { NODES, EDGES } from "../data/constellationData";
 
@@ -166,15 +167,13 @@ interface ConstellationMapProps {
 
 export const ConstellationMap: React.FC<ConstellationMapProps> = React.memo(({ onClose, onFilterByThinker }) => {
   const [hoveredNode, setHoveredNode] = useState<string | null>(null);
+  const [selectedNode, setSelectedNode] = useState<string | null>(null);
 
   const handleNodeClick = useCallback(
     (nodeLabel: string) => {
-      if (onFilterByThinker) {
-        onFilterByThinker(nodeLabel);
-        onClose();
-      }
+      setSelectedNode(nodeLabel);
     },
-    [onFilterByThinker, onClose]
+    []
   );
 
   const handleHover = useCallback((id: string) => setHoveredNode(id), []);
@@ -273,6 +272,62 @@ export const ConstellationMap: React.FC<ConstellationMapProps> = React.memo(({ o
           );
         })}
       </div>
+
+      <AnimatePresence>
+        {selectedNode && (
+          <motion.div
+            initial={{ y: "100%" }}
+            animate={{ y: 0 }}
+            exit={{ y: "100%" }}
+            transition={{ type: "spring", damping: 28, stiffness: 280 }}
+            className="fixed inset-x-0 bottom-0 z-[60] bg-[#0F0F11] border-t border-[#2A2A2E] rounded-t-3xl shadow-[0_-10px_40px_rgba(0,0,0,0.5)] p-6"
+          >
+            <div className="max-w-md mx-auto">
+              <div className="flex justify-between items-start mb-6">
+                <div className="flex items-center gap-3">
+                  <div className="w-12 h-12 rounded-full bg-[#B5A48B] flex items-center justify-center text-[#0F0F11] text-lg font-serif italic font-bold">
+                    {getInitials(selectedNode)}
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-serif italic text-white/90">{selectedNode}</h3>
+                    <p className="text-[10px] font-mono uppercase tracking-[0.15em] text-[#B5A48B] mt-1">
+                      {nodesMap.get(selectedNode)?.category || "Philosopher"}
+                    </p>
+                  </div>
+                </div>
+                <button
+                  onClick={() => setSelectedNode(null)}
+                  className="w-8 h-8 rounded-full bg-[#2A2A2E] hover:bg-[#3A3A3E] flex items-center justify-center text-white/60 hover:text-white transition-all"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
+              <p className="text-sm text-white/60 font-light leading-relaxed mb-8">
+                Explore the thoughts, influences, and legacies connected to {selectedNode}. This will redirect you to a curated stream of their ideas.
+              </p>
+              <div className="flex gap-3">
+                <button
+                  onClick={() => setSelectedNode(null)}
+                  className="flex-1 py-3 px-4 rounded-xl border border-[#2A2A2E] text-white/70 hover:bg-[#1C1C20] hover:text-white text-xs font-bold uppercase tracking-wider transition-all"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={() => {
+                    if (onFilterByThinker) {
+                      onFilterByThinker(selectedNode);
+                      onClose();
+                    }
+                  }}
+                  className="flex-1 py-3 px-4 rounded-xl bg-[#B5A48B] hover:bg-[#C4B39A] text-[#0F0F11] text-xs font-bold uppercase tracking-wider transition-all shadow-[0_4px_14px_rgba(181,164,139,0.3)]"
+                >
+                  Start Trail
+                </button>
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </motion.div>
   );
 });
