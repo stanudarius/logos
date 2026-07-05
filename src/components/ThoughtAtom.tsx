@@ -1,19 +1,25 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
-import { motion, AnimatePresence, useScroll, useTransform, Variants } from "motion/react";
-import { useRef } from "react";
-import { Bookmark, BookmarkCheck, BookOpen, X, MessageCircle, Heart } from "lucide-react";
+import { motion, AnimatePresence, useTransform, Variants, useMotionValue, useSpring } from "motion/react";
+
+import { BookOpen, X, MessageCircle, Heart } from "lucide-react";
 import type { FeedCard, LayoutVariant, ReadingPart } from "../types";
 import { getInitials } from "../utils/aesthetics";
 import SocraticChat from "./SocraticChat";
+import FocusLock from "react-focus-lock";
 
 interface ThoughtAtomProps {
   card: FeedCard;
   layoutVariant: LayoutVariant;
   index: number;
   isSaved: boolean;
-  onToggleSave: () => void;
+  onToggleSave: (index: number) => void;
   onTriggerToast: (msg: string) => void;
+  onOpenDeepDive?: (index: number) => void;
+  onOpenChat?: (index: number) => void;
+  isActive?: boolean;
+  mouseX?: number;
+  mouseY?: number;
 }
 
 /**
@@ -28,31 +34,45 @@ const ThoughtAtom: React.FC<ThoughtAtomProps> = ({
   isSaved,
   onToggleSave,
   onTriggerToast,
+  onOpenDeepDive,
+  onOpenChat,
+  isActive,
+  mouseX = 0,
+  mouseY = 0
 }) => {
   const [isDeepDiveOpen, setIsDeepDiveOpen] = useState(false);
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [showHeart, setShowHeart] = useState(false);
+  const heartTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (heartTimeoutRef.current) clearTimeout(heartTimeoutRef.current);
+    };
+  }, []);
 
   const handleDoubleTap = useCallback(
     (e: React.MouseEvent) => {
       e.preventDefault();
       const target = e.target as HTMLElement;
       if (target.closest("button")) return;
+      if (layoutVariant === "interstitial") return;
 
       if (!isSaved) {
-        onToggleSave();
+        onToggleSave(index);
       }
       
       // Heart animation
       setShowHeart(true);
-      setTimeout(() => setShowHeart(false), 800);
+      if (heartTimeoutRef.current) clearTimeout(heartTimeoutRef.current);
+      heartTimeoutRef.current = setTimeout(() => setShowHeart(false), 800);
       
-      // Haptic feedback
+      // Haptic feedback (Double Pop)
       if (typeof navigator !== 'undefined' && navigator.vibrate) {
-        navigator.vibrate(50);
+        navigator.vibrate([30, 50, 30]);
       }
     },
-    [isSaved, onToggleSave]
+    [isSaved, onToggleSave, index]
   );
 
   const handleCloseDeepDive = useCallback(() => {
@@ -61,30 +81,40 @@ const ThoughtAtom: React.FC<ThoughtAtomProps> = ({
   }, [onTriggerToast]);
 
   const containerRef = useRef<HTMLDivElement>(null);
+
+  // Ambient Parallax (Driven by parent)
+  const motionX = useMotionValue(0);
+  const motionY = useMotionValue(0);
+  const smoothX = useSpring(motionX, { damping: 40, stiffness: 150 });
+  const smoothY = useSpring(motionY, { damping: 40, stiffness: 150 });
   
-  // Fling Physics based on vertical scroll
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ["start end", "end start"]
-  });
-  const rotate = useTransform(scrollYProgress, [0, 0.3, 0.7, 1], [-15, 0, 0, 15]);
-  const scale = useTransform(scrollYProgress, [0, 0.3, 0.7, 1], [0.85, 1, 1, 0.85]);
-  const y = useTransform(scrollYProgress, [0, 0.3, 0.7, 1], [-50, 0, 0, 50]);
+  useEffect(() => {
+    if (isActive) {
+      motionX.set(mouseX);
+      motionY.set(mouseY);
+    }
+  }, [isActive, mouseX, mouseY, motionX, motionY]);
 
   return (
-    <div id={`thought-atom-${index}`} ref={containerRef} className="thought-atom relative overflow-hidden h-[100dvh] w-full snap-center" data-card-index={index}>
+    <div 
+      id={`thought-atom-${index}`} 
+      ref={containerRef} 
+      className="thought-atom relative overflow-hidden h-full w-full snap-center" 
+      data-card-index={index}
+    >
       {/* Main Card Surface */}
       <motion.div
         className={`h-full w-full bg-[#FAF8F3] flex flex-col relative select-none layout-${layoutVariant}`}
         onDoubleClick={handleDoubleTap}
-        style={{ rotate, scale, y }}
       >
-        {/* Subtle grain texture overlay */}
-        <div
-          className="absolute inset-0 opacity-[0.025] pointer-events-none"
+        {/* Subtle grain texture overlay with cinematic parallax */}
+        <motion.div
           style={{
+            x: smoothX,
+            y: smoothY,
             backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.5'/%3E%3C/svg%3E")`,
           }}
+          className="absolute inset-0 opacity-[0.035] pointer-events-none scale-[1.05]"
         />
 
         {/* Double Tap Heart Overlay */}
@@ -102,60 +132,121 @@ const ThoughtAtom: React.FC<ThoughtAtomProps> = ({
           )}
         </AnimatePresence>
 
-        {renderLayout(card, layoutVariant)}
+        {renderLayout(card, layoutVariant, index)}
       </motion.div>
 
+      {/* Author Footer (Clickable to open Deep Dive) */}
+      {layoutVariant !== "interstitial" && (
+        <div 
+          className="absolute bottom-6 left-5 right-16 z-40 pointer-events-auto"
+          onClick={(e) => {
+            e.stopPropagation();
+            setIsDeepDiveOpen(true);
+            onOpenDeepDive?.(index);
+            onTriggerToast("Opening Deep Dive essay!");
+          }}
+        >
+          <div className="flex items-center justify-between border-t border-[#E8E4DC] pt-3 w-full cursor-pointer group">
+            <div className="flex items-center gap-2.5">
+              <div className="w-9 h-9 rounded-full bg-[#1C1C1E] flex items-center justify-center text-[#FAF8F3] text-[11px] font-serif italic shadow-sm flex-shrink-0 group-active:scale-95 transition-transform">
+                {getInitials(card.philosopher)}
+              </div>
+              <div>
+                <p className="text-[11px] font-semibold text-[#1C1C1E] tracking-tight leading-none mb-0.5 group-hover:underline">
+                  {card.philosopher}
+                </p>
+                <p className="text-[9px] font-normal text-[#B5A48B] tracking-wide uppercase truncate max-w-[160px]">
+                  {card.presentation?.title || card.topic}
+                </p>
+                {/* 4-card Sequence Progress Indicator */}
+                <div className="flex items-center gap-1 mt-1.5">
+                  {(() => {
+                    let cardSequence = 1;
+                    const genMatch = card.id.match(/_card_(\d+)_/);
+                    if (genMatch) {
+                      cardSequence = parseInt(genMatch[1], 10) + 1;
+                    } else {
+                      const match = card.id.match(/_(\d+)$/);
+                      cardSequence = match ? parseInt(match[1], 10) : 1;
+                    }
+                    return [...Array(4)].map((_, i) => (
+                      <div
+                        key={i}
+                        className={`h-[2px] w-2.5 rounded-full transition-all ${
+                          i < cardSequence ? "bg-[#B5A48B]" : "bg-[#E8E4DC]"
+                        }`}
+                      />
+                    ));
+                  })()}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Vertical Action Bar (TikTok Style) */}
-      <div className="absolute right-3 bottom-24 z-40 flex flex-col gap-5 pointer-events-auto">
+      {layoutVariant !== "interstitial" && (
+        <div className="absolute right-3 bottom-24 z-40 flex flex-col gap-5 pointer-events-auto">
         <button 
-          onClick={onToggleSave}
+          id={`bookmark-toggle-btn-${index}`}
+          onClick={() => onToggleSave(index)}
+          aria-label={isSaved ? "Remove from Vault" : "Save to Vault"}
           className="group flex flex-col items-center gap-1 active:scale-90 transition-transform"
         >
-          <div className="w-10 h-10 rounded-full bg-white/80 backdrop-blur-md shadow-lg border border-white/50 flex items-center justify-center">
+          <div className="w-10 h-10 rounded-full bg-white/80 backdrop-blur-md shadow-lg border border-[#E8E4DC] flex items-center justify-center">
             {isSaved ? <Heart className="w-5 h-5 text-red-500 fill-current" /> : <Heart className="w-5 h-5 text-[#1C1C1E]" />}
           </div>
-          <span className="text-[9px] font-bold text-white drop-shadow-md">Save</span>
+          <span className="text-[9px] font-bold text-[#1C1C1E] drop-shadow-sm">Save</span>
         </button>
 
         <button 
           onClick={() => {
             setIsDeepDiveOpen(true);
+            onOpenDeepDive?.(index);
             onTriggerToast("Opening Deep Dive essay!");
           }}
+          aria-label="Read Deep Dive Essay"
           className="group flex flex-col items-center gap-1 active:scale-90 transition-transform"
         >
           <div className="w-10 h-10 rounded-full bg-[#1C1C1E] shadow-lg border border-[#3A3A3E] flex items-center justify-center">
             <BookOpen className="w-4 h-4 text-[#FAF8F3]" />
           </div>
-          <span className="text-[9px] font-bold text-white drop-shadow-md">Read</span>
+          <span className="text-[9px] font-bold text-[#1C1C1E] drop-shadow-sm">Read</span>
         </button>
 
         <button 
-          onClick={() => setIsChatOpen(true)}
+          onClick={() => {
+            setIsChatOpen(true);
+            onOpenChat?.(index);
+          }}
+          aria-label="Debate with AI"
           className="group flex flex-col items-center gap-1 active:scale-90 transition-transform"
         >
           <div className="w-10 h-10 rounded-full bg-[#FAF8F3] shadow-lg border border-[#D4CFC5] flex items-center justify-center">
             <MessageCircle className="w-4 h-4 text-[#B5A48B]" />
           </div>
-          <span className="text-[9px] font-bold text-white drop-shadow-md">Debate</span>
+          <span className="text-[9px] font-bold text-[#1C1C1E] drop-shadow-sm">Debate</span>
         </button>
       </div>
+      )}
 
-      {/* Deep Dive Drawer */}
-      {createPortal(
+      {isActive && createPortal(
         <AnimatePresence>
           {isDeepDiveOpen && (
-            <motion.div
-              initial={{ y: "100%", opacity: 0, borderRadius: "40px" }}
-              animate={{ y: 0, opacity: 1, borderRadius: "0px" }}
-              exit={{ y: "100%", opacity: 0, borderRadius: "40px" }}
-              transition={{ type: "spring", damping: 25, stiffness: 200 }}
-              className="absolute inset-0 z-[60] bg-[#FAF8F3] flex flex-col shadow-[0_-10px_30px_rgba(0,0,0,0.1)] pointer-events-auto"
-              onClick={(e) => e.stopPropagation()}
-              onWheel={(e) => e.stopPropagation()} // Stop scroll bubbling
-              onTouchMove={(e) => e.stopPropagation()}
-            >
-              {/* Header */}
+              <motion.div
+                initial={{ y: "100%", opacity: 0, borderRadius: "40px" }}
+                animate={{ y: 0, opacity: 1, borderRadius: "0px" }}
+                exit={{ y: "100%", opacity: 0, borderRadius: "40px" }}
+                transition={{ type: "spring", damping: 25, stiffness: 200, mass: 0.8 }}
+                className="absolute inset-0 z-[60] bg-[#FAF8F3] flex flex-col shadow-[0_-10px_30px_rgba(0,0,0,0.1)] pointer-events-auto"
+                style={{ willChange: "transform, opacity, border-radius" }}
+                onClick={(e) => e.stopPropagation()}
+                onWheel={(e) => e.stopPropagation()} // Stop scroll bubbling
+                onTouchMove={(e) => e.stopPropagation()}
+              >
+              <FocusLock returnFocus className="flex flex-col h-full w-full">
+                {/* Header */}
               <div className="flex items-center justify-between px-5 py-4 border-b border-[#E8E4DC]">
                 <div className="flex items-center gap-2">
                   <BookOpen className="w-4 h-4 text-[#B5A48B]" />
@@ -165,17 +256,11 @@ const ThoughtAtom: React.FC<ThoughtAtomProps> = ({
                 </div>
                 <div className="flex items-center gap-2">
                   <button
-                    onClick={(e) => { e.stopPropagation(); e.preventDefault(); setIsChatOpen(true); }}
-                    className="flex items-center gap-1 px-2.5 py-1.5 rounded-xl bg-[#1C1C1E] text-[#FAF8F3] hover:bg-[#2C2C2E] text-[9px] font-bold transition-all active:scale-95"
-                  >
-                    <MessageCircle className="w-3 h-3" />
-                    <span>Debate</span>
-                  </button>
-                  <button
                     onClick={(e) => {
                       e.stopPropagation();
                       handleCloseDeepDive();
                     }}
+                    aria-label="Close Deep Dive"
                     className="w-7 h-7 rounded-full bg-[#F0EDE6] hover:bg-[#E8E4DC] flex items-center justify-center text-[#1C1C1E] transition-all"
                   >
                     <X className="w-3.5 h-3.5" />
@@ -218,14 +303,14 @@ const ThoughtAtom: React.FC<ThoughtAtomProps> = ({
                 End of Essay
               </div>
 
+              </FocusLock>
             </motion.div>
           )}
         </AnimatePresence>,
         document.getElementById("phone-device-emulation") || document.body
       )}
 
-      {/* Socratic Chat Overlay */}
-      {createPortal(
+      {isActive && createPortal(
         <AnimatePresence>
           {isChatOpen && (
             <SocraticChat
@@ -242,35 +327,17 @@ const ThoughtAtom: React.FC<ThoughtAtomProps> = ({
   );
 };
 
-/**
- * Typewriter text component for kinetic typography
- */
 const TypewriterText = ({ text, className, speed = 0.04, delay = 0.2 }: { text: string; className?: string; speed?: number; delay?: number }) => {
-  const container: Variants = {
-    hidden: { opacity: 1 },
-    visible: {
-      opacity: 1,
-      transition: { staggerChildren: speed, delayChildren: delay },
-    },
-  };
-  const child: Variants = {
-    hidden: { opacity: 0, y: 5 },
-    visible: { opacity: 1, y: 0 },
-  };
-
   return (
     <motion.span
       className={className}
-      variants={container}
-      initial="hidden"
-      whileInView="visible"
-      viewport={{ once: false, amount: 0.5 }}
+      initial={{ opacity: 0, y: 5 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.6, delay: delay, ease: "easeOut" }}
+      viewport={{ once: true, amount: 0.1 }}
+      style={{ display: "inline-block", willChange: "transform, opacity" }}
     >
-      {text.split("").map((char, index) => (
-        <motion.span key={index} variants={child}>
-          {char}
-        </motion.span>
-      ))}
+      {text}
     </motion.span>
   );
 };
@@ -284,6 +351,7 @@ const Monogram = ({ philosopher }: { philosopher: string }) => (
     whileInView={{ scale: 1, opacity: 0.07 }}
     transition={{ duration: 1.2, ease: "easeOut" }}
     viewport={{ once: false, amount: 0.2 }}
+    style={{ willChange: "transform, opacity" }}
     className="atom-monogram absolute left-[-1.5rem] top-1/2 -translate-y-1/2 font-[var(--font-literary)] text-[14rem] font-semibold text-[#1C1C1E] leading-none pointer-events-none select-none z-0"
   >
     {getInitials(philosopher).charAt(0)}
@@ -303,14 +371,62 @@ const titleAnim = {
 
 const descAnim = {
   hidden: { opacity: 0, y: 10 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.8, delay: 0.8 } }
+  visible: { opacity: 1, y: 0, transition: { duration: 0.8, delay: 0.8, ease: "easeOut" } }
 };
 
 /**
  * Renders the appropriate typographic layout for a card.
  */
-function renderLayout(card: FeedCard, variant: LayoutVariant) {
+function renderLayout(card: FeedCard, variant: LayoutVariant, index: number = 0) {
   switch (variant) {
+    case "interstitial": {
+      const words = card.explore_title.split(' ');
+      const hugeWord = words[words.length - 1];
+      const restTitle = words.slice(0, -1).join(' ') || card.topic;
+
+      return (
+        <div className="flex-1 w-full h-full bg-[#F5F0E8] relative overflow-hidden">
+          
+          {/* ENORMOUS bleeding word - pinned to top right, colliding with the edge */}
+          <motion.div 
+            initial={{ x: 50, opacity: 0 }}
+            whileInView={{ x: 0, opacity: 1 }}
+            transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
+            className="absolute top-8 -right-12 text-[14rem] sm:text-[16rem] font-serif italic tracking-tighter leading-[0.75] text-[#E6DFD3] select-none pointer-events-none z-0"
+            style={{ willChange: "transform, opacity" }}
+          >
+            {hugeWord}
+          </motion.div>
+
+          {/* Extreme tension split: Muted terracotta line physically slicing the layout */}
+          <motion.div 
+            initial={{ scaleX: 0 }}
+            whileInView={{ scaleX: 1 }}
+            transition={{ duration: 0.8, delay: 0.2, ease: "circOut" }}
+            className="absolute top-[45%] left-0 w-[65%] h-[2px] bg-[#C1694F] origin-left z-10"
+          />
+
+          {/* The rest of the title - tiny, mono, sitting exactly on the structural slice */}
+          <div className="absolute top-[45%] left-6 -translate-y-full pb-3 z-10">
+            <span className="text-[9px] font-mono uppercase tracking-[0.4em] text-[#2C2825]">
+              {restTitle}
+            </span>
+          </div>
+
+          {/* Body text: Pinned hard to the right edge, under the slice, uncomfortably narrow */}
+          <motion.div 
+            variants={descAnim} initial="hidden" whileInView="visible" viewport={{ once: false }}
+            className="absolute top-[45%] right-6 pt-6 w-[55%] z-10"
+          >
+            <p className="text-[13px] font-serif text-[#2C2825] leading-[1.65] text-right">
+              {card.explore_subtext}
+            </p>
+          </motion.div>
+          
+        </div>
+      );
+    }
+
     case "thesis":
       return (
         <div className="flex-1 flex flex-col items-center justify-center text-center px-6 pb-16 relative overflow-hidden">
@@ -404,4 +520,4 @@ function renderLayout(card: FeedCard, variant: LayoutVariant) {
   }
 }
 
-export default ThoughtAtom;
+export default React.memo(ThoughtAtom);

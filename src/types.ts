@@ -10,20 +10,13 @@ export interface Presentation {
   reading_parts: ReadingPart[];
 }
 
-export interface Preset {
-  category: "philosophy" | "arts" | "literature" | "architecture";
-  title: string;
-  icon: string;
-  text: string;
-}
-
 export interface CardData {
   explore_title: string;
   explore_subtext: string;
 }
 
 /** Typographic layout variants for the Thought Stream poster cards */
-export type LayoutVariant = "thesis" | "blockquote" | "fragment" | "epigraph";
+export type LayoutVariant = "thesis" | "blockquote" | "fragment" | "epigraph" | "interstitial";
 
 export interface FeedCard {
   id: string;
@@ -64,18 +57,6 @@ export interface SavedVaultCard {
   user_folder?: string;
 }
 
-export interface MoodAesthetic {
-  bg: string;
-  text: string;
-  sub: string;
-  accent: string;
-  border: string;
-  glow: string;
-  cardBg: string;
-  btnColor: string;
-  badgeColor: string;
-  display: string;
-}
 
 /** Relationship types for Knowledge Constellation edges */
 export type EdgeRelationship = "Influenced" | "Critiqued" | "Contradicts" | "Contemporaries" | "Inspired";

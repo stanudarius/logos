@@ -4,6 +4,10 @@ import { createServer as createViteServer } from "vite";
 import { GoogleGenAI, Type } from "@google/genai";
 import dotenv from "dotenv";
 
+import helmet from "helmet";
+import rateLimit from "express-rate-limit";
+import { z } from "zod";
+
 dotenv.config();
 
 // Initialize express app
@@ -11,7 +15,33 @@ const app = express();
 const PORT = 3000;
 
 // Middleware
+app.use(helmet({ contentSecurityPolicy: false })); // Disabled CSP for Vite dev server compatibility
 app.use(express.json());
+
+// Rate Limiting
+const apiLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 50, // limit each IP to 50 requests per windowMs
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+app.use("/api/", apiLimiter);
+
+// Validation Schemas
+const generateSchema = z.object({
+  rawText: z.string().optional().nullable(),
+  rabbitHoleContext: z.array(z.string()).optional()
+});
+
+const chatSchema = z.object({
+  philosopher: z.string().min(1),
+  topic: z.string().min(1),
+  essayContext: z.string().optional(),
+  messages: z.array(z.object({
+    role: z.enum(["user", "model"]),
+    text: z.string()
+  }))
+});
 
 // Initialize Gemini SDK server-side
 const ai = new GoogleGenAI({
@@ -27,7 +57,7 @@ const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
 // Robust fallback generator with exponential backoff
 async function generateWithFallback(params: any) {
-  const models = ["gemini-2.5-flash", "gemini-3.5-flash", "gemini-2.0-flash", "gemini-flash-latest", "gemini-2.5-flash-lite"];
+  const models = ["gemini-3.5-flash", "gemini-2.5-flash"];
   let lastError;
 
   for (const modelName of models) {
@@ -132,13 +162,17 @@ const microlearningSchema = {
   required: ["stack_id", "category", "topic", "philosopher", "visual_mood", "cards", "presentation"]
 };
 
-// API Endpoint to transform raw material into the Content Stack JSON structure using Gemini
 app.post("/api/generate", async (req, res) => {
   try {
-    let { rawText } = req.body;
+    const parsed = generateSchema.safeParse(req.body);
+    if (!parsed.success) {
+      return res.status(400).json({ error: "Invalid request payload", details: parsed.error.issues });
+    }
+    
+    let { rawText, rabbitHoleContext } = parsed.data;
 
     // If rawText is not provided or specifically set to "RANDOM" for infinite scroll feeds, generate a random subject.
-    if (!rawText || typeof rawText !== "string" || rawText.trim().length === 0 || rawText === "RANDOM") {
+    if (!rawText || rawText.trim().length === 0 || rawText === "RANDOM") {
       const randomSubjects = [
         "Friedrich Nietzsche", "Socrates", "Claude Monet", "Rembrandt", "Pablo Picasso",
         "Frida Kahlo", "Salvador Dali", "Jane Austen", "Virginia Woolf", "Homer",
@@ -156,10 +190,11 @@ app.post("/api/generate", async (req, res) => {
       });
     }
 
-    const prompt = `
+    let prompt = `
     Transform the following raw textual concepts into an elite microlearning content stack JSON package.
-    Ensure there are EXACTLY 4 sequential cards that tell a beautiful narrative arc about this subject (philosophy, arts, literature, or architecture).
-    The reading_parts must contain a coherent essay broken down into 2 to 4 parts.
+    Ensure there are EXACTLY 4 sequential cards that tell a beautiful, captivating narrative arc about this subject (philosophy, arts, literature, or architecture).
+    The insights must be exceptionally profound, avoiding clichés, and designed to induce awe and deep contemplation in the reader.
+    The reading_parts must contain a coherent, masterfully written essay broken down into 2 to 4 parts, exploring the philosophical depths of the subject.
     
     Raw Concepts to Digest:
     ---
@@ -167,12 +202,21 @@ app.post("/api/generate", async (req, res) => {
     ---
     `;
 
+    if (rabbitHoleContext && Array.isArray(rabbitHoleContext) && rabbitHoleContext.length > 0) {
+      prompt += `
+      CRITICAL INSTRUCTION (RABBIT HOLE ALGORITHM):
+      The user is currently exploring and highly engaged in these themes: ${rabbitHoleContext.join(", ")}.
+      Instead of just outputting the raw concepts, blend the raw concepts with the user's current interests. 
+      Generate 2 cards that dive deeper into their exact interests, and 2 cards that introduce adjacent, opposing, or highly provocative philosophical concepts (e.g. Absurdism vs Nihilism) to organically pull them down a rabbit hole of endless intellectual discovery. Make the transitions seamless and thought-provoking.
+      `;
+    }
+
     // Query Gemini 2.5 Flash for high performance and structured accuracy
     const response = await generateWithFallback({
       contents: prompt,
       config: {
         temperature: 0.5,
-        systemInstruction: "You are an elite, poetic university professor and master microlearning designer. You output beautiful, world-class, profound explanations entirely in English covering Philosophy, Arts, Literature, or Architecture depending on the subject. Do not output in Romanian or any other language, ensuring everything is standard, natural English. Always determine and assign the correct category in the JSON ('philosophy', 'arts', 'literature', or 'architecture').",
+        systemInstruction: "You are an elite, poetic university professor and master microlearning designer. You output beautiful, world-class, profound explanations entirely in English covering Philosophy, Arts, Literature, or Architecture depending on the subject. Your writing style is evocative, intellectually rigorous, and breathtaking. Do not output in Romanian or any other language, ensuring everything is standard, natural English. Always determine and assign the correct category in the JSON ('philosophy', 'arts', 'literature', or 'architecture').",
         responseMimeType: "application/json",
         responseSchema: microlearningSchema,
       },
@@ -197,28 +241,30 @@ app.post("/api/generate", async (req, res) => {
 // Socratic AI Tutor — conversational debate endpoint
 app.post("/api/chat", async (req, res) => {
   try {
-    const { philosopher, topic, essayContext, messages } = req.body;
+    const parsed = chatSchema.safeParse(req.body);
+    if (!parsed.success) {
+      return res.status(400).json({ error: "Invalid request payload", details: parsed.error.issues });
+    }
+    
+    const { philosopher, topic, essayContext, messages } = parsed.data;
 
     if (!process.env.GEMINI_API_KEY) {
       return res.status(500).json({ error: "GEMINI_API_KEY is not configured." });
     }
 
-    if (!philosopher || !topic) {
-      return res.status(400).json({ error: "philosopher and topic are required." });
-    }
-
     const systemInstruction = `You are ${philosopher}, the great thinker. You are having an intimate, intellectually rigorous philosophical conversation with a curious student.
 
 PERSONA RULES:
-- Speak in first person AS ${philosopher}. Use "I" and refer to your own works and ideas directly.
-- Be warm but intellectually challenging — push the student to think deeper.
-- Use the Socratic method: answer questions with provocative counter-questions when appropriate.
-- Reference your actual philosophical positions, works, and historical context accurately.
-- Keep responses concise (2-4 sentences max) to maintain a natural conversational rhythm.
-- If the student disagrees, engage genuinely — don't just agree. Defend your positions.
-- Occasionally use a memorable aphorism or quote from your actual writings.
+- Speak in first person AS ${philosopher}. Use "I" and refer to your own works, specific theories, and ideas directly.
+- Embody the exact tone, vocabulary, and worldview of ${philosopher}. If you are Nietzsche, be fiery and poetic; if you are Kant, be analytical and categorical.
+- Be warm but intellectually challenging — push the student to question their fundamental assumptions.
+- Use the Socratic method: answer questions with provocative counter-questions when appropriate to stimulate deeper thought.
+- Reference your actual philosophical positions, historical context, and major texts accurately and naturally.
+- Keep responses concise (2-4 sentences max) to maintain a natural, rapid conversational rhythm.
+- If the student disagrees or presents a flawed argument, engage genuinely. Do not blindly agree. Defend your positions vigorously but respectfully.
+- Occasionally use a memorable aphorism or quote from your actual writings to anchor your point.
 
-TOPIC CONTEXT: The conversation is about "${topic}".
+TOPIC CONTEXT: The conversation revolves around the concept of "${topic}".
 ${essayContext ? `\nESSAY BEING DISCUSSED:\n${essayContext}` : ""}`;
 
     // Build conversation history for Gemini
@@ -262,13 +308,13 @@ app.post("/api/export", async (req, res) => {
       `Thinker: ${c.philosopher}\nIdea: ${c.explore_title}\nInsight: ${c.explore_subtext}\nMy Annotation: ${c.annotation || "None"}\n`
     ).join("\n---\n");
 
-    const prompt = `Act as an eloquent editor compiling a personal 'Commonplace Book'. Weave the following saved ideas and personal annotations into a cohesive, beautifully written summary essay (about 300-500 words). Draw connections between the distinct thoughts.\n\nHere are the notes:\n${cardsContext}`;
+    const prompt = `Act as an elite literary editor compiling a personal 'Commonplace Book'. Weave the following saved ideas and personal annotations into a cohesive, beautifully written, and profound summary essay (about 300-500 words). Draw deep, unexpected connections between the distinct thoughts, elevating the user's annotations into a grand philosophical narrative.\n\nHere are the notes:\n${cardsContext}`;
 
     const response = await generateWithFallback({
       contents: prompt,
       config: {
         temperature: 0.7,
-        systemInstruction: "You are a thoughtful writer synthesizing disparate ideas into a profound narrative essay. Use markdown formatting.",
+        systemInstruction: "You are a master essayist and philosopher synthesizing disparate ideas into a profound, intellectually breathtaking narrative essay. Your writing is elegant, cohesive, and insightful. Use clear markdown formatting.",
       },
     });
 

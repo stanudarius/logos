@@ -1,19 +1,36 @@
 import React, { useState, useEffect, useCallback } from "react";
 import {
-  BookOpen, Bookmark, BookmarkCheck, Network, ArrowLeft, Timer
+  BookOpen, Bookmark, Network, ArrowLeft, Timer
 } from "lucide-react";
 import { motion } from "motion/react";
-import type { FeedCard, MoodAesthetic, SavedVaultCard } from "../types";
-import { getInitials } from "../utils/aesthetics";
+import type { FeedCard, SavedVaultCard } from "../types";
 import ThoughtStream from "./ThoughtStream";
 import CommonplaceBook from "./CommonplaceBook";
+
+const StatusBarTime = () => {
+  const [currentTime, setCurrentTime] = useState<string>("9:41");
+  useEffect(() => {
+    const updateTime = () => {
+      const now = new Date();
+      let hours = now.getHours();
+      const minutes = now.getMinutes();
+      hours = hours % 12 || 12; // 12-hour format
+      setCurrentTime(`${hours}:${minutes.toString().padStart(2, '0')}`);
+    };
+    updateTime(); // Initial set
+    const interval = setInterval(updateTime, 10000); // Check every 10 seconds
+    return () => clearInterval(interval);
+  }, []);
+  return <span className="opacity-45 text-[#1C1C1E] hidden sm:block">{currentTime}</span>;
+};
+
 
 interface PhoneEmulatorProps {
   // Display state
   phoneTab: "explore" | "vault";
   currentDisplayCards: FeedCard[];
   activeCardIndex: number;
-  activeAesthetic: MoodAesthetic;
+
   isFetchingMore: boolean;
 
   // Vault state
@@ -24,13 +41,15 @@ interface PhoneEmulatorProps {
   onFetchMore: () => void;
   onSetPhoneTab: (tab: "explore" | "vault") => void;
   onToggleSaveToVault: (idx: number) => void;
-  isCardSavedInVault: (idx: number) => boolean;
+  savedVaultCardIds: Set<string>;
   onTriggerToast: (msg: string) => void;
   onOpenConstellation?: () => void;
   onOpenZenMode?: () => void;
   onUpdateVaultCardAnnotation: (cardId: string, text: string) => void;
   onAssignToFolder: (id: string, folderName: string | undefined) => void;
   onDeleteFromVault: (id: string) => void;
+  onOpenDeepDive?: (index: number) => void;
+  onOpenChat?: (index: number) => void;
 }
 
 const PhoneEmulator: React.FC<PhoneEmulatorProps> = ({
@@ -43,15 +62,16 @@ const PhoneEmulator: React.FC<PhoneEmulatorProps> = ({
   onFetchMore,
   onSetPhoneTab,
   onToggleSaveToVault,
-  isCardSavedInVault,
+  savedVaultCardIds,
   onTriggerToast,
   onOpenConstellation,
   onOpenZenMode,
   onUpdateVaultCardAnnotation,
   onAssignToFolder,
-  onDeleteFromVault
+  onDeleteFromVault,
+  onOpenDeepDive,
+  onOpenChat
 }) => {
-  const [currentTime, setCurrentTime] = useState<string>("9:41");
   const [isSharing, setIsSharing] = useState(false);
 
   const handleShareClick = useCallback(async () => {
@@ -71,7 +91,7 @@ const PhoneEmulator: React.FC<PhoneEmulatorProps> = ({
         filter: (el) => {
           // Filter out the bookmark toggle and drawer when capturing
           if (el.tagName === 'BUTTON' && el.id?.startsWith('bookmark-toggle')) return false;
-          if (el.classList && el.classList.contains('deep-dive-drawer')) return false;
+          if (el.classList && typeof el.classList.contains === 'function' && el.classList.contains('deep-dive-drawer')) return false;
           return true;
         }
       });
@@ -91,9 +111,13 @@ const PhoneEmulator: React.FC<PhoneEmulatorProps> = ({
             files: [file]
           });
           onTriggerToast("Shared successfully!");
-        } catch (shareErr) {
-          // User might have cancelled share
-          console.log(shareErr);
+        } catch (shareErr: any) {
+          if (shareErr.name === 'AbortError') {
+            onTriggerToast("Share cancelled.");
+          } else {
+            console.error(shareErr);
+            onTriggerToast("Failed to share.");
+          }
         }
       } else {
         // Fallback to direct download
@@ -111,21 +135,6 @@ const PhoneEmulator: React.FC<PhoneEmulatorProps> = ({
     }
   }, [activeCardIndex, isSharing, currentDisplayCards, onTriggerToast]);
 
-  useEffect(() => {
-    const updateTime = () => {
-      const now = new Date();
-      let hours = now.getHours();
-      const minutes = now.getMinutes();
-      hours = hours % 12 || 12; // 12-hour format
-      setCurrentTime(`${hours}:${minutes.toString().padStart(2, '0')}`);
-    };
-    updateTime(); // Initial set
-    const interval = setInterval(updateTime, 10000); // Check every 10 seconds
-    return () => clearInterval(interval);
-  }, []);
-
-
-
   return (
     <div
       id="phone-device-emulation"
@@ -135,7 +144,7 @@ const PhoneEmulator: React.FC<PhoneEmulatorProps> = ({
       {/* Simulated top notch & Constellation Trigger */}
       <div className="relative z-50 flex justify-between items-center text-[10px] font-bold tracking-widest uppercase px-5 pt-4 pb-2 pointer-events-none">
         <div className="flex items-center gap-2">
-          <span className="opacity-45 text-[#1C1C1E] hidden sm:block">{currentTime}</span>
+          <StatusBarTime />
           
           {/* Generating Indicator (Status Bar) */}
           {isFetchingMore && (
@@ -197,85 +206,12 @@ const PhoneEmulator: React.FC<PhoneEmulatorProps> = ({
               isLoading={isFetchingMore}
               onActiveCardChange={onActiveCardChange}
               onFetchMore={onFetchMore}
-              isCardSaved={isCardSavedInVault}
+              savedVaultCardIds={savedVaultCardIds}
               onToggleSave={onToggleSaveToVault}
               onTriggerToast={onTriggerToast}
+              onOpenDeepDive={onOpenDeepDive}
+              onOpenChat={onOpenChat}
             />
-
-            {/* Static Attribution Footer Overlay */}
-            {currentDisplayCards[activeCardIndex] && (
-              <motion.div 
-                key={`footer-${currentDisplayCards[activeCardIndex].id}`}
-                initial={{ y: 100, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                transition={{ type: "spring", stiffness: 300, damping: 30, delay: 0.6 }}
-                className="absolute bottom-[60px] left-0 right-0 px-5 pb-5 z-20 pointer-events-none"
-              >
-                <div className="flex items-center justify-between border-t border-[#E8E4DC]/60 pt-3">
-                  <div className="flex items-center gap-2.5">
-                    <div className="w-9 h-9 rounded-full bg-[#1C1C1E] flex items-center justify-center text-[#FAF8F3] text-[11px] font-serif italic shadow-sm flex-shrink-0">
-                      {getInitials(currentDisplayCards[activeCardIndex].philosopher)}
-                    </div>
-                    <div>
-                      <p className="text-[11px] font-semibold text-[#1C1C1E] tracking-tight leading-none mb-0.5">
-                        {currentDisplayCards[activeCardIndex].philosopher}
-                      </p>
-                      <p className="text-[9px] font-normal text-[#B5A48B] tracking-wide uppercase truncate max-w-[160px]">
-                        {currentDisplayCards[activeCardIndex].presentation?.title || currentDisplayCards[activeCardIndex].topic}
-                      </p>
-                      {/* 4-card Sequence Progress Indicator */}
-                      <div className="flex items-center gap-1 mt-1.5">
-                        {(() => {
-                          const currentCard = currentDisplayCards[activeCardIndex];
-                          let cardSequence = 1;
-                          const genMatch = currentCard.id.match(/_card_(\d+)_/);
-                          if (genMatch) {
-                            cardSequence = parseInt(genMatch[1], 10) + 1;
-                          } else {
-                            const match = currentCard.id.match(/_(\d+)$/);
-                            cardSequence = match ? parseInt(match[1], 10) : 1;
-                          }
-                          return [...Array(4)].map((_, i) => (
-                            <div
-                              key={i}
-                              className={`h-[2px] w-2.5 rounded-full transition-all ${
-                                i < cardSequence ? "bg-[#B5A48B]" : "bg-[#E8E4DC]"
-                              }`}
-                            />
-                          ));
-                        })()}
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Bookmark toggle */}
-                  <button
-                    id={`bookmark-toggle-btn-${activeCardIndex}`}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      onToggleSaveToVault(activeCardIndex);
-                    }}
-                    className={`pointer-events-auto flex items-center gap-1 text-[10px] font-semibold py-1.5 px-2.5 rounded-xl border transition-all active:scale-95 ${
-                      isCardSavedInVault(activeCardIndex)
-                        ? "bg-[#1C1C1E] border-[#1C1C1E] text-[#FAF8F3]"
-                        : "bg-white/80 border-[#E8E4DC] text-[#1C1C1E] hover:bg-white hover:border-[#D4CFC5]"
-                    }`}
-                  >
-                    {isCardSavedInVault(activeCardIndex) ? (
-                      <>
-                        <BookmarkCheck className="w-3.5 h-3.5 fill-current" />
-                        <span>Saved</span>
-                      </>
-                    ) : (
-                      <>
-                        <Bookmark className="w-3.5 h-3.5" />
-                        <span>Save</span>
-                      </>
-                    )}
-                  </button>
-                </div>
-              </motion.div>
-            )}
           </>
         )}
 
@@ -376,4 +312,4 @@ const PhoneEmulator: React.FC<PhoneEmulatorProps> = ({
   );
 };
 
-export default PhoneEmulator;
+export default React.memo(PhoneEmulator);

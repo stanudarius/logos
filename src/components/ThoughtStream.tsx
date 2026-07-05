@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useCallback, useState } from "react";
+import React, { useRef, useEffect, useCallback, useState, memo } from "react";
 import type { FeedCard, LayoutVariant } from "../types";
 import ThoughtAtom from "./ThoughtAtom";
 
@@ -9,67 +9,99 @@ interface ThoughtStreamProps {
   isLoading: boolean;
   onActiveCardChange: (index: number) => void;
   onFetchMore: () => void;
-  isCardSaved: (index: number) => boolean;
+  savedVaultCardIds: Set<string>;
   onToggleSave: (index: number) => void;
   onTriggerToast: (msg: string) => void;
+  onOpenDeepDive?: (index: number) => void;
+  onOpenChat?: (index: number) => void;
 }
 
 /**
  * ThoughtStream — CSS scroll-snap container for the vertical "TikTok" feed.
- * Uses IntersectionObserver for tracking the active card and triggering
- * infinite scroll at the bottom. Hardware-accelerated via native scrolling.
+ * Tracks active card via scroll events and infinite scroll at the bottom.
  */
 const ThoughtStream: React.FC<ThoughtStreamProps> = ({
   cards,
   isLoading,
   onActiveCardChange,
   onFetchMore,
-  isCardSaved,
+  savedVaultCardIds,
   onToggleSave,
   onTriggerToast,
+  onOpenDeepDive,
+  onOpenChat
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [activeIndex, setActiveIndex] = useState(0);
-  const observerRef = useRef<IntersectionObserver | null>(null);
+  const [mouseX, setMouseX] = useState(0);
+  const [mouseY, setMouseY] = useState(0);
+
   const sentinelObserverRef = useRef<IntersectionObserver | null>(null);
+  const sentinelRef = useRef<HTMLDivElement>(null);
 
-  // Track which card is centered via IntersectionObserver
+  // Global Parallax tracking
   useEffect(() => {
-    const container = containerRef.current;
-    if (!container) return;
+    let ticking = false;
 
-    observerRef.current = new IntersectionObserver(
-      (entries) => {
-        for (const entry of entries) {
-          if (entry.isIntersecting && entry.intersectionRatio >= 0.5) {
-            const idx = Number(
-              (entry.target as HTMLElement).dataset.cardIndex
-            );
-            if (!isNaN(idx)) {
-              setActiveIndex(idx);
-              onActiveCardChange(idx);
-            }
-          }
-        }
-      },
-      {
-        root: container,
-        threshold: 0.5,
+    const handleMouseMove = (e: MouseEvent) => {
+      if (!ticking) {
+        requestAnimationFrame(() => {
+          const x = (e.clientX / window.innerWidth - 0.5) * 20;
+          const y = (e.clientY / window.innerHeight - 0.5) * 20;
+          setMouseX(x);
+          setMouseY(y);
+          ticking = false;
+        });
+        ticking = true;
       }
-    );
+    };
 
-    const atoms = container.querySelectorAll(".thought-atom");
-    atoms.forEach((atom) => observerRef.current?.observe(atom));
+    const handleDeviceOrientation = (e: DeviceOrientationEvent) => {
+      if (e.gamma === null || e.beta === null) return;
+      if (!ticking) {
+        requestAnimationFrame(() => {
+          const x = Math.min(Math.max(e.gamma! / 4.5, -10), 10);
+          const y = Math.min(Math.max((e.beta! - 45) / 4.5, -10), 10);
+          setMouseX(x);
+          setMouseY(y);
+          ticking = false;
+        });
+        ticking = true;
+      }
+    };
+
+    window.addEventListener("mousemove", handleMouseMove, { passive: true });
+    if (typeof window !== 'undefined' && window.DeviceOrientationEvent) {
+      window.addEventListener("deviceorientation", handleDeviceOrientation, { passive: true });
+    }
 
     return () => {
-      observerRef.current?.disconnect();
+      window.removeEventListener("mousemove", handleMouseMove);
+      if (typeof window !== 'undefined' && window.DeviceOrientationEvent) {
+        window.removeEventListener("deviceorientation", handleDeviceOrientation);
+      }
     };
-  }, [cards.length, onActiveCardChange]);
+  }, []);
 
-  // Infinite scroll sentinel — observe the last 2 cards
+  // Calculate active index on scroll
+  const handleScroll = useCallback(() => {
+    const container = containerRef.current;
+    if (!container) return;
+    
+    const cardHeight = container.clientHeight;
+    if (cardHeight === 0) return;
+    
+    const newIndex = Math.round(container.scrollTop / cardHeight);
+    if (newIndex !== activeIndex && newIndex >= 0 && newIndex < cards.length) {
+      setActiveIndex(newIndex);
+      onActiveCardChange(newIndex);
+    }
+  }, [activeIndex, cards.length, onActiveCardChange]);
+
   useEffect(() => {
     const container = containerRef.current;
-    if (!container || cards.length < 2) return;
+    const sentinel = sentinelRef.current;
+    if (!container || !sentinel) return;
 
     sentinelObserverRef.current = new IntersectionObserver(
       (entries) => {
@@ -85,16 +117,12 @@ const ThoughtStream: React.FC<ThoughtStreamProps> = ({
       }
     );
 
-    const atoms = container.querySelectorAll(".thought-atom");
-    const sentinel = atoms[atoms.length - 2]; // 2nd to last card
-    if (sentinel) {
-      sentinelObserverRef.current.observe(sentinel);
-    }
+    sentinelObserverRef.current.observe(sentinel);
 
     return () => {
       sentinelObserverRef.current?.disconnect();
     };
-  }, [cards.length, onFetchMore]);
+  }, [onFetchMore]);
 
   // Keyboard navigation for desktop (scroll by card height)
   const scrollToCard = useCallback(
@@ -133,15 +161,6 @@ const ThoughtStream: React.FC<ThoughtStreamProps> = ({
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [scrollToCard]);
 
-  /** Programmatically scroll to first card (used after filter) */
-  const scrollToTop = useCallback(() => {
-    const container = containerRef.current;
-    if (!container) return;
-    container.scrollTo({ top: 0, behavior: "smooth" });
-  }, []);
-
-  // Expose scrollToTop via ref-based imperative handle
-  // (parent can also just re-render with new cards which resets scroll)
   useEffect(() => {
     // Reset scroll position when cards array is re-ordered (filter by thinker)
     const container = containerRef.current;
@@ -153,6 +172,7 @@ const ThoughtStream: React.FC<ThoughtStreamProps> = ({
   return (
     <div
       ref={containerRef}
+      onScroll={handleScroll}
       className="thought-stream h-full w-full overflow-y-auto snap-y snap-mandatory scroll-smooth"
       style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }} // Hide scrollbar for a cleaner look
     >
@@ -160,15 +180,21 @@ const ThoughtStream: React.FC<ThoughtStreamProps> = ({
         <ThoughtAtom
           key={card.id}
           card={card}
-          layoutVariant={LAYOUT_CYCLE[index % LAYOUT_CYCLE.length]}
+          layoutVariant={card.layoutVariant || LAYOUT_CYCLE[index % LAYOUT_CYCLE.length]}
           index={index}
-          isSaved={isCardSaved(index)}
-          onToggleSave={() => onToggleSave(index)}
+          isSaved={savedVaultCardIds.has(card.id)}
+          isActive={index === activeIndex}
+          mouseX={mouseX}
+          mouseY={mouseY}
+          onToggleSave={onToggleSave}
           onTriggerToast={onTriggerToast}
+          onOpenDeepDive={onOpenDeepDive}
+          onOpenChat={onOpenChat}
         />
       ))}
+      <div ref={sentinelRef} className="h-4 w-full flex-shrink-0" aria-hidden="true" />
     </div>
   );
 };
 
-export default ThoughtStream;
+export default memo(ThoughtStream);

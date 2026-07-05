@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { X, Play, Pause, RotateCcw } from "lucide-react";
-import type { MoodAesthetic } from "../types";
+
 
 interface ZenModeProps {
-  aesthetic: MoodAesthetic;
+
   onClose: () => void;
   onSessionComplete: () => void;
 }
@@ -26,9 +26,20 @@ const SOUNDSCAPES = [
  * Creates a procedural ambient soundscape using the Web Audio API.
  * Returns a cleanup function that stops and disconnects all nodes.
  */
+let sharedAudioContext: AudioContext | null = null;
+function getAudioContext() {
+  if (!sharedAudioContext || sharedAudioContext.state === "closed") {
+    sharedAudioContext = new AudioContext();
+  }
+  return sharedAudioContext;
+}
+
 function createSoundscape(type: string, volume: number): (() => void) | null {
   try {
-    const ctx = new AudioContext();
+    const ctx = getAudioContext();
+    if (ctx.state === "suspended") {
+      ctx.resume();
+    }
     const gain = ctx.createGain();
     gain.gain.value = volume;
     gain.connect(ctx.destination);
@@ -49,7 +60,7 @@ function createSoundscape(type: string, volume: number): (() => void) | null {
       source.connect(bandpass);
       bandpass.connect(gain);
       source.start();
-      return () => { source.stop(); ctx.close(); };
+      return () => { source.stop(); gain.disconnect(); };
     }
 
     if (type === "fire") {
@@ -72,7 +83,7 @@ function createSoundscape(type: string, volume: number): (() => void) | null {
       source.connect(lowpass);
       lowpass.connect(gain);
       source.start();
-      return () => { source.stop(); ctx.close(); };
+      return () => { source.stop(); gain.disconnect(); };
     }
 
     if (type === "lofi") {
@@ -103,17 +114,16 @@ function createSoundscape(type: string, volume: number): (() => void) | null {
       source.connect(lowpass);
       lowpass.connect(gain);
       source.start();
-      return () => { source.stop(); ctx.close(); };
+      return () => { source.stop(); gain.disconnect(); };
     }
 
-    ctx.close();
     return null;
   } catch {
     return null;
   }
 }
 
-const ZenMode: React.FC<ZenModeProps> = ({ aesthetic, onClose, onSessionComplete }) => {
+const ZenMode: React.FC<ZenModeProps> = ({ onClose, onSessionComplete }) => {
   const [selectedDuration, setSelectedDuration] = useState(DURATION_PRESETS[2].seconds);
   const [timeRemaining, setTimeRemaining] = useState(DURATION_PRESETS[2].seconds);
   const [isRunning, setIsRunning] = useState(false);
