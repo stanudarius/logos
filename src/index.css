@@ -64,11 +64,24 @@
 /* ================================================
    BASE
    ================================================ */
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
 body {
   font-family: var(--font-sans);
   background-color: var(--color-parchment, #FAF8F3);
   color: var(--color-ink, #1C1C1E);
   overflow-x: hidden;
+  overscroll-behavior-y: none;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+input, textarea {
+  -webkit-user-select: auto;
+  user-select: auto;
 }
 
 /* Accessible focus ring */

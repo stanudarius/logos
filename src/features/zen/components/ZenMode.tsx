@@ -65,12 +65,11 @@ function createSoundscape(type: string, volume: number): (() => void) | null {
       const source = ctx.createBufferSource();
       source.buffer = buffer;
       source.loop = true;
-      const bandpass = ctx.createBiquadFilter();
-      bandpass.type = "bandpass";
-      bandpass.frequency.value = 800;
-      bandpass.Q.value = 0.5;
-      source.connect(bandpass);
-      bandpass.connect(gain);
+      const lowpass = ctx.createBiquadFilter();
+      lowpass.type = "lowpass";
+      lowpass.frequency.value = 800; // Brown noise characteristic
+      source.connect(lowpass);
+      lowpass.connect(gain);
       source.start();
       return () => { source.stop(); gain.disconnect(); };
     }
@@ -117,7 +116,7 @@ const ZenMode: React.FC<ZenModeProps> = ({ onClose, onSessionComplete }) => {
     }
 
     if (isRunning && selectedSound !== "silence") {
-      cleanupAudioRef.current = createSoundscape(selectedSound, 0.3);
+      cleanupAudioRef.current = createSoundscape(selectedSound, 1.5);
     }
 
     return () => {

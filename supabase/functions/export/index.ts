@@ -33,7 +33,7 @@ serve(async (req) => {
 
     const response = await ai.models.generateContent({
       contents: prompt,
-      model: "gemini-2.5-flash",
+      model: "gemini-3.5-flash",
       config: {
         temperature: 0.7,
         systemInstruction: "You are a master essayist and philosopher synthesizing disparate ideas into a profound, intellectually breathtaking narrative essay. Your writing is elegant, cohesive, and insightful. Use clear markdown formatting.",

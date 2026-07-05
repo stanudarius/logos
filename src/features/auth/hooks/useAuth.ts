@@ -42,6 +42,9 @@ export function useAuth() {
           setIsLoading(false);
         }
       }
+    }).catch((err) => {
+      console.error("Auth session error:", err);
+      if (isMounted) setIsLoading(false);
     });
 
     const {

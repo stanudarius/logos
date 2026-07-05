@@ -14,7 +14,7 @@ export const MobileTabBar: React.FC<MobileTabBarProps> = ({
   savedVaultCardsCount,
 }) => {
   return (
-    <div className="sm:hidden relative z-20 bg-[#FAF8F3] pb-safe">
+    <div className="sm:hidden relative z-20 bg-[#FAF8F3] pb-[max(env(safe-area-inset-bottom),0.5rem)]">
       <div className="flex items-end justify-around pt-2 pb-2 px-2 pointer-events-auto">
         {NAV_TABS.map(({ id, label, Icon }) => {
           const isActive = id === activeTabId;

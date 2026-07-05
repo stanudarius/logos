@@ -41,9 +41,9 @@ ${essayContext ? `\nESSAY BEING DISCUSSED:\n${essayContext}` : ""}`;
 
     const response = await ai.models.generateContent({
       contents,
-      model: "gemini-2.5-flash",
+      model: "gemini-3.5-flash",
       config: {
-        temperature: 0.8,
+        temperature: 0.7,
         systemInstruction,
         maxOutputTokens: 800,
       },

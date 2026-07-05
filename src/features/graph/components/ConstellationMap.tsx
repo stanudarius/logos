@@ -215,7 +215,7 @@ export const ConstellationMap: React.FC<ConstellationMapProps> = React.memo(({ o
       <div className="fixed inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-white/[0.03] via-transparent to-transparent opacity-80 pointer-events-none" />
       <div className="fixed inset-0 pointer-events-none" style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg width=\'60\' height=\'60\' viewBox=\'0 0 60 60\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cg fill=\'none\' fill-rule=\'evenodd\'%3E%3Cg fill=\'%23ffffff\' fill-opacity=\'0.05\'%3E%3Cpath d=\'M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z\'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")' }} />
 
-      <div className="fixed top-8 left-8 right-8 flex justify-between items-center z-20 pointer-events-none">
+      <div className="fixed top-[max(env(safe-area-inset-top),2rem)] left-8 right-8 flex justify-between items-center z-20 pointer-events-none">
         <div className="pointer-events-auto">
           <h2 className="text-white text-2xl font-serif italic tracking-tight mb-1">Knowledge Constellation</h2>
           <p className="text-white/40 text-xs tracking-widest uppercase font-mono">Tap a thinker to filter the Stream</p>
@@ -228,7 +228,7 @@ export const ConstellationMap: React.FC<ConstellationMapProps> = React.memo(({ o
         </button>
       </div>
 
-      <div className="fixed bottom-8 left-8 z-20 flex flex-wrap gap-3 pointer-events-none">
+      <div className="fixed bottom-[max(env(safe-area-inset-bottom),2rem)] left-8 z-20 flex flex-wrap gap-3 pointer-events-none">
         {(["Influenced", "Critiqued", "Contradicts", "Contemporaries", "Inspired"] as EdgeRelationship[]).map((rel) => (
           <div key={rel} className="flex items-center gap-1.5">
             <div className="w-3 h-0.5 rounded-full" style={{ backgroundColor: getRelationshipColor(rel) }} />
@@ -289,7 +289,7 @@ export const ConstellationMap: React.FC<ConstellationMapProps> = React.memo(({ o
             animate={{ y: 0 }}
             exit={{ y: "100%" }}
             transition={{ type: "spring", damping: 28, stiffness: 280 }}
-            className="fixed inset-x-0 bottom-0 z-[60] bg-[#0F0F11] border-t border-[#2A2A2E] rounded-t-3xl shadow-[0_-10px_40px_rgba(0,0,0,0.5)] p-6"
+            className="fixed inset-x-0 bottom-0 z-[60] bg-[#0F0F11] border-t border-[#2A2A2E] rounded-t-3xl shadow-[0_-10px_40px_rgba(0,0,0,0.5)] px-6 pt-6 pb-[max(env(safe-area-inset-bottom),1.5rem)]"
           >
             <div className="max-w-md mx-auto">
               <div className="flex justify-between items-start mb-6">

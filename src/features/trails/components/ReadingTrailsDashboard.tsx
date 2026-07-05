@@ -30,7 +30,7 @@ const ReadingTrailsDashboard: React.FC<ReadingTrailsDashboardProps> = React.memo
   );
 
   return (
-    <div className="h-full w-full bg-[#FAF8F3] flex flex-col pt-6 pb-20 px-4 overflow-y-auto">
+    <div className="h-full w-full bg-[#FAF8F3] flex flex-col pt-[max(env(safe-area-inset-top),1.5rem)] pb-20 px-4 overflow-y-auto">
 
       {/* ── Header ── */}
       <div className="mb-6 flex flex-col items-center justify-center text-center">

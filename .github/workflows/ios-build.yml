@@ -1,0 +1,67 @@
+name: Build iOS App (Unsigned for SideStore/AltStore)
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Build iOS IPA
+    runs-on: macos-15
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build Web App
+        run: npm run build
+        env:
+          VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
+          VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
+
+      - name: Sync Capacitor iOS
+        run: npx cap sync ios
+
+      - name: Generate Shared Scheme
+        run: |
+          gem install xcodeproj
+          ruby -e "require 'xcodeproj'; proj = Xcodeproj::Project.open('ios/App/App.xcodeproj'); proj.recreate_user_schemes; proj.save"
+
+      - name: Build Unsigned iOS App
+        run: |
+          # Build the app with code signing disabled and capture output to find errors
+          xcodebuild build \
+            -project ios/App/App.xcodeproj \
+            -scheme App \
+            -destination 'generic/platform=iOS' \
+            -configuration Release \
+            -derivedDataPath build \
+            CODE_SIGN_IDENTITY="" \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGNING_ALLOWED=NO > xcodebuild.log 2>&1 || { echo "XCODEBUILD FAILED! Printing last 100 lines:"; tail -n 100 xcodebuild.log; exit 1; }
+
+      - name: Package IPA
+        run: |
+          # Create a Payload directory
+          mkdir -p Payload
+          
+          # Move the .app folder into the Payload directory
+          mv build/Build/Products/Release-iphoneos/App.app Payload/
+          
+          # Zip it up into an .ipa file
+          zip -r Logos.ipa Payload
+
+      - name: Upload IPA Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Logos-iOS-App
+          path: Logos.ipa
+          retention-days: 7

@@ -13,7 +13,7 @@ const AnnotationInput = React.memo(({ id, initialValue, onUpdate }: { id: string
 
   return (
     <textarea
-      className="w-full bg-transparent border-t border-[#E8E4DC] pt-2 text-[11px] font-mono text-[#3A3A3E] placeholder:text-[#B5A48B]/50 resize-none outline-none focus:bg-white/60 focus:ring-1 focus:ring-[#B5A48B]/30 rounded-b min-h-[48px] transition-colors"
+      className="w-full bg-transparent border-t border-[#E8E4DC] pt-2 text-base sm:text-[11px] font-mono text-[#3A3A3E] placeholder:text-[#B5A48B]/50 resize-none outline-none focus:bg-white/60 focus:ring-1 focus:ring-[#B5A48B]/30 rounded-b min-h-[48px] transition-colors"
       placeholder="Your annotation…"
       rows={2}
       value={text}
@@ -74,7 +74,7 @@ const CommonplaceBook: React.FC<CommonplaceBookProps> = ({
     <div className="flex-1 flex flex-col overflow-hidden bg-transparent relative">
 
       {/* ── Sticky vault header ── */}
-      <div className="flex-shrink-0 px-4 pt-4 pb-3 flex justify-between items-center border-b border-[#D4CFC5]/60 bg-transparent z-20">
+      <div className="flex-shrink-0 px-4 pt-[max(env(safe-area-inset-top),1rem)] pb-3 flex justify-between items-center border-b border-[#D4CFC5]/60 bg-transparent z-20">
         <div>
           <h3 className="text-sm font-serif italic text-[#1C1C1E] font-semibold leading-tight">
             Commonplace Book
@@ -260,7 +260,7 @@ const CommonplaceBook: React.FC<CommonplaceBookProps> = ({
                     value={newFolderName}
                     onChange={(e) => setNewFolderName(e.target.value)}
                     placeholder="E.g., Stoic Toolkit"
-                    className="flex-1 bg-white border border-[#D4CFC5] rounded-lg px-3 py-1.5 text-xs outline-none focus:border-[#B5A48B] focus:ring-1 focus:ring-[#B5A48B]/30"
+                    className="flex-1 bg-white border border-[#D4CFC5] rounded-lg px-3 py-1.5 text-base sm:text-xs outline-none focus:border-[#B5A48B] focus:ring-1 focus:ring-[#B5A48B]/30"
                   />
                   <button
                     onClick={() => {

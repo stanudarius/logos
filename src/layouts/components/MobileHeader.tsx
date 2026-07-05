@@ -18,7 +18,7 @@ export const MobileHeader: React.FC<MobileHeaderProps> = ({
   const { isDeepDiveOpen } = useNavigation();
 
   return (
-    <div className={`sm:hidden absolute top-0 inset-x-0 z-50 flex justify-between items-center px-5 pt-5 pb-3 pointer-events-none transition-opacity duration-300 ${isDeepDiveOpen ? "opacity-0" : "opacity-100"}`}>
+    <div className={`sm:hidden absolute top-0 inset-x-0 z-50 flex justify-between items-center px-5 pt-[max(env(safe-area-inset-top),1.25rem)] pb-3 pointer-events-none transition-opacity duration-300 ${isDeepDiveOpen ? "opacity-0" : "opacity-100"}`}>
       {!(phoneTab === "vault" || phoneTab === "trails") && (
         <div className={`flex items-center gap-2 opacity-80 ${isDeepDiveOpen ? "pointer-events-none" : "pointer-events-auto"}`}>
           <div className="w-5 h-5 bg-black rounded flex items-center justify-center">

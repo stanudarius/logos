@@ -219,7 +219,7 @@ const ThoughtAtom: React.FC<ThoughtAtomProps> = ({
             >
               <FocusLock returnFocus autoFocus={false} className="flex flex-col h-full w-full">
                 {/* Header */}
-                <div className="flex items-center justify-between px-5 py-4 border-b border-[#E8E4DC]">
+                <div className="flex items-center justify-between px-5 pb-4 pt-[max(env(safe-area-inset-top),1rem)] border-b border-[#E8E4DC]">
                   <div className="flex items-center gap-2">
                     <BookOpen className="w-4 h-4 text-[#B5A48B]" />
                     <span className="text-[9px] font-bold font-mono uppercase tracking-[0.15em] text-[#B5A48B]">
@@ -241,7 +241,7 @@ const ThoughtAtom: React.FC<ThoughtAtomProps> = ({
                 </div>
 
                 {/* Reading content */}
-                <div className="flex-1 overflow-y-auto px-5 pt-5 pb-8 space-y-4" style={{ overscrollBehaviorY: "contain" }}>
+                <div className="flex-1 overflow-y-auto px-5 pt-5 pb-[max(env(safe-area-inset-bottom),2rem)] space-y-4" style={{ overscrollBehaviorY: "contain" }}>
                   <div className="mb-3 space-y-1.5">
                     <span className="text-[9px] font-bold font-mono uppercase tracking-[0.2em] text-[#B5A48B] block">
                       {card.topic}

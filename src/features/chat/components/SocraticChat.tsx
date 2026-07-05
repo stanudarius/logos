@@ -123,7 +123,7 @@ const SocraticChat: React.FC<SocraticChatProps> = ({
     <div className="flex-1 bg-[#FAF8F3] flex flex-col w-full h-full relative z-[60]">
       <FocusLock returnFocus autoFocus={false} className="flex flex-col h-full w-full">
         {/* Handle */}
-        <div className="flex justify-center pt-3 pb-1">
+        <div className="flex justify-center pt-[max(env(safe-area-inset-top),0.75rem)] pb-1">
         <div className="w-10 h-1 rounded-full bg-[#E8E4DC]" />
       </div>
 
@@ -247,7 +247,7 @@ const SocraticChat: React.FC<SocraticChatProps> = ({
       </div>
 
       {/* Input area */}
-      <div className="px-4 py-2 border-t border-[#E8E4DC] bg-[#FAF8F3]">
+      <div className="px-4 pt-2 pb-[max(env(safe-area-inset-bottom),0.5rem)] border-t border-[#E8E4DC] bg-[#FAF8F3]">
         <div className="relative flex items-end gap-2">
           <textarea
             ref={inputRef}

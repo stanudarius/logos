@@ -24,7 +24,8 @@ export const AppLayout: React.FC = () => {
     setActiveExploreIndex, 
     setActiveTrailIndex, 
     setIsConstellationOpen, 
-    setIsZenModeOpen 
+    setIsZenModeOpen,
+    setIsDeepDiveOpen
   } = useNavigation();
 
   const [isChatOpen, setIsChatOpen] = useState(false);
@@ -82,15 +83,16 @@ export const AppLayout: React.FC = () => {
     if (success) {
       setActiveTrailIndex(0);
       setPhoneTab("trail-view");
+      setIsDeepDiveOpen(false);
     }
-  }, [handleStartTrail, setActiveTrailIndex, setPhoneTab]);
+  }, [handleStartTrail, setActiveTrailIndex, setPhoneTab, setIsDeepDiveOpen]);
 
   return (
     <div className="w-full h-[100dvh] bg-[#FAF8F3] flex flex-col sm:flex-row overflow-hidden transition-all duration-700 ease-out font-sans text-[#1C1C1E]">
       
       <DesktopSidebar
         activeTabId={activeTabId}
-        setPhoneTab={setPhoneTab}
+        setPhoneTab={(tab) => { setPhoneTab(tab); setIsChatOpen(false); }}
         savedVaultCardsCount={savedVaultCards.length}
         setIsConstellationOpen={setIsConstellationOpen}
         setIsChatOpen={setIsChatOpen}
@@ -185,7 +187,7 @@ export const AppLayout: React.FC = () => {
 
       <MobileTabBar
         activeTabId={activeTabId}
-        setPhoneTab={setPhoneTab}
+        setPhoneTab={(tab) => { setPhoneTab(tab); setIsChatOpen(false); }}
         savedVaultCardsCount={savedVaultCards.length}
       />
     </div>

@@ -21,8 +21,8 @@ export const QuizScreen: React.FC<{ onComplete: (answers: Record<string, string>
   const question = QUIZ_QUESTIONS[currentStep];
 
   return (
-    <div className="w-full h-[100dvh] bg-[#FAF8F3] flex flex-col items-center justify-center p-6 relative overflow-hidden">
-      <div className="absolute top-12 w-full px-8 flex justify-center">
+    <div className="w-full h-[100dvh] bg-[#FAF8F3] flex flex-col items-center justify-center p-6 relative overflow-y-auto">
+      <div className="absolute top-[max(env(safe-area-inset-top),3rem)] w-full px-8 flex justify-center mt-4">
         <div className="flex gap-2">
           {QUIZ_QUESTIONS.map((_, i) => (
             <div key={i} className={`h-1 rounded-full transition-all duration-500 ${i <= currentStep ? 'w-6 bg-[#1C1C1E]' : 'w-2 bg-[#E8E4DC]'}`} />

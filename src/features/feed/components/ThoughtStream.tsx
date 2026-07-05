@@ -37,6 +37,7 @@ const ThoughtStream: React.FC<ThoughtStreamProps> = ({
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [activeIndex, setActiveIndex] = useState(0);
+  const activeIndexRef = useRef(activeIndex);
 
   const sentinelObserverRef = useRef<IntersectionObserver | null>(null);
   const sentinelRef = useRef<HTMLDivElement>(null);
@@ -76,17 +77,16 @@ const ThoughtStream: React.FC<ThoughtStreamProps> = ({
             const indexStr = entry.target.getAttribute("data-card-index");
             if (indexStr !== null) {
               const newIndex = parseInt(indexStr, 10);
-              setActiveIndex((prev) => {
-                if (prev !== newIndex) {
-                  onActiveCardChange(newIndex);
+              if (activeIndexRef.current !== newIndex) {
+                activeIndexRef.current = newIndex;
+                setActiveIndex(newIndex);
+                
+                onActiveCardChange(newIndex);
 
-                  if (newIndex >= cards.length - 2 && !isLoadingRef.current) {
-                    onFetchMoreRef.current();
-                  }
-                  return newIndex;
+                if (newIndex >= cards.length - 2 && !isLoadingRef.current) {
+                  onFetchMoreRef.current();
                 }
-                return prev;
-              });
+              }
             }
           }
         }
@@ -143,7 +143,6 @@ const ThoughtStream: React.FC<ThoughtStreamProps> = ({
     };
   }, [isActiveTab]);
 
-  const activeIndexRef = useRef(activeIndex);
   activeIndexRef.current = activeIndex;
 
   const scrollToCard = useCallback(
