@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
 import {
-  BookOpen, Bookmark, Network, ArrowLeft, Timer, Waypoints
+  BookOpen, Bookmark, Network, ArrowLeft, Timer, Waypoints, X
 } from "lucide-react";
 import { motion } from "motion/react";
 import type { FeedCard, SavedVaultCard } from "../types";
@@ -26,7 +26,6 @@ interface PhoneEmulatorProps {
   onSetPhoneTab: (tab: "explore" | "vault") => void;
   onToggleSaveToVault: (idx: number) => void;
   savedVaultCardIds: Set<string>;
-  onTriggerToast: (msg: string) => void;
   onOpenConstellation?: () => void;
   onOpenZenMode?: () => void;
   onUpdateVaultCardAnnotation: (cardId: string, text: string) => void;
@@ -44,12 +43,11 @@ const PhoneEmulator: React.FC<PhoneEmulatorProps> = ({
   activeCardIndex,
   isFetchingMore,
   savedVaultCards,
+  savedVaultCardIds,
   onActiveCardChange,
   onFetchMore,
   onSetPhoneTab,
   onToggleSaveToVault,
-  savedVaultCardIds,
-  onTriggerToast,
   onOpenConstellation,
   onOpenZenMode,
   onUpdateVaultCardAnnotation,
@@ -59,87 +57,6 @@ const PhoneEmulator: React.FC<PhoneEmulatorProps> = ({
   onOpenChat,
   onStartTrail
 }) => {
-  const [isSharing, setIsSharing] = useState(false);
-
-  const handleShareClick = useCallback(async () => {
-    if (isSharing) return;
-    setIsSharing(true);
-    try {
-      const { toPng } = await import("html-to-image");
-      const container = document.getElementById(`thought-stream-${phoneTab}`);
-      if (!container) throw new Error("Stream container not found");
-      const node = container.querySelector(`[data-card-index="${activeCardIndex}"]`) as HTMLElement;
-      if (!node) throw new Error("Card node not found");
-
-      onTriggerToast("Generating shareable image...");
-
-      // Temporarily hide the deep dive drawer and buttons if they exist
-      const dataUrl = await toPng(node, {
-        quality: 0.95,
-        pixelRatio: 2,
-        skipFonts: true, // Bypass font CORS issues
-        filter: (el) => {
-          if (el.id === 'parallax-bg') return false;
-          // Filter out the bookmark toggle and drawer when capturing
-          if (el.tagName === 'BUTTON' && el.id?.startsWith('bookmark-toggle')) return false;
-          if (el.classList && typeof el.classList.contains === 'function' && el.classList.contains('deep-dive-drawer')) return false;
-          return true;
-        }
-      });
-
-      const activeCards = phoneTab === "trail-view" ? activeTrailCards : feedCards;
-      const philosopher = activeCards[activeCardIndex]?.philosopher || "philosophy";
-      const filename = `${philosopher.replace(/\s+/g, '-').toLowerCase()}-logos.png`;
-
-      // Robustly convert dataUrl (base64) to File to avoid "Failed to fetch" on data URIs
-      const arr = dataUrl.split(',');
-      const mimeMatch = arr[0].match(/:(.*?);/);
-      const mime = mimeMatch ? mimeMatch[1] : 'image/png';
-      const bstr = atob(arr[1]);
-      let n = bstr.length;
-      const u8arr = new Uint8Array(n);
-      while (n--) {
-        u8arr[n] = bstr.charCodeAt(n);
-      }
-      const file = new File([u8arr], filename, { type: mime });
-
-      const downloadFallback = () => {
-        const link = document.createElement("a");
-        link.download = filename;
-        link.href = dataUrl;
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        onTriggerToast("Saved to downloads!");
-      };
-
-      if (navigator.canShare && navigator.canShare({ files: [file] })) {
-        try {
-          await navigator.share({
-            files: [file]
-          });
-          onTriggerToast("Shared successfully!");
-        } catch (shareErr: any) {
-          if (shareErr.name === 'AbortError') {
-            onTriggerToast("Share cancelled.");
-          } else {
-            console.error("Share failed, falling back to download:", shareErr);
-            // Fallback to direct download
-            downloadFallback();
-          }
-        }
-      } else {
-        // Fallback to direct download
-        downloadFallback();
-      }
-    } catch (err: any) {
-      console.error("Share Button Error:", err);
-      const msg = err?.message || err?.toString() || "Unknown error";
-      onTriggerToast(`Share Error: ${msg.substring(0, 40)}`);
-    } finally {
-      setIsSharing(false);
-    }
-  }, [activeCardIndex, isSharing, feedCards, activeTrailCards, phoneTab, onTriggerToast]);
 
   return (
     <div
@@ -157,14 +74,6 @@ const PhoneEmulator: React.FC<PhoneEmulatorProps> = ({
               title="Zen Mode"
             >
               <Timer className="w-5 h-5" />
-            </button>
-            <button
-              onClick={handleShareClick}
-              disabled={isSharing}
-              className="p-1.5 rounded-full backdrop-blur-md bg-[#1C1C1E]/5 hover:bg-[#1C1C1E]/15 transition-all text-[#1C1C1E] disabled:opacity-50"
-              title="Share Snapshot"
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8" /><polyline points="16 6 12 2 8 6" /><line x1="12" x2="12" y1="2" y2="15" /></svg>
             </button>
             <button
               onClick={onOpenConstellation}
@@ -186,9 +95,10 @@ const PhoneEmulator: React.FC<PhoneEmulatorProps> = ({
             onFetchMore={onFetchMore}
             savedVaultCardIds={savedVaultCardIds}
             onToggleSave={onToggleSaveToVault}
-            onTriggerToast={onTriggerToast}
             onOpenDeepDive={onOpenDeepDive}
             onOpenChat={onOpenChat}
+            isTrailMode={false}
+            isActiveTab={phoneTab === "explore"}
           />
         </div>
 
@@ -200,9 +110,10 @@ const PhoneEmulator: React.FC<PhoneEmulatorProps> = ({
             onFetchMore={onFetchMore}
             savedVaultCardIds={savedVaultCardIds}
             onToggleSave={onToggleSaveToVault}
-            onTriggerToast={onTriggerToast}
             onOpenDeepDive={onOpenDeepDive}
             onOpenChat={onOpenChat}
+            isTrailMode={phoneTab === "trail-view"}
+            isActiveTab={phoneTab === "trail-view"}
           />
         </div>
 
@@ -225,7 +136,6 @@ const PhoneEmulator: React.FC<PhoneEmulatorProps> = ({
                 <button
                   onClick={() => {
                     onSetPhoneTab("explore");
-                    onTriggerToast("Returning to the Stream.");
                   }}
                   className="group flex items-center gap-2 text-[12px] font-serif italic text-[#1C1C1E] hover:text-[#B5A48B] transition-all duration-300 mt-2"
                 >
@@ -241,7 +151,6 @@ const PhoneEmulator: React.FC<PhoneEmulatorProps> = ({
                 onUpdateAnnotation={onUpdateVaultCardAnnotation}
                 onAssignToFolder={onAssignToFolder}
                 onDeleteFromVault={onDeleteFromVault}
-                onTriggerToast={onTriggerToast}
               />
             )}
           </div>
@@ -258,7 +167,6 @@ const PhoneEmulator: React.FC<PhoneEmulatorProps> = ({
           id="phone-mode-explore-tab"
           onClick={() => {
             onSetPhoneTab("explore");
-            onTriggerToast("Switched to active Explore Feed.");
           }}
           className="flex flex-col items-center gap-1 group active:scale-95 transition-all focus:outline-none"
         >
@@ -275,7 +183,6 @@ const PhoneEmulator: React.FC<PhoneEmulatorProps> = ({
           id="phone-mode-trails-tab"
           onClick={() => {
             onSetPhoneTab("trails");
-            onTriggerToast("Opened Trails.");
           }}
           className="flex flex-col items-center gap-1 group active:scale-95 transition-all focus:outline-none"
         >
@@ -292,7 +199,6 @@ const PhoneEmulator: React.FC<PhoneEmulatorProps> = ({
           id="phone-mode-vault-tab"
           onClick={() => {
             onSetPhoneTab("vault");
-            onTriggerToast("Opened Vault.");
           }}
           className="flex flex-col items-center gap-1 active:scale-95 transition-all focus:outline-none"
         >

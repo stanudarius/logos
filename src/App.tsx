@@ -1,56 +1,22 @@
 import React, { useState, useEffect, useCallback, useRef, useMemo } from "react";
 import { AnimatePresence } from "motion/react";
 
-import { INITIAL_FEED_CARDS } from "./data/feedCards";
+
 import { getRandomInterstitial } from "./data/interstitials";
 import type { FeedCard, SavedVaultCard } from "./types";
 
-import Toast from "./components/Toast";
 import PhoneEmulator from "./components/PhoneEmulator";
 import { AuthScreen } from "./components/AuthScreen";
 import { ConstellationMap } from "./components/ConstellationMap";
 import ZenMode from "./components/ZenMode";
+import { ResetPasswordScreen } from "./components/ResetPasswordScreen";
 import { supabase } from "./lib/supabase";
 import type { Session } from "@supabase/supabase-js";
 import { READING_TRAILS } from "./data/trailsData";
 
 export default function App() {
-  const [toastMessage, setToastMessage] = useState<string | null>(null);
 
-  const [feedCards, setFeedCards] = useState<FeedCard[]>(() => {
-    const groups: Record<string, FeedCard[]> = {};
-    INITIAL_FEED_CARDS.forEach(card => {
-      if (!groups[card.philosopher]) groups[card.philosopher] = [];
-      groups[card.philosopher].push(card);
-    });
-    const philosophers = Object.keys(groups);
-    philosophers.forEach(p => groups[p].sort(() => Math.random() - 0.5));
-
-    const allInitialCards: FeedCard[] = [];
-    let cardsRemaining = true;
-    while (cardsRemaining) {
-      cardsRemaining = false;
-      const roundPhilosophers = [...philosophers].sort(() => Math.random() - 0.5);
-      roundPhilosophers.forEach(p => {
-        if (groups[p].length > 0) {
-          allInitialCards.push(groups[p].shift() as FeedCard);
-          cardsRemaining = true;
-        }
-      });
-    }
-
-    const initialFeed: FeedCard[] = [];
-    let count = 0;
-    allInitialCards.forEach(card => {
-      initialFeed.push(card);
-      count++;
-      if (count % 4 === 0) {
-        initialFeed.push(getRandomInterstitial());
-      }
-    });
-
-    return initialFeed;
-  });
+  const [feedCards, setFeedCards] = useState<FeedCard[]>([]);
   const [activeExploreIndex, setActiveExploreIndex] = useState(0);
   const [activeTrailIndex, setActiveTrailIndex] = useState(0);
   const [phoneTab, setPhoneTab] = useState<"explore" | "vault" | "trails" | "trail-view">("explore");
@@ -58,6 +24,7 @@ export default function App() {
   const [isFetchingInfinite, setIsFetchingInfinite] = useState(false);
   const [isConstellationOpen, setIsConstellationOpen] = useState(false);
   const [isZenModeOpen, setIsZenModeOpen] = useState(false);
+  const [isRecoveringPassword, setIsRecoveringPassword] = useState(false);
 
   const [activeTrailCards, setActiveTrailCards] = useState<FeedCard[]>([]);
 
@@ -108,8 +75,13 @@ export default function App() {
 
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
-      if (isMounted) setSession(session);
+    } = supabase.auth.onAuthStateChange((event, session) => {
+      if (isMounted) {
+        setSession(session);
+        if (event === 'PASSWORD_RECOVERY') {
+          setIsRecoveringPassword(true);
+        }
+      }
     });
 
     return () => {
@@ -139,10 +111,6 @@ export default function App() {
   }, [session]);
 
 
-  const triggerToast = useCallback((msg: string) => {
-    setToastMessage(msg);
-    setTimeout(() => setToastMessage(null), 2800);
-  }, []);
 
   const isFetchingInfiniteRef = useRef(false);
   const feedExhaustedRef = useRef(false);
@@ -160,11 +128,16 @@ export default function App() {
         .slice(0, 3)
         .map(([topic]) => topic);
 
+      const seenIds = feedCardsRef.current
+        .filter(c => c.layoutVariant !== "interstitial")
+        .map(c => c.base_id || c.id);
+
       const response = await fetch("/api/generate", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          rabbitHoleContext: sortedInterests.length > 0 ? sortedInterests : undefined
+          rabbitHoleContext: sortedInterests.length > 0 ? sortedInterests : undefined,
+          seenIds
         }),
       });
       
@@ -172,7 +145,6 @@ export default function App() {
          const data = await response.json();
          if (data.feed_exhausted) {
              feedExhaustedRef.current = true;
-             triggerToast("You've reached the end of the feed! Check back later.");
              return;
          }
       }
@@ -195,18 +167,18 @@ export default function App() {
             newFeed.push(getRandomInterstitial());
           }
         });
+        feedCardsRef.current = newFeed; // Update ref synchronously to prevent duplicates in rapid successive fetches
         return newFeed;
       });
     } catch (err: unknown) {
       console.error(err);
-      if (isAppMounted.current) triggerToast("Failed to fetch next sequence.");
     } finally {
       if (isAppMounted.current) {
         isFetchingInfiniteRef.current = false;
         setIsFetchingInfinite(false);
       }
     }
-  }, [triggerToast, phoneTab]);
+  }, [phoneTab]);
 
   const handleActiveCardChange = useCallback((index: number) => {
     if (phoneTab === "trail-view") {
@@ -217,22 +189,23 @@ export default function App() {
     trackCardInteraction(index, 1);
   }, [phoneTab, trackCardInteraction]);
 
-  const savedVaultCardIds = useMemo(() => new Set(savedVaultCards.map(c => c.id)), [savedVaultCards]);
+  const savedVaultCardIds = useMemo(() => new Set(savedVaultCards.map(c => c.base_id || c.id)), [savedVaultCards]);
 
   const toggleSaveToVault = useCallback(async (index: number) => {
     if (!session?.user) return;
 
     const currentDeck = phoneTab === "trail-view" ? activeTrailCardsRef.current : feedCardsRef.current;
-    const card = currentDeck[index] || INITIAL_FEED_CARDS[0];
-    const isSaved = savedVaultCardsRef.current.some(c => c.id === card.id);
+    const card = currentDeck[index];
+    if (!card) return;
+    const cardBaseId = card.base_id || card.id;
+    const isSaved = savedVaultCardsRef.current.some(c => (c.base_id || c.id) === cardBaseId);
 
     if (isSaved) {
-      const indexInVault = savedVaultCardsRef.current.findIndex(c => c.id === card.id);
+      const indexInVault = savedVaultCardsRef.current.findIndex(c => (c.base_id || c.id) === cardBaseId);
       const cardToRemove = savedVaultCardsRef.current[indexInVault];
-      setSavedVaultCards(prev => prev.filter(c => c.id !== card.id));
-      triggerToast("Removed from Vault");
+      setSavedVaultCards(prev => prev.filter(c => (c.base_id || c.id) !== cardBaseId));
       try {
-        const { error } = await supabase.from('vault_cards').delete().eq('user_id', session.user.id).eq('card_id', card.id);
+        const { error } = await supabase.from('vault_cards').delete().eq('user_id', session.user.id).eq('card_id', cardToRemove.id);
         if (error) throw error;
       } catch (err) {
         if (cardToRemove && isAppMounted.current) {
@@ -242,7 +215,6 @@ export default function App() {
             return next;
           });
         }
-        if (isAppMounted.current) triggerToast("Failed to remove. Try again.");
       }
     } else {
       const vaultCard: SavedVaultCard = {
@@ -251,7 +223,6 @@ export default function App() {
       };
       setSavedVaultCards(prev => [...prev, vaultCard]);
       trackCardInteraction(index, 3); // High signal for saving
-      triggerToast("Saved to Vault.");
       try {
         const { error } = await supabase.from('vault_cards').insert([{
           user_id: session.user.id,
@@ -261,10 +232,9 @@ export default function App() {
         if (error) throw error;
       } catch (err) {
         setSavedVaultCards(prev => prev.filter(c => c.id !== vaultCard.id));
-        triggerToast(`Failed to save: ${err?.message || JSON.stringify(err)}`);
       }
     }
-  }, [triggerToast, session, phoneTab, trackCardInteraction]);
+  }, [session, phoneTab, trackCardInteraction]);
 
   const deleteFromVault = useCallback(async (id: string) => {
     if (!session?.user) return;
@@ -272,7 +242,6 @@ export default function App() {
     const indexInVault = savedVaultCards.findIndex(c => c.id === id);
     const cardToDelete = savedVaultCards[indexInVault];
     setSavedVaultCards(prev => prev.filter(c => c.id !== id));
-    triggerToast("Card removed from vault.");
 
     try {
       const { error } = await supabase.from('vault_cards').delete().eq('user_id', session.user.id).eq('card_id', id);
@@ -285,9 +254,8 @@ export default function App() {
           return next;
         });
       }
-      if (isAppMounted.current) triggerToast("Failed to remove. Try again.");
     }
-  }, [triggerToast, session, savedVaultCards]);
+  }, [session, savedVaultCards]);
 
   const updateVaultCardAnnotation = useCallback(async (id: string, annotation: string) => {
     const cardToUpdate = savedVaultCards.find(c => c.id === id);
@@ -302,10 +270,9 @@ export default function App() {
         if (error) throw error;
       } catch (err) {
         setSavedVaultCards(prev => prev.map(c => c.id === id ? cardToUpdate : c));
-        triggerToast("Failed to update annotation.");
       }
     }
-  }, [savedVaultCards, session, triggerToast]);
+  }, [savedVaultCards, session]);
 
   const assignToFolder = useCallback(async (id: string, folderName: string | undefined) => {
     const cardToUpdate = savedVaultCards.find(c => c.id === id);
@@ -313,7 +280,6 @@ export default function App() {
 
     const newCardData = { ...cardToUpdate, user_folder: folderName };
     setSavedVaultCards(prev => prev.map(c => c.id === id ? newCardData : c));
-    triggerToast(folderName ? `Moved to ${folderName}` : "Removed from folder");
 
     if (session?.user) {
       try {
@@ -321,20 +287,17 @@ export default function App() {
         if (error) throw error;
       } catch (err) {
         setSavedVaultCards(prev => prev.map(c => c.id === id ? cardToUpdate : c));
-        triggerToast("Failed to move folder.");
       }
     }
-  }, [savedVaultCards, session, triggerToast]);
+  }, [savedVaultCards, session]);
 
   const handleZenSessionComplete = useCallback(() => {
-    triggerToast("Zen session complete!");
-  }, [triggerToast]);
+  }, []);
 
   const handleStartTrail = useCallback(async (trailId: string) => {
     const trail = READING_TRAILS.find(t => t.id === trailId);
     if (!trail) return;
 
-    triggerToast(`Loading Trail: ${trail.title}...`);
     try {
       const response = await fetch(`/api/trail/${trailId}`);
       if (!response.ok) throw new Error("Trail not found");
@@ -342,19 +305,16 @@ export default function App() {
       const trailCards: FeedCard[] = await response.json();
       
       if (trailCards.length === 0) {
-        triggerToast(`Content not yet generated for ${trail.title}.`);
         return;
       }
 
       setActiveTrailCards(trailCards);
       setActiveTrailIndex(0);
       setPhoneTab("trail-view");
-      triggerToast(`Started Trail: ${trail.title}`);
     } catch (err) {
        console.error("Failed to load trail:", err);
-       triggerToast(`Failed to load ${trail.title}.`);
     }
-  }, [triggerToast]);
+  }, []);
 
   const filterByThinker = useCallback(async (thinkerName: string) => {
     const trail = READING_TRAILS.find(t =>
@@ -368,9 +328,8 @@ export default function App() {
     if (trail) {
       handleStartTrail(trail.id);
     } else {
-       triggerToast(`No curated trail found for ${thinkerName}.`);
     }
-  }, [handleStartTrail, triggerToast]);
+  }, [handleStartTrail]);
 
   const handleOpenConstellation = useCallback(() => setIsConstellationOpen(true), []);
   const handleOpenZenMode = useCallback(() => setIsZenModeOpen(true), []);
@@ -378,11 +337,18 @@ export default function App() {
 
 
 
+  if (isRecoveringPassword) {
+    return (
+      <div className="w-full h-[100dvh] bg-[#0A0A0A] flex items-center justify-center overflow-hidden p-4 sm:p-8">
+        <ResetPasswordScreen onPasswordReset={() => setIsRecoveringPassword(false)} />
+      </div>
+    );
+  }
+
   if (!session) {
     return (
       <div className="w-full h-[100dvh] bg-[#0A0A0A] flex items-center justify-center overflow-hidden p-4 sm:p-8">
-        <Toast message={toastMessage} />
-        <AuthScreen onLoginSuccess={() => { }} onTriggerToast={triggerToast} />
+        <AuthScreen onLoginSuccess={() => { }} />
       </div>
     );
   }
@@ -390,7 +356,6 @@ export default function App() {
   return (
     <div className="w-full h-[100dvh] bg-[#0A0A0A] flex items-center justify-center overflow-hidden p-0 sm:p-8">
       <div className="w-full sm:max-w-[420px] h-full flex flex-col items-center justify-center font-sans relative">
-        <Toast message={toastMessage} />
 
         <PhoneEmulator
           phoneTab={phoneTab}
@@ -406,7 +371,6 @@ export default function App() {
           onToggleSaveToVault={toggleSaveToVault}
           savedVaultCardIds={savedVaultCardIds}
           onDeleteFromVault={deleteFromVault}
-          onTriggerToast={triggerToast}
           onOpenConstellation={handleOpenConstellation}
           onOpenZenMode={handleOpenZenMode}
           onUpdateVaultCardAnnotation={updateVaultCardAnnotation}

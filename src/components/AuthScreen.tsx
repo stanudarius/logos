@@ -4,59 +4,46 @@ import { BookOpen } from 'lucide-react';
 
 interface AuthScreenProps {
   onLoginSuccess: () => void;
-  onTriggerToast?: (message: string) => void;
 }
 
-async function checkPasswordPwned(password: string): Promise<boolean> {
-  const encoder = new TextEncoder();
-  const data = encoder.encode(password);
-  const hashBuffer = await crypto.subtle.digest('SHA-1', data);
-  const hashArray = Array.from(new Uint8Array(hashBuffer));
-  const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('').toUpperCase();
-  
-  const prefix = hashHex.slice(0, 5);
-  const suffix = hashHex.slice(5);
-
-  try {
-    const response = await fetch(`https://api.pwnedpasswords.com/range/${prefix}`);
-    if (!response.ok) return false;
-    const text = await response.text();
-    const leakedHashes = text.split('\n').map(line => line.split(':')[0].trim());
-    return leakedHashes.includes(suffix);
-  } catch (err) {
-    console.error("Error checking pwned passwords:", err);
-    return false;
-  }
-}
-
-export const AuthScreen: React.FC<AuthScreenProps> = ({ onLoginSuccess, onTriggerToast }) => {
+export const AuthScreen: React.FC<AuthScreenProps> = ({ onLoginSuccess }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState<string | null>(null);
   const [isSignUp, setIsSignUp] = useState(false);
+  const [isDelete, setIsDelete] = useState(false);
 
   const handleAuth = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setError(null);
+    setSuccess(null);
 
     try {
-      if (isSignUp) {
-        const isPwned = await checkPasswordPwned(password);
-        if (isPwned) {
-          setError("This password has been exposed in a data breach. Please choose a different password.");
-          setLoading(false);
-          return;
-        }
+      if (isDelete) {
+        // Step 1: Authenticate to prove identity
+        const { error: signInError } = await supabase.auth.signInWithPassword({ email, password });
+        if (signInError) throw new Error("Invalid email or password. Cannot delete account.");
+        
+        // Step 2: Delete via RPC
+        const { error: rpcError } = await supabase.rpc('delete_user');
+        if (rpcError) throw new Error("Failed to delete account. Did you run the SQL setup script?");
+        
+        // Step 3: Clean up session
+        await supabase.auth.signOut();
+        
+        setSuccess("Your account has been permanently deleted.");
+        setIsDelete(false);
+        setPassword('');
+        return;
+      }
 
+      if (isSignUp) {
         const { error } = await supabase.auth.signUp({ email, password });
         if (error) throw error;
-        if (onTriggerToast) {
-          onTriggerToast("Check your email for the confirmation link!");
-        } else {
-          alert("Check your email for the confirmation link!");
-        }
+        setSuccess("Check your email for the confirmation link!");
       } else {
         const { error } = await supabase.auth.signInWithPassword({ email, password });
         if (error) throw error;
@@ -65,7 +52,27 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({ onLoginSuccess, onTrigge
     } catch (err: any) {
       const msg = err.message || "An error occurred during authentication.";
       setError(msg);
-      if (onTriggerToast) onTriggerToast(msg);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleForgotPassword = async () => {
+    if (!email) {
+      setError("Please enter your email address to reset your password.");
+      return;
+    }
+    setLoading(true);
+    setError(null);
+    setSuccess(null);
+    try {
+      // Need to provide a redirectUrl if we have a specific path to handle resets
+      // Assuming default behavior for now
+      const { error } = await supabase.auth.resetPasswordForEmail(email);
+      if (error) throw error;
+      setSuccess("Password reset link sent! Check your email.");
+    } catch (err: any) {
+      setError(err.message || "Failed to send reset link.");
     } finally {
       setLoading(false);
     }
@@ -104,22 +111,57 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({ onLoginSuccess, onTrigge
           </div>
           
           {error && <p className="text-red-400 text-xs text-center">{error}</p>}
+          {success && <p className="text-emerald-400 text-xs text-center">{success}</p>}
           
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-white text-black font-semibold rounded-xl px-4 py-3 text-sm hover:bg-neutral-200 transition-colors active:scale-[0.98] disabled:opacity-50"
+            className={`w-full font-semibold rounded-xl px-4 py-3 text-sm transition-colors active:scale-[0.98] disabled:opacity-50 ${
+              isDelete 
+                ? "bg-red-500/20 text-red-500 hover:bg-red-500/30 border border-red-500/50" 
+                : "bg-white text-black hover:bg-neutral-200"
+            }`}
           >
-            {loading ? "Processing..." : (isSignUp ? "Create Account" : "Sign In")}
+            {loading ? "Processing..." : isDelete ? "Permanently Delete Account" : isSignUp ? "Create Account" : "Sign In"}
           </button>
         </form>
 
-        <div className="mt-6 text-center">
-          <button 
-            onClick={() => setIsSignUp(!isSignUp)}
-            className="text-xs text-neutral-400 hover:text-white transition-colors"
+        <div className="mt-6 flex flex-col items-center gap-4">
+          {!isDelete && (
+            <button 
+              onClick={() => {
+                setIsSignUp(!isSignUp);
+                setError(null);
+                setSuccess(null);
+              }}
+              type="button"
+              className="text-xs text-neutral-400 hover:text-white transition-colors"
+            >
+              {isSignUp ? "Already have an account? Sign in." : "Need an account? Sign up."}
+            </button>
+          )}
+
+          {!isSignUp && !isDelete && (
+            <button
+              onClick={handleForgotPassword}
+              type="button"
+              className="text-xs text-neutral-500 hover:text-white transition-colors"
+            >
+              Forgot your password?
+            </button>
+          )}
+
+          <button
+            onClick={() => {
+              setIsDelete(!isDelete);
+              setIsSignUp(false);
+              setError(null);
+              setSuccess(null);
+            }}
+            type="button"
+            className={`text-xs transition-colors ${isDelete ? "text-neutral-400 hover:text-white" : "text-red-500/60 hover:text-red-500"}`}
           >
-            {isSignUp ? "Already have an account? Sign in." : "Need an account? Sign up."}
+            {isDelete ? "Cancel deletion, go back to sign in." : "Delete Account"}
           </button>
         </div>
       </div>

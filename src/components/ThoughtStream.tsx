@@ -11,13 +11,14 @@ interface ThoughtStreamProps {
   onFetchMore: () => void;
   savedVaultCardIds: Set<string>;
   onToggleSave: (index: number) => void;
-  onTriggerToast: (msg: string) => void;
   onOpenDeepDive?: (index: number) => void;
   onOpenChat?: (index: number) => void;
+  isTrailMode?: boolean;
+  isActiveTab?: boolean;
 }
 
 /**
- * ThoughtStream — CSS scroll-snap container for the vertical "TikTok" feed.
+ * ThoughtStream — CSS scroll-snap container for the vertical feed.
  * Tracks active card via scroll events and infinite scroll at the bottom.
  */
 const ThoughtStream: React.FC<ThoughtStreamProps> = ({
@@ -27,9 +28,10 @@ const ThoughtStream: React.FC<ThoughtStreamProps> = ({
   onFetchMore,
   savedVaultCardIds,
   onToggleSave,
-  onTriggerToast,
   onOpenDeepDive,
-  onOpenChat
+  onOpenChat,
+  isTrailMode = false,
+  isActiveTab = true
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [activeIndex, setActiveIndex] = useState(0);
@@ -46,6 +48,14 @@ const ThoughtStream: React.FC<ThoughtStreamProps> = ({
 
   // Active card tracking via IntersectionObserver (O(1) performance instead of onScroll reflows)
   useEffect(() => {
+    if (!isActiveTab) {
+      if (cardObserverRef.current) {
+        cardObserverRef.current.disconnect();
+        cardObserverRef.current = null;
+      }
+      return;
+    }
+
     const container = containerRef.current;
     if (!container) return;
 
@@ -82,8 +92,12 @@ const ThoughtStream: React.FC<ThoughtStreamProps> = ({
     const atoms = container.querySelectorAll(".thought-atom");
     atoms.forEach((atom) => cardObserverRef.current?.observe(atom));
 
-    return () => cardObserverRef.current?.disconnect();
-  }, [cards.length, onActiveCardChange]);
+    return () => {
+      if (cardObserverRef.current) {
+        cardObserverRef.current.disconnect();
+      }
+    };
+  }, [cards.length, onActiveCardChange, isActiveTab]);
 
   const onFetchMoreRef = useRef(onFetchMore);
   useEffect(() => {
@@ -91,6 +105,14 @@ const ThoughtStream: React.FC<ThoughtStreamProps> = ({
   }, [onFetchMore]);
 
   useEffect(() => {
+    if (!isActiveTab) {
+      if (sentinelObserverRef.current) {
+        sentinelObserverRef.current.disconnect();
+        sentinelObserverRef.current = null;
+      }
+      return;
+    }
+
     const container = containerRef.current;
     const sentinel = sentinelRef.current;
     if (!container || !sentinel) return;
@@ -113,9 +135,11 @@ const ThoughtStream: React.FC<ThoughtStreamProps> = ({
     sentinelObserverRef.current.observe(sentinel);
 
     return () => {
-      sentinelObserverRef.current?.disconnect();
+      if (sentinelObserverRef.current) {
+        sentinelObserverRef.current.disconnect();
+      }
     };
-  }, []);
+  }, [isActiveTab]);
 
   // Keyboard navigation for desktop (scroll by card height)
   const scrollToCard = useCallback(
@@ -174,14 +198,20 @@ const ThoughtStream: React.FC<ThoughtStreamProps> = ({
           card={card}
           layoutVariant={card.layoutVariant || LAYOUT_CYCLE[index % LAYOUT_CYCLE.length]}
           index={index}
-          isSaved={savedVaultCardIds.has(card.id)}
+          isSaved={savedVaultCardIds.has(card.base_id || card.id)}
           isActive={index === activeIndex}
           onToggleSave={onToggleSave}
-          onTriggerToast={onTriggerToast}
           onOpenDeepDive={onOpenDeepDive}
           onOpenChat={onOpenChat}
+          isTrailMode={isTrailMode}
         />
       ))}
+      {cards.length === 0 && isLoading && (
+        <div className="absolute inset-0 flex flex-col items-center justify-center opacity-50 space-y-4">
+          <div className="w-6 h-6 border-2 border-[#1C1C1E] border-t-transparent rounded-full animate-spin" />
+          <p className="text-[10px] font-mono tracking-widest uppercase text-[#1C1C1E]">Summoning Thoughts...</p>
+        </div>
+      )}
       <div ref={sentinelRef} className="h-4 w-full flex-shrink-0" aria-hidden="true" />
     </div>
   );
