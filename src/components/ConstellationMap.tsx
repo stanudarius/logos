@@ -117,9 +117,6 @@ const ConstellationNode = React.memo(({
     } else if (node.group === "arts") {
       c = "bg-purple-300";
       g = "shadow-[0_0_15px_rgba(216,180,254,0.5)]";
-    } else if (node.group === "architecture") {
-      c = "bg-emerald-300";
-      g = "shadow-[0_0_15px_rgba(110,231,183,0.5)]";
     }
     return { colorClass: c, glowClass: g };
   }, [node.group]);

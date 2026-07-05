@@ -50,7 +50,7 @@ export interface Node {
   label: string;
   x: number; // Percentage 0-100
   y: number; // Percentage 0-100
-  group: "ancient" | "stoic" | "existential" | "literature" | "arts" | "architecture";
+  group: "ancient" | "stoic" | "existential" | "literature" | "arts";
 }
 
 /** Relationship types for Knowledge Constellation edges */
@@ -72,3 +72,4 @@ export interface ReadingTrail {
   description: string;
   thinkerIds: string[]; // e.g. ["epictetus", "marcus", "seneca"]
 }
+

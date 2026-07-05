@@ -1963,7 +1963,7 @@
     {
       "id": "manual_arch_corbusier_01_card_0",
       "stack_id": "arch_corbusier_01",
-      "category": "architecture",
+      "category": "arts",
       "topic": "The Machine for Living",
       "philosopher": "Le Corbusier",
       "visual_mood": "amber_glow",
@@ -1987,7 +1987,7 @@
     {
       "id": "manual_arch_corbusier_01_card_1",
       "stack_id": "arch_corbusier_01",
-      "category": "architecture",
+      "category": "arts",
       "topic": "The Machine for Living",
       "philosopher": "Le Corbusier",
       "visual_mood": "amber_glow",
@@ -2011,7 +2011,7 @@
     {
       "id": "manual_arch_corbusier_01_card_2",
       "stack_id": "arch_corbusier_01",
-      "category": "architecture",
+      "category": "arts",
       "topic": "The Machine for Living",
       "philosopher": "Le Corbusier",
       "visual_mood": "amber_glow",
@@ -2035,7 +2035,7 @@
     {
       "id": "manual_arch_corbusier_01_card_3",
       "stack_id": "arch_corbusier_01",
-      "category": "architecture",
+      "category": "arts",
       "topic": "The Machine for Living",
       "philosopher": "Le Corbusier",
       "visual_mood": "amber_glow",
@@ -2052,6 +2052,2138 @@
           {
             "part_number": 2,
             "text": "By formulating his 'Five Points of Architecture', he freed the wall from its structural duties, allowing light and space to pour in. His concrete pilotis lifted buildings off the ground, reconnecting humanity with the earth, while his roof gardens reclaimed the footprint of the structure, forging a stark, controversial, yet undeniable new paradigm."
+          }
+        ]
+      }
+    }
+  ],
+  "socratic-method_socrates": [
+    {
+      "id": "socratic-method_socrates_card_0",
+      "stack_id": "socratic-method_socrates",
+      "category": "philosophy",
+      "topic": "The Elenchus",
+      "philosopher": "Socrates",
+      "visual_mood": "bg-stone-900",
+      "explore_title": "The Art of Midwifery",
+      "explore_subtext": "Truth is not taught, but painfully recollected through structured cross-examination.",
+      "layoutVariant": "thesis",
+      "presentation": {
+        "title": "The Awakening of Ignorance",
+        "reading_parts": [
+          {
+            "part_number": 1,
+            "text": "The Socratic method, or elenchus, is not a pedagogical transmission of information but an existential purge. Socrates operated on the radical premise that the human soul already contains the seeds of truth, buried under layers of unexamined dogma and social conditioning. By positioning himself as an intellectual midwife, he did not profess to give birth to ideas, but rather to assist others in delivering their own latent insights.\n\nTo achieve this, one must first be brought to a state of aporia—an intellectual impasse where previous certainties dissolve into nothingness. This state of conscious confusion is the necessary matrix for genuine philosophical inquiry. True wisdom begins only when the illusion of knowledge is stripped away, leaving a fertile clearing of recognized ignorance."
+          }
+        ]
+      }
+    },
+    {
+      "id": "socratic-method_socrates_card_1",
+      "stack_id": "socratic-method_socrates",
+      "category": "philosophy",
+      "topic": "The Gadfly's Sting",
+      "philosopher": "Socrates",
+      "visual_mood": "bg-amber-950",
+      "explore_title": "The Civic Provocation",
+      "explore_subtext": "An unexamined society is as dangerous as an unexamined life.",
+      "layoutVariant": "blockquote",
+      "presentation": {
+        "title": "The Cost of Confrontation",
+        "reading_parts": [
+          {
+            "part_number": 1,
+            "text": "Socrates did not practice philosophy in the quiet isolation of an academy; he weaponized dialogue in the public square. By challenging the assumptions of Athens' elite, he exposed the fragile foundations of political power and civic pride. This relentless questioning earned him the title of the 'gadfly'—an annoying entity stinging a sluggish, complacent horse into consciousness.\n\nThis provocation created an irreconcilable conflict between individual critical thought and state stability. The state requires obedience and myth; Socrates demanded truth and autonomy. His subsequent execution was not a historical accident, but the inevitable defense mechanism of a society terrified of looking into its own ideological abyss."
+          }
+        ]
+      }
+    },
+    {
+      "id": "socratic-method_socrates_card_2",
+      "stack_id": "socratic-method_socrates",
+      "category": "philosophy",
+      "topic": "Intellectual Humility",
+      "philosopher": "Socrates",
+      "visual_mood": "bg-slate-900",
+      "explore_title": "The Oracle's Riddle",
+      "explore_subtext": "Knowing that you know nothing is the ultimate paradox of wisdom.",
+      "layoutVariant": "fragment",
+      "presentation": {
+        "title": "The Oracle and the Abyss",
+        "reading_parts": [
+          {
+            "part_number": 1,
+            "text": "When the Delphic Oracle declared Socrates the wisest man in Athens, he was profoundly disturbed. He set out to disprove the oracle by interviewing those with reputations for wisdom, only to find their knowledge was a mirage. He realized his singular advantage lay not in possessing vast knowledge, but in understanding the boundaries of his own intellect.\n\nThis nuance transforms humility from a passive virtue into an active epistemological tool. To know that you do not know is to remain perpetually open to the universe. It shifts philosophy from a pursuit of dogmatic answers to an eternal relationship with the question itself, elevating the process of inquiry above the destination."
+          }
+        ]
+      }
+    },
+    {
+      "id": "socratic-method_socrates_card_3",
+      "stack_id": "socratic-method_socrates",
+      "category": "philosophy",
+      "topic": "The Examined Life",
+      "philosopher": "Socrates",
+      "visual_mood": "bg-zinc-900",
+      "explore_title": "The Eternal Mirror",
+      "explore_subtext": "Living mechanically is a form of spiritual sleepwalking.",
+      "layoutVariant": "epigraph",
+      "presentation": {
+        "title": "The Architecture of the Soul",
+        "reading_parts": [
+          {
+            "part_number": 1,
+            "text": "Socrates' ultimate legacy is summarized in his timeless dictum: 'The unexamined life is not worth living.' He asserted that to exist without inspecting your values, desires, and motives is to forfeit human agency, reducing life to mere biological survival. Philosophy is thus recontextualized as an urgent ethical imperative.\n\nBy dying for his right to question, Socrates established the independent intellectual as Western culture's moral conscience. His legacy is the realization that true sovereignty is found within. We are tasked with building an internal citadel of reason capable of standing firm against the currents of conformity and collective delusion."
+          }
+        ]
+      }
+    }
+  ],
+  "ideal-forms_plato": [
+    {
+      "id": "ideal-forms_plato_card_0",
+      "stack_id": "ideal-forms_plato",
+      "category": "philosophy",
+      "topic": "The Theory of Forms",
+      "philosopher": "Plato",
+      "visual_mood": "bg-blue-950",
+      "explore_title": "The Realm of the Perfect",
+      "explore_subtext": "Our material world is merely a shifting shadow of an eternal, unchanging reality.",
+      "layoutVariant": "thesis",
+      "presentation": {
+        "title": "Beyond the Veil of Sense",
+        "reading_parts": [
+          {
+            "part_number": 1,
+            "text": "Plato posited a radical bifurcation of reality. The physical world we perceive through our senses is not ultimate reality, but a realm of constant flux, decay, and imperfection. True reality exists in a transcendent, non-material realm populated by the Forms or Ideas—perfect, eternal, and immutable archetypes of all things.\n\nEvery beautiful object, every just act, and every circle drawn in the sand is merely a flawed, fleeting participation in the absolute Forms of Beauty, Justice, and Circularity. The philosopher’s task is to look past the deceptive noise of sensory data and align the intellect with these eternal truths, which serve as the invisible scaffolding of the cosmos."
+          }
+        ]
+      }
+    },
+    {
+      "id": "ideal-forms_plato_card_1",
+      "stack_id": "ideal-forms_plato",
+      "category": "philosophy",
+      "topic": "The Allegory of the Cave",
+      "philosopher": "Plato",
+      "visual_mood": "bg-neutral-950",
+      "explore_title": "The Tyranny of Shadows",
+      "explore_subtext": "Breaking free from illusion requires a painful ascent into the blinding light.",
+      "layoutVariant": "blockquote",
+      "presentation": {
+        "title": "The Trauma of Enlightenment",
+        "reading_parts": [
+          {
+            "part_number": 1,
+            "text": "In his famous Allegory of the Cave, Plato describes humanity as prisoners chained facing a wall, watching shadows cast by puppets and mistaking them for reality. When a prisoner is unchained and forced to turn toward the firelight and then ascend into the outside world, the transition is agonizing. The blinding light of the sun—representing the Form of the Good—initially causes deep physical and psychological pain.\n\nThis highlights the inherent conflict of enlightenment. Human beings grow comfortable in their illusions and will fiercely resist anyone who tries to liberate them. The returned philosopher, attempting to explain the true nature of reality to those still chained, is mocked and treated as a madman, illustrating the tragic gap between truth and public consensus."
+          }
+        ]
+      }
+    },
+    {
+      "id": "ideal-forms_plato_card_2",
+      "stack_id": "ideal-forms_plato",
+      "category": "philosophy",
+      "topic": "Anamnesis and Eros",
+      "philosopher": "Plato",
+      "visual_mood": "bg-indigo-950",
+      "explore_title": "The Soul's Longing",
+      "explore_subtext": "Learning is not the acquisition of new knowledge, but a remembering fueled by desire.",
+      "layoutVariant": "fragment",
+      "presentation": {
+        "title": "The Memory of Transcendence",
+        "reading_parts": [
+          {
+            "part_number": 1,
+            "text": "Plato introduces nuance to his metaphysics through the doctrines of anamnesis (recollection) and Eros (desire). He argues that before birth, our immortal souls inhabited the realm of Forms, gazing upon absolute truth. Entering a physical body inflicts amnesia, and what we call 'learning' is actually the soul recognizing echoes of those Forms in the material world.\n\nThis recognition triggers Eros—a profound, erotic longing for the divine and the beautiful. Far from being a dry, academic exercise, Platonic philosophy is a passionate, desire-driven ascent. Love begins with the beauty of an individual body, but, properly cultivated, expands to appreciate the beauty of souls, laws, institutions, and finally, absolute Beauty itself."
+          }
+        ]
+      }
+    },
+    {
+      "id": "ideal-forms_plato_card_3",
+      "stack_id": "ideal-forms_plato",
+      "category": "philosophy",
+      "topic": "Platonic Idealism",
+      "philosopher": "Plato",
+      "visual_mood": "bg-violet-950",
+      "explore_title": "The Blueprint of the West",
+      "explore_subtext": "The conceptual framework that shaped centuries of theology, art, and science.",
+      "layoutVariant": "epigraph",
+      "presentation": {
+        "title": "The Architecture of Transcendence",
+        "reading_parts": [
+          {
+            "part_number": 1,
+            "text": "Plato’s legacy cannot be overstated; as Alfred North Whitehead remarked, Western philosophy is largely a series of footnotes to his dialogues. By prioritizing the conceptual over the material, Plato provided the intellectual vocabulary for early Christian theology, Renaissance art, and the foundational premises of mathematical physics, which treats the universe as governed by abstract laws.\n\nHis enduring impact reminds us that ideas are not passive reflections of the world, but the very matrices through which we construct reality. To seek the Platonic ideal is to refuse to settle for the world as it appears, striving instead to reshape reality in the image of transcendent justice, harmony, and truth."
+          }
+        ]
+      }
+    }
+  ],
+  "golden-mean_aristotle": [
+    {
+      "id": "golden-mean_aristotle_card_0",
+      "stack_id": "golden-mean_aristotle",
+      "category": "philosophy",
+      "topic": "The Golden Mean",
+      "philosopher": "Aristotle",
+      "visual_mood": "bg-emerald-950",
+      "explore_title": "The Geometry of Virtue",
+      "explore_subtext": "Virtue is not an absolute extreme, but a dynamic equilibrium between vices.",
+      "layoutVariant": "thesis",
+      "presentation": {
+        "title": "The Dynamic Balance",
+        "reading_parts": [
+          {
+            "part_number": 1,
+            "text": "Unlike his teacher Plato, Aristotle grounded his philosophy in the empirical reality of the natural world. In the realm of ethics, he introduced the Doctrine of the Mean. He argued that moral virtue is never an absolute, rigid commandment, but an elusive, golden midpoint between two opposing vices: deficiency and excess.\n\nCourage, for instance, is the perfect equilibrium between the deficiency of cowardice and the excess of rashness. This mean is not a mathematical average; it is highly contextual, shifting based on the individual, the situation, and the timing. Virtue is a highly sophisticated art form, requiring the agent to feel the right emotions and act in the right proportion, toward the right person, for the right reason."
+          }
+        ]
+      }
+    },
+    {
+      "id": "golden-mean_aristotle_card_1",
+      "stack_id": "golden-mean_aristotle",
+      "category": "philosophy",
+      "topic": "Teleology",
+      "philosopher": "Aristotle",
+      "visual_mood": "bg-teal-950",
+      "explore_title": "The Purposeful Cosmos",
+      "explore_subtext": "Everything in nature moves toward its own built-in perfection.",
+      "layoutVariant": "blockquote",
+      "presentation": {
+        "title": "The Pull of the Future",
+        "reading_parts": [
+          {
+            "part_number": 1,
+            "text": "Aristotle's physics and metaphysics are thoroughly teleological: he believed that nature does nothing without a purpose. Every object and living being contains an inner blueprint or potentiality striving toward actualization. An acorn is not just a collection of matter; it is a potential oak tree, pulled forward by its final cause.\n\nThis creates a conceptual conflict with modern mechanistic views of the universe, which see nature as blind matter pushed by past causes. For Aristotle, the cosmos is an alive, yearning hierarchy of purpose. Misunderstanding or ignoring an object's inherent nature and purpose results in a failure to comprehend its true reality and place in the cosmic order."
+          }
+        ]
+      }
+    },
+    {
+      "id": "golden-mean_aristotle_card_2",
+      "stack_id": "golden-mean_aristotle",
+      "category": "philosophy",
+      "topic": "Phronesis",
+      "philosopher": "Aristotle",
+      "visual_mood": "bg-cyan-950",
+      "explore_title": "Practical Wisdom",
+      "explore_subtext": "Abstract ethical rules are useless without the lived intelligence to apply them.",
+      "layoutVariant": "fragment",
+      "presentation": {
+        "title": "The Eye of Experience",
+        "reading_parts": [
+          {
+            "part_number": 1,
+            "text": "To navigate the complexities of the Golden Mean, Aristotle asserted that humans need more than theoretical knowledge (sophia); they require phronesis, or practical wisdom. Phronesis is the intellectual virtue that enables a person to deliberate correctly about what is good and advantageous for a life lived well.\n\nThis nuance separates Aristotelian ethics from dogmatic moralism. Phronesis cannot be learned from a textbook; it requires years of lived experience, habituation, and critical reflection. It is the capacity to read the specificities of an unfolding situation and intuitively deploy the appropriate virtue, transforming ethics from a set of rules into an unshakeable, living character trait."
+          }
+        ]
+      }
+    },
+    {
+      "id": "golden-mean_aristotle_card_3",
+      "stack_id": "golden-mean_aristotle",
+      "category": "philosophy",
+      "topic": "Eudaimonia",
+      "philosopher": "Aristotle",
+      "visual_mood": "bg-sky-950",
+      "explore_title": "Human Flourishing",
+      "explore_subtext": "Happiness is not a transient emotion, but the ultimate activity of a soul in accordance with virtue.",
+      "layoutVariant": "epigraph",
+      "presentation": {
+        "title": "The Fully Realized Life",
+        "reading_parts": [
+          {
+            "part_number": 1,
+            "text": "The culmination of Aristotle's thought is eudaimonia—often translated as happiness, but more accurately understood as human flourishing. Eudaimonia is the supreme good, the ultimate end for which all human actions are undertaken. It is not a passive state of pleasure, but an active, lifelong practice of cultivating excellence across our rational, social, and emotional capacities.\n\nAristotle's legacy is the foundation of empiricism, scientific taxonomy, and virtue ethics. He bequeathed to Western civilization the profound insight that a meaningful life is not discovered through otherworldly escapism, but built systematically here on earth through reasoned action, community engagement, and the elegant mastery of balance."
+          }
+        ]
+      }
+    }
+  ],
+  "stoic-logic_zeno": [
+    {
+      "id": "stoic-logic_zeno_card_0",
+      "stack_id": "stoic-logic_zeno",
+      "category": "philosophy",
+      "topic": "The Logic of the Cosmos",
+      "philosopher": "Zeno of Citium",
+      "visual_mood": "bg-slate-900",
+      "explore_title": "The Logos Blueprint",
+      "explore_subtext": "The universe is a rational, unified organism governed by an all-pervading law.",
+      "layoutVariant": "thesis",
+      "presentation": {
+        "title": "The Symphony of Reason",
+        "reading_parts": [
+          {
+            "part_number": 1,
+            "text": "Zeno of Citium, the founder of Stoicism, initiated his philosophy under the painted porch (Stoa Poikile) of Athens by declaring that the cosmos is not a chaotic accident, but a single, rational, living entity. This organizing principle is the Logos—an immanent rational energy that structures, sustains, and guides every atom of existence.\n\nFor Zeno, human reason is a direct spark of this cosmic Logos. Human happiness and virtue do not come from fighting against reality, but from alignment: living in accordance with Nature. To understand this rational structure is to realize that nothing in the universe happens by chance, and that everything is webbed together in a beautifully determined matrix of cause and effect."
+          }
+        ]
+      }
+    },
+    {
+      "id": "stoic-logic_zeno_card_1",
+      "stack_id": "stoic-logic_zeno",
+      "category": "philosophy",
+      "topic": "The Logic of Impression",
+      "philosopher": "Zeno of Citium",
+      "visual_mood": "bg-zinc-900",
+      "explore_title": "The Citadel of Assent",
+      "explore_subtext": "We cannot choose external events, but we command our internal judgment of them.",
+      "layoutVariant": "blockquote",
+      "presentation": {
+        "title": "The War on Perception",
+        "reading_parts": [
+          {
+            "part_number": 1,
+            "text": "Zeno revolutionized epistemology by splitting perception into three distinct stages: the impression, the assent, and comprehension. The world bombards our senses with raw impressions, which often trigger automatic, irrational emotions like fear or desire. The core Stoic conflict lies in this immediate vulnerability.\n\nZeno illustrated this with his famous hand metaphor: an open hand represents the raw impression; slightly curved fingers show assent; a closed fist is comprehension; and grasping the fist with the other hand is systematic knowledge. He argued that virtue depends entirely on withholding assent from false, emotional impressions, ensuring our minds remain unhijacked by external chaos."
+          }
+        ]
+      }
+    },
+    {
+      "id": "stoic-logic_zeno_card_2",
+      "stack_id": "stoic-logic_zeno",
+      "category": "philosophy",
+      "topic": "The Unity of Virtue",
+      "philosopher": "Zeno of Citium",
+      "visual_mood": "bg-neutral-900",
+      "explore_title": "The Indivisible Good",
+      "explore_subtext": "Virtue is an all-or-nothing condition of the human soul.",
+      "layoutVariant": "fragment",
+      "presentation": {
+        "title": "The Absolute Threshold",
+        "reading_parts": [
+          {
+            "part_number": 1,
+            "text": "Zeno proposed a uncompromising nuance to virtue ethics: virtue is unified and absolute. He famously claimed that a person is either wise or foolish, with no comfortable middle ground. He compared this to a person submerged in water; whether they are ten fathoms down or just an inch below the surface, they are still drowning.\n\nThis psychological extremity forces a complete reevaluation of moral progress. Incremental improvements are mere 'indifferents' unless they culminate in a total, structural shift of the soul toward reason. Virtue is not a list of good behaviors, but an unyielding internal consistency that transforms how a person processes every moment of existence."
+          }
+        ]
+      }
+    },
+    {
+      "id": "stoic-logic_zeno_card_3",
+      "stack_id": "stoic-logic_zeno",
+      "category": "philosophy",
+      "topic": "Cosmopolitanism",
+      "philosopher": "Zeno of Citium",
+      "visual_mood": "bg-stone-900",
+      "explore_title": "Citizens of the Universe",
+      "explore_subtext": "Shattering tribalism to recognize our shared citizenship in the global city of mind.",
+      "layoutVariant": "epigraph",
+      "presentation": {
+        "title": "The Commonwealth of Reason",
+        "reading_parts": [
+          {
+            "part_number": 1,
+            "text": "Zeno's enduring legacy is the concept of cosmopolitanism—the idea that all human beings are citizens of a single world community (the Cosmopolis). Because we all share in the cosmic Logos, traditional boundaries of nation, class, and ethnicity are superficial illusions. His lost work, *The Republic*, outlined a utopian society governed entirely by love, reason, and shared laws.\n\nBy anchoring human identity in universal reason rather than local tribalism, Zeno laid the foundations for natural law theories and universal human rights. His logic transformed philosophy from an insular Greek pastime into an urgent, practical shield for humanity, proving that an individual can remain tranquil and sovereign even amidst the collapse of empires."
+          }
+        ]
+      }
+    }
+  ],
+  "stoic-duty_seneca": [
+    {
+      "id": "stoic-duty_seneca_card_0",
+      "stack_id": "stoic-duty_seneca",
+      "category": "philosophy",
+      "topic": "The Economy of Time",
+      "philosopher": "Seneca",
+      "visual_mood": "bg-rose-950",
+      "explore_title": "The Shortness of Life",
+      "explore_subtext": "Life is not short, but we waste a vast majority of it on trivialities.",
+      "layoutVariant": "thesis",
+      "presentation": {
+        "title": "The Currency of Existence",
+        "reading_parts": [
+          {
+            "part_number": 1,
+            "text": "Seneca confronted humanity with a terrifying paradox: we complain about the brief span of our lives, yet we squander our days as if we had an infinite supply. He argued that we are fiercely protective of our money and property, yet shockingly profligate with our time—the one asset we can never recover.\n\nTrue luxury and philosophy begin with the ruthless editing of our commitments. To live intentionally requires reclaiming ownership over our attention, rescuing it from the trivial demands of social status, luxury, and careerism. Life is long enough if we know how to use it, turning our focus inward to secure the present moment rather than gambling on a phantom future."
+          }
+        ]
+      }
+    },
+    {
+      "id": "stoic-duty_seneca_card_1",
+      "stack_id": "stoic-duty_seneca",
+      "category": "philosophy",
+      "topic": "The Wealth of the Court",
+      "philosopher": "Seneca",
+      "visual_mood": "bg-red-950",
+      "explore_title": "The Stoic Millionaire",
+      "explore_subtext": "Navigating the dangerous temptation of absolute power and immense wealth.",
+      "layoutVariant": "blockquote",
+      "presentation": {
+        "title": "Philosophy in the Corridors of Power",
+        "reading_parts": [
+          {
+            "part_number": 1,
+            "text": "Seneca lived out a volatile conflict between philosophical ideals and practical realities. As a fabulously wealthy senator and advisor to the tyrannical Emperor Nero, he faced the constant accusation of hypocrisy. How could a Stoic preach simplicity while accumulating vast riches and navigating a murderous court?\n\nThis tension defines Seneca's philosophy. He argued that a Stoic does not need to flee wealth, but must possess it without being possessed by it. He practiced voluntary poverty amid his riches, mentally preparing for their sudden loss. This precarious existence forced him to realize that real danger lies not in external circumstances, but in the internal corruption of the soul by power and luxury."
+          }
+        ]
+      }
+    },
+    {
+      "id": "stoic-duty_seneca_card_2",
+      "stack_id": "stoic-duty_seneca",
+      "category": "philosophy",
+      "topic": "Premeditatio Malorum",
+      "philosopher": "Seneca",
+      "visual_mood": "bg-orange-950",
+      "explore_title": "The Premeditation of Evils",
+      "explore_subtext": "Anxiety is disarmed by staring directly at the worst-case scenario.",
+      "layoutVariant": "fragment",
+      "presentation": {
+        "title": "Vaccinating the Mind Against Fate",
+        "reading_parts": [
+          {
+            "part_number": 1,
+            "text": "Seneca pioneered the psychological tool of *premeditatio malorum*—the premeditation of evils. He advised that we should regularly rehearse exile, poverty, torture, and the deaths of our loved ones in our minds. By striping catastrophic events of their unexpectedness, we rob them of their power to destroy our peace.\n\nThis nuance separates Stoicism from toxic positivity. It asserts that true resilience is built not by avoiding dark thoughts, but by systematically exploring them. When we realize that fate can strip us of everything in a single moment, we stop taking our lives for granted, replacing existential dread with a fierce, appreciative clarity for the present."
+          }
+        ]
+      }
+    },
+    {
+      "id": "stoic-duty_seneca_card_3",
+      "stack_id": "stoic-duty_seneca",
+      "category": "philosophy",
+      "topic": "The Ultimate Liberty",
+      "philosopher": "Seneca",
+      "visual_mood": "bg-amber-950",
+      "explore_title": "The Philosophy of Death",
+      "explore_subtext": "To learn how to die is to unlearn how to be a slave.",
+      "layoutVariant": "epigraph",
+      "presentation": {
+        "title": "The Final Act of Sovereignty",
+        "reading_parts": [
+          {
+            "part_number": 1,
+            "text": "Seneca's legacy is defined by his profound philosophy of death, culminating in his forced suicide under Nero. He viewed death not as an enemy, but as the ultimate guarantor of human freedom. No matter how tyrannical a tyrant or how agonizing a disease, the exit door of life is always open.\n\nHis beautifully written letters established essays as an intimacy-driven form of philosophical therapy. Seneca teaches us that philosophy is an emergency kit for existence. By conquering the fear of death, we achieve the ultimate liberty, liberating ourselves from external leverage and standing sovereign over our own destinies."
+          }
+        ]
+      }
+    }
+  ],
+  "inner-citadel_marcus": [
+    {
+      "id": "inner-citadel_marcus_card_0",
+      "stack_id": "inner-citadel_marcus",
+      "category": "philosophy",
+      "topic": "The Inner Citadel",
+      "philosopher": "Marcus Aurelius",
+      "visual_mood": "bg-stone-900",
+      "explore_title": "The Sovereign Mind",
+      "explore_subtext": "You have power over your mind, not outside events. Realize this, and you will find strength.",
+      "layoutVariant": "thesis",
+      "presentation": {
+        "title": "The Unassailable Fortress",
+        "reading_parts": [
+          {
+            "part_number": 1,
+            "text": "Marcus Aurelius, Emperor of Rome, conceived of the human mind as an 'Inner Citadel'—an unassailable spiritual fortress that no external force can breach unless we open the gates from within. Surrounded by political betrayal, endless war, and a devastating plague, he used his private journal to construct this psychological sanctuary.\n\nHe argued that external events are fundamentally neutral; they possess no moral weight in themselves. It is our internal judgment, our interpretation of these events, that inflicts suffering or grants peace. By refusing to label external hardships as inherently 'evil,' we preserve the sovereign purity of our rational core, transforming our minds into anchors of calm amidst historical chaos."
+          }
+        ]
+      }
+    },
+    {
+      "id": "inner-citadel_marcus_card_1",
+      "stack_id": "inner-citadel_marcus",
+      "category": "philosophy",
+      "topic": "Amor Fati",
+      "philosopher": "Marcus Aurelius",
+      "visual_mood": "bg-neutral-900",
+      "explore_title": "Loving the Obstacle",
+      "explore_subtext": "The impediment to action advances action. What stands in the way becomes the way.",
+      "layoutVariant": "blockquote",
+      "presentation": {
+        "title": "The Alchemy of Adversity",
+        "reading_parts": [
+          {
+            "part_number": 1,
+            "text": "As ruler of the Western world, Marcus Aurelius faced a mountain of duties and human resistance. Rather than despairing over obstacles, he developed a radical strategy: he viewed every frustration as raw material for virtue. If an advisor betrayed him, it became an opportunity to practice forgiveness; if war broke out, it was an opportunity for courage.\n\nThis concept of radical acceptance—prefiguring *Amor Fati*—creates an aggressive intellectual shift. It demands that we do not merely tolerate adversity, but embrace it as a necessary catalyst for growth. The obstacle ceases to be an interruption of our path; it becomes the path itself, converting every threat into fuel for the mind's fire."
+          }
+        ]
+      }
+    },
+    {
+      "id": "inner-citadel_marcus_card_2",
+      "stack_id": "inner-citadel_marcus",
+      "category": "philosophy",
+      "topic": "Memento Mori",
+      "philosopher": "Marcus Aurelius",
+      "visual_mood": "bg-zinc-900",
+      "explore_title": "The Cosmic Perspective",
+      "explore_subtext": "Look down from above at the fleeting absurdity of human fame and empires.",
+      "layoutVariant": "fragment",
+      "presentation": {
+        "title": "The View from Above",
+        "reading_parts": [
+          {
+            "part_number": 1,
+            "text": "To prevent the corruption of absolute power, Marcus regularly practiced 'the view from above.' He imagined looking down at the earth from a great height, observing the endless marches of armies, the trivial squabbles of courts, and the fleeting nature of entire generations. He reminded himself that even the most celebrated emperors are quickly forgotten.\n\nThis nuance strips the ego of its toxic illusions. By meditating deeply on death (*memento mori*) and the insignificance of our individual lifetimes within cosmic history, our immediate anxieties are deflated. We are left with a serene focus on the only thing that actually matters: acting justly and honorably in the immediate present."
+          }
+        ]
+      }
+    },
+    {
+      "id": "inner-citadel_marcus_card_3",
+      "stack_id": "inner-citadel_marcus",
+      "category": "philosophy",
+      "topic": "The Meditations",
+      "philosopher": "Marcus Aurelius",
+      "visual_mood": "bg-slate-950",
+      "explore_title": "The Philosopher King",
+      "explore_subtext": "A raw, intimate blueprint for self-mastery written in the mud of military camps.",
+      "layoutVariant": "epigraph",
+      "presentation": {
+        "title": "The Legacy of Self-Dialogue",
+        "reading_parts": [
+          {
+            "part_number": 1,
+            "text": "Marcus Aurelius’s legacy is unique: his *Meditations* was never intended for publication. It was a private journal of self-correction, written to hold himself accountable to his philosophy while running an empire. It remains history’s ultimate proof that Plato’s ideal of the Philosopher King was achievable, though profoundly exhausting.\n\nHis writings democratized philosophy, transforming it from an academic theory into an intimate, daily conversation with one's soul. He leaves behind a stark, beautiful truth: no matter how overwhelming the external world becomes, absolute freedom and peace are always available to you, requiring nothing more than a retreat into your own mind."
+          }
+        ]
+      }
+    }
+  ],
+  "leap-of-faith_kierkegaard": [
+    {
+      "id": "leap-of-faith_kierkegaard_card_0",
+      "stack_id": "leap-of-faith_kierkegaard",
+      "category": "philosophy",
+      "topic": "Existential Dread",
+      "philosopher": "Søren Kierkegaard",
+      "visual_mood": "bg-fuchsia-950",
+      "explore_title": "The Dizziness of Freedom",
+      "explore_subtext": "Anxiety is the inevitable byproduct of realizing our own absolute possibility.",
+      "layoutVariant": "thesis",
+      "presentation": {
+        "title": "Staring Into the Void of Choice",
+        "reading_parts": [
+          {
+            "part_number": 1,
+            "text": "Søren Kierkegaard, the father of existentialism, identified anxiety (*Angst*) not as a clinical pathology, but as an ontological truth of human existence. He famously described anxiety as 'the dizziness of freedom'—the psychological vertigo that strikes an individual when they stand at the edge of a cliff and realize they have the terrifying capacity to either jump or stay.\n\nUnlike animals, which are guided by instinct, humans are burdened with the agonizing gift of self-determination. We must choose who we become without any objective guarantees. This radical freedom induces a deep, systemic dread, as we realize that we alone are responsible for the meaning or meaninglessness of our lives."
+          }
+        ]
+      }
+    },
+    {
+      "id": "leap-of-faith_kierkegaard_card_1",
+      "stack_id": "leap-of-faith_kierkegaard",
+      "category": "philosophy",
+      "topic": "The Three Spheres",
+      "philosopher": "Søren Kierkegaard",
+      "visual_mood": "bg-purple-950",
+      "explore_title": "Stages on Life's Way",
+      "explore_subtext": "The tragic progression from sensory pleasure to moral duty, and finally to religious absurdity.",
+      "layoutVariant": "blockquote",
+      "presentation": {
+        "title": "The Fractured Ascency",
+        "reading_parts": [
+          {
+            "part_number": 1,
+            "text": "Kierkegaard mapped human life into three existential spheres: the Aesthetic, the Ethical, and the Religious. The aesthete lives for immediate pleasure, novelty, and the avoidance of boredom, but inevitably collapses into despair when they realize sensory experiences are fleeting and empty. To escape this, one must choose the ethical stage, embracing duty, social institutions, and moral universalism.\n\nHowever, the ethical stage eventually cracks under the weight of human imperfection and guilt. The core Kierkegaardian conflict emerges here: reason and universal ethics are ultimately insufficient to resolve our deepest existential crises. The individual finds themselves stranded, needing a higher resolution that reason cannot provide."
+          }
+        ]
+      }
+    },
+    {
+      "id": "leap-of-faith_kierkegaard_card_2",
+      "stack_id": "leap-of-faith_kierkegaard",
+      "category": "philosophy",
+      "topic": "The Absurd Knight",
+      "philosopher": "Søren Kierkegaard",
+      "visual_mood": "bg-violet-950",
+      "explore_title": "The Teleological Suspension",
+      "explore_subtext": "When faith demands the abandonment of universal reason and morality.",
+      "layoutVariant": "fragment",
+      "presentation": {
+        "title": "The Paradox of Abraham",
+        "reading_parts": [
+          {
+            "part_number": 1,
+            "text": "In his masterpiece *Fear and Trembling*, Kierkegaard introduces his most profound nuance through the figure of Abraham, who was commanded by God to sacrifice his son Isaac. From an ethical standpoint, Abraham is a murderer; from a religious standpoint, he is a 'Knight of Faith.' Abraham undergoes a 'teleological suspension of the ethical,' stepping outside universal morality.\n\nThis is not a comfortable blind faith, but an agonizing encounter with the Absurd. Abraham must believe by virtue of the absurd that God will demand Isaac, yet also return him. Faith requires a total surrender of rational calculation, existing in an intense, isolated, and highly subjective relationship with the divine that defies public communication."
+          }
+        ]
+      }
+    },
+    {
+      "id": "leap-of-faith_kierkegaard_card_3",
+      "stack_id": "leap-of-faith_kierkegaard",
+      "category": "philosophy",
+      "topic": "The Leap of Faith",
+      "philosopher": "Søren Kierkegaard",
+      "visual_mood": "bg-indigo-950",
+      "explore_title": "Crucifying the Intellect",
+      "explore_subtext": "Truth is subjectivity, found only by leaping across the chasm of rational doubt.",
+      "layoutVariant": "epigraph",
+      "presentation": {
+        "title": "The Birth of the Individual",
+        "reading_parts": [
+          {
+            "part_number": 1,
+            "text": "Kierkegaard’s legacy centers on the 'leap of faith.' Because objective truth about metaphysical reality is unattainable, he asserted that 'truth is subjectivity.' To live authentically, one cannot hide behind church dogmas or philosophical systems; one must personally leap across the infinite chasm of objective uncertainty and choose commitment.\n\nBy prioritizing the concrete, anxious individual over abstract systems, Kierkegaard laid the foundations for 20th-century secular and religious existentialism. He rescued the human spirit from the cold machinery of Hegelian logic, leaving us with a beautiful, terrifying truth: your life’s meaning is defined entirely by the passion and risk of your personal choices."
+          }
+        ]
+      }
+    }
+  ],
+  "radical-freedom_sartre": [
+    {
+      "id": "radical-freedom_sartre_card_0",
+      "stack_id": "radical-freedom_sartre",
+      "category": "philosophy",
+      "topic": "Existence Precedes Essence",
+      "philosopher": "Jean-Paul Sartre",
+      "visual_mood": "bg-zinc-900",
+      "explore_title": "The Blank Slate of Being",
+      "explore_subtext": "We are not born with a purpose; we are defined entirely by our actions.",
+      "layoutVariant": "thesis",
+      "presentation": {
+        "title": "The Void of Human Nature",
+        "reading_parts": [
+          {
+            "part_number": 1,
+            "text": "Jean-Paul Sartre flipped centuries of metaphysical tradition on its head with his core premise: 'existence precedes essence.' For an object like a paper knife, its essence (its purpose, blueprint, and design) precedes its physical existence. A craftsman invents it to fulfill a specific function.\n\nHumans, however, are born into the world as blank slates of pure consciousness. There is no God to design us, no cosmic plan to guide us, and no fixed 'human nature' to excuse our behavior. We exist first, encounter ourselves in the world, surge up in an empty universe, and only afterward do we define who we are through our choices. We are the authors of our own essence."
+          }
+        ]
+      }
+    },
+    {
+      "id": "radical-freedom_sartre_card_1",
+      "stack_id": "radical-freedom_sartre",
+      "category": "philosophy",
+      "topic": "Condemned to be Free",
+      "philosopher": "Jean-Paul Sartre",
+      "visual_mood": "bg-stone-900",
+      "explore_title": "The Terror of Choice",
+      "explore_subtext": "The agonizing weight of total responsibility in a universe without excuses.",
+      "layoutVariant": "blockquote",
+      "presentation": {
+        "title": "The Burden of Absolute Sovereignty",
+        "reading_parts": [
+          {
+            "part_number": 1,
+            "text": "This total lack of a pre-established essence creates a profound psychological conflict. Sartre famously declared that human beings are 'condemned to be free.' We did not create ourselves, yet we are cast into the world and held completely responsible for everything we do. Every action, every omission, and every emotional reaction is a choice.\n\nThis freedom is terrifying because it eliminates all excuses. We cannot blame our upbringing, our genetics, or our circumstances for our moral failures. When we make a choice, we don't just choose for ourselves; we project an image of what humanity ought to be, carrying the entire weight of the world on our shoulders without a divine safety net."
+          }
+        ]
+      }
+    },
+    {
+      "id": "radical-freedom_sartre_card_2",
+      "stack_id": "radical-freedom_sartre",
+      "category": "philosophy",
+      "topic": "Bad Faith",
+      "philosopher": "Jean-Paul Sartre",
+      "visual_mood": "bg-slate-900",
+      "explore_title": "The Lie of Authenticity",
+      "explore_subtext": "Pretending to be a passive object to escape the anxiety of freedom.",
+      "layoutVariant": "fragment",
+      "presentation": {
+        "title": "The Mask of the Waiter",
+        "reading_parts": [
+          {
+            "part_number": 1,
+            "text": "To escape the anxiety of absolute freedom, humans frequently lapse into what Sartre called *mauvaise foi* (bad faith). Bad faith is the act of lying to oneself to pretend we don't have a choice. Sartre famously illustrated this with a café waiter whose movements are a bit too precise, too theatrical; he is playing the *role* of a waiter to reduce himself to an object.\n\nThis nuance reveals that we often treat our social roles, jobs, or pasts as deterministic prisons. We say 'I can't help it, that's just who I am,' pretending our freedom is restricted. Sartre shatters this illusion: you are never identical to your roles or your past. You are a fluid consciousness, and at any moment, you can choose to step out of the script."
+          }
+        ]
+      }
+    },
+    {
+      "id": "radical-freedom_sartre_card_3",
+      "stack_id": "radical-freedom_sartre",
+      "category": "philosophy",
+      "topic": "Existential Engagement",
+      "philosopher": "Jean-Paul Sartre",
+      "visual_mood": "bg-neutral-950",
+      "explore_title": "The Philosophy of Action",
+      "explore_subtext": "Shattering quietism to build an authentic life through political and social commitment.",
+      "layoutVariant": "epigraph",
+      "presentation": {
+        "title": "The Legacy of Engagement",
+        "reading_parts": [
+          {
+            "part_number": 1,
+            "text": "Sartre's legacy is a fierce, uncompromising philosophy of engagement (*engagement*). He rejected any form of intellectual detachment, arguing that even choosing not to take a political stance is itself a choice that supports the status quo. Philosophy must be lived in the streets, in literature, and in revolutionary action.\n\nHis thought redefined post-war global culture, transforming existentialism into a rallying cry for anti-colonial struggles, student revolts, and individual liberation. Sartre leaves us with a stark, vital challenge: you are nothing other than your life; you are the sum of your actions, and it is never too late to reinvent yourself through a new project."
+          }
+        ]
+      }
+    }
+  ],
+  "second-sex_beauvoir": [
+    {
+      "id": "second-sex_beauvoir_card_0",
+      "stack_id": "second-sex_beauvoir",
+      "category": "philosophy",
+      "topic": "The Construction of Woman",
+      "philosopher": "Simone de Beauvoir",
+      "visual_mood": "bg-pink-950",
+      "explore_title": "The Socialized Essence",
+      "explore_subtext": "One is not born, but rather becomes, a woman.",
+      "layoutVariant": "thesis",
+      "presentation": {
+        "title": "Shattering the Myth of the Eternal Feminine",
+        "reading_parts": [
+          {
+            "part_number": 1,
+            "text": "Simone de Beauvoir applied existentialist philosophy to the structural reality of gender, delivering the revolutionary thesis: 'One is not born, but rather becomes, a woman.' She argued that biological sex (male and female) is a physiological fact, but 'woman' is a cultural construct fabricated by a patriarchal society.\n\nFrom infancy, females are conditioned to internalize myths of passivity, emotionality, and submission—the 'Eternal Feminine.' Beauvoir dismantled the idea that there is a fixed, natural essence to womanhood, exposing it as an artificial prison designed to curtail female autonomy and keep women tethered to domesticity and male desire."
+          }
+        ]
+      }
+    },
+    {
+      "id": "second-sex_beauvoir_card_1",
+      "stack_id": "second-sex_beauvoir",
+      "category": "philosophy",
+      "topic": "The Other",
+      "philosopher": "Simone de Beauvoir",
+      "visual_mood": "bg-rose-950",
+      "explore_title": "The Absolute Other",
+      "explore_subtext": "Man defines himself as the Subject, anchoring Woman as the relative Object.",
+      "layoutVariant": "blockquote",
+      "presentation": {
+        "title": "The Imperialism of the Subject",
+        "reading_parts": [
+          {
+            "part_number": 1,
+            "text": "Using Hegelian dialectics, Beauvoir illustrated the deep-seated conflict in human relations: the self requires an 'Other' to define its own identity. However, in patriarchal history, man has successfully positioned himself as the absolute Subject—the default representative of humanity (rational, independent, creative).\n\nConsequently, woman is cast as the absolute 'Other'—the relative object defined only in relation to man. He is the One, she is the Sex. This asymmetrical dynamic denies women their subjective agency. While other oppressed groups have historical roots or geographic locations to unite them, women are scattered among men, making their subjugation uniquely intimate and difficult to dismantle."
+          }
+        ]
+      }
+    },
+    {
+      "id": "second-sex_beauvoir_card_2",
+      "stack_id": "second-sex_beauvoir",
+      "category": "philosophy",
+      "topic": "Immanence vs. Transcendence",
+      "philosopher": "Simone de Beauvoir",
+      "visual_mood": "bg-purple-950",
+      "explore_title": "The Ethics of Ambiguity",
+      "explore_subtext": "The tragic tension between physical biology and the human drive for freedom.",
+      "layoutVariant": "fragment",
+      "presentation": {
+        "title": "The Trap of the Nest",
+        "reading_parts": [
+          {
+            "part_number": 1,
+            "text": "Beauvoir added brilliant nuance to existential ethics by introducing the tension between immanence and transcendence. Transcendence is the human drive to project oneself into the future through creative work, political action, and intellectual expansion. Immanence, conversely, is the stagnation of life in repetitive, circular, domestic maintenance.\n\nPatriarchy systematically restricts women to the realm of immanence (cooking, cleaning, child-rearing) while reserving transcendence for men. Beauvoir acknowledges the deep ambiguity here: women are sometimes complicit in their own oppression because immanence offers a comfortable escape from the anxiety of freedom. True liberation, therefore, requires a courageous refusal of safety in exchange for authentic risk."
+          }
+        ]
+      }
+    },
+    {
+      "id": "second-sex_beauvoir_card_3",
+      "stack_id": "second-sex_beauvoir",
+      "category": "philosophy",
+      "topic": "Feminist Existentialism",
+      "philosopher": "Simone de Beauvoir",
+      "visual_mood": "bg-indigo-950",
+      "explore_title": "The Genesis of Liberation",
+      "explore_subtext": "The foundational text that ignited the second wave of global feminism.",
+      "layoutVariant": "epigraph",
+      "presentation": {
+        "title": "The Legacy of Autonomy",
+        "reading_parts": [
+          {
+            "part_number": 1,
+            "text": "The publication of *The Second Sex* in 1949 altered the course of human history, laying the theoretical foundation for second-wave feminism and gender studies. Beauvoir proved that women's liberation is inextricably linked to the liberation of men, as both genders are warped by the artificial performance of patriarchal roles.\n\nHer legacy is a fierce demand for economic, political, and sexual independence. She leaves us with an inspiring ethical vision: human freedom can only be realized by looking outward, transcending our given biology, and actively constructing a world where no human being is reduced to a shadow of another."
+          }
+        ]
+      }
+    }
+  ],
+  "cogito-ergo_descartes": [
+    {
+      "id": "cogito-ergo_descartes_card_0",
+      "stack_id": "cogito-ergo_descartes",
+      "category": "philosophy",
+      "topic": "Radical Doubt",
+      "philosopher": "René Descartes",
+      "visual_mood": "bg-slate-900",
+      "explore_title": "The Architectural Demolition",
+      "explore_subtext": "To find absolute certainty, one must first burn down every belief that can be doubted.",
+      "layoutVariant": "thesis",
+      "presentation": {
+        "title": "The Cleansing Fire of Skepticism",
+        "reading_parts": [
+          {
+            "part_number": 1,
+            "text": "René Descartes set out on an audacious epistemological quest: to discover an unshakeable foundation for science and philosophy. Recognizing that many of his childhood beliefs had proven false, he resolved to systematically demolish his entire belief structure. He deployed radical, hyperbolic doubt as an intellectual scalpel.\n\nHe realized that his senses frequently deceived him, making them untrustworthy. He went further, imagining that he might be dreaming, or worse, that an all-powerful, 'malicious demon' was actively manipulating his perceptions, making even basic mathematical truths suspect. He stripped away the physical world, his body, and his memories, descending into an abyss of total skepticism."
+          }
+        ]
+      }
+    },
+    {
+      "id": "cogito-ergo_descartes_card_1",
+      "stack_id": "cogito-ergo_descartes",
+      "category": "philosophy",
+      "topic": "The Cogito",
+      "philosopher": "René Descartes",
+      "visual_mood": "bg-zinc-900",
+      "explore_title": "The Bedrock of Being",
+      "explore_subtext": "I think, therefore I am. The ultimate, indubitable truth of consciousness.",
+      "layoutVariant": "blockquote",
+      "presentation": {
+        "title": "The Monad of Certainty",
+        "reading_parts": [
+          {
+            "part_number": 1,
+            "text": "At the very bottom of this terrifying epistemological abyss, Descartes hit solid rock. He realized that even if the malicious demon was deceiving him about everything else, the demon could never make him non-existent so long as he was thinking. The very act of doubting, resisting, and being deceived required an entity to perform those actions.\n\nThus emerged his monumental formulation: *Cogito, ergo sum*—I think, therefore I am. Even if the entire physical universe is an illusion, the immediate fact of conscious experience is absolutely certain. This created a profound philosophical conflict, severing the thinking mind from the external world and establishing a radical isolation at the heart of human identity."
+          }
+        ]
+      }
+    },
+    {
+      "id": "cogito-ergo_descartes_card_2",
+      "stack_id": "cogito-ergo_descartes",
+      "category": "philosophy",
+      "topic": "Cartesian Dualism",
+      "philosopher": "René Descartes",
+      "visual_mood": "bg-neutral-900",
+      "explore_title": "The Ghost in the Machine",
+      "explore_subtext": "The radical separation of the thinking mind from the mechanical body.",
+      "layoutVariant": "fragment",
+      "presentation": {
+        "title": "The Split Reality",
+        "reading_parts": [
+          {
+            "part_number": 1,
+            "text": "From the bedrock of the *Cogito*, Descartes developed Cartesian Dualism, splitting the universe into two entirely different substances: *res cogitans* (thinking substance) and *res extensa* (extended, physical substance). The mind is an immaterial, unextended, free entity, while the body is a mechanical, deterministic machine governed by laws of physics.\n\nThis nuance solved the problem of preserving free will and the soul in an increasingly scientific age, but it birthed the notorious 'mind-body problem.' If mind and body are completely different substances, how do they interact? Descartes awkwardly pointed to the pineal gland in the brain, leaving a profound metaphysical puzzle that continues to torment philosophy and cognitive science."
+          }
+        ]
+      }
+    },
+    {
+      "id": "cogito-ergo_descartes_card_3",
+      "stack_id": "cogito-ergo_descartes",
+      "category": "philosophy",
+      "topic": "Rationalism",
+      "philosopher": "René Descartes",
+      "visual_mood": "bg-stone-950",
+      "explore_title": "The Triumph of the Subject",
+      "explore_subtext": "Inaugurating the modern era by centering truth inside the human intellect.",
+      "layoutVariant": "epigraph",
+      "presentation": {
+        "title": "The Legacy of the Grid",
+        "reading_parts": [
+          {
+            "part_number": 1,
+            "text": "Descartes’s legacy is nothing less than the invention of modern philosophy. By shifting the starting point of inquiry from God or the external world to the internal individual consciousness, he initiated the turn toward the subject. His emphasis on clear, distinct ideas laid the mathematical foundation for the Enlightenment.\n\nFrom his coordinate geometry to his rationalist epistemology, Descartes reframed the human being as a detached master and possessor of nature. His thought challenges us to consider whether our internal mental space is a lonely windowless room, or the ultimate gateway through which all cosmic truth must pass."
+          }
+        ]
+      }
+    }
+  ],
+  "categorical-imperative_kant": [
+    {
+      "id": "categorical-imperative_kant_card_0",
+      "stack_id": "categorical-imperative_kant",
+      "category": "philosophy",
+      "topic": "Deontology",
+      "philosopher": "Immanuel Kant",
+      "visual_mood": "bg-sky-950",
+      "explore_title": "The Sovereignty of Duty",
+      "explore_subtext": "Morality is governed by absolute rational laws, independent of consequences.",
+      "layoutVariant": "thesis",
+      "presentation": {
+        "title": "The Architecture of Pure Duty",
+        "reading_parts": [
+          {
+            "part_number": 1,
+            "text": "Immanuel Kant sought to establish an objective, rational framework for morality that did not rely on religious dogma or fluctuating human emotions. He pioneered deontology—a duty-based ethics. He argued that the moral worth of an action does not reside in its consequences, but in the internal motive of the actor.\n\nTo be truly moral, an act must be performed out of pure respect for the moral law, not out of desire for happiness, fear of punishment, or pity. A merchant who charges fair prices just to keep customers is acting in accordance with duty, but their action has no moral worth. True morality shines only when a person acts against their inclinations out of pure duty."
+          }
+        ]
+      }
+    },
+    {
+      "id": "categorical-imperative_kant_card_1",
+      "stack_id": "categorical-imperative_kant",
+      "category": "philosophy",
+      "topic": "The Categorical Imperative",
+      "philosopher": "Immanuel Kant",
+      "visual_mood": "bg-blue-950",
+      "explore_title": "The Universal Test",
+      "explore_subtext": "Act only according to that maxim whereby you can at the same time will that it should become a universal law.",
+      "layoutVariant": "blockquote",
+      "presentation": {
+        "title": "The Logic of Global Obligation",
+        "reading_parts": [
+          {
+            "part_number": 1,
+            "text": "Kant formalized this rational moral law into the Categorical Imperative. Its first formulation demands that before you act, you must isolate the underlying rule (maxim) of your action and ask: 'What if everyone did this?' If your maxim contradicts itself when universalized, it is irrational and immoral.\n\nFor example, making a lying promise to get out of financial trouble fails this test. If everyone lied when convenient, the institution of promising would collapse, making your own lie impossible. This creates an intense conflict with human pragmatism; Kant forbids moral exceptions, demanding an absolute intellectual honesty that refuses to prioritize our personal desires over universal logic."
+          }
+        ]
+      }
+    },
+    {
+      "id": "categorical-imperative_kant_card_2",
+      "stack_id": "categorical-imperative_kant",
+      "category": "philosophy",
+      "topic": "The Kingdom of Ends",
+      "philosopher": "Immanuel Kant",
+      "visual_mood": "bg-indigo-950",
+      "explore_title": "The Sacred Individual",
+      "explore_subtext": "Never treat a human being merely as a means to an end, but always as an end in themselves.",
+      "layoutVariant": "fragment",
+      "presentation": {
+        "title": "The Ethics of Human Dignity",
+        "reading_parts": [
+          {
+            "part_number": 1,
+            "text": "Kant introduced his most profound ethical nuance in the second formulation of the Categorical Imperative: the Formula of Humanity. He asserted that rational beings possess intrinsic worth, which he defined as 'dignity,' standing in stark contrast to objects, which merely have a 'price.'\n\nTherefore, we must never treat people as mere tools or instruments to achieve our goals. This nuance outlaws slavery, exploitation, and even paternalistic deception. Every interaction must respect the rational autonomy of the other person, pointing toward an ideal social order Kant called the 'Kingdom of Ends'—a commonwealth where laws treat every individual as a sovereign legislator."
+          }
+        ]
+      }
+    },
+    {
+      "id": "categorical-imperative_kant_card_3",
+      "stack_id": "categorical-imperative_kant",
+      "category": "philosophy",
+      "topic": "The Copernican Revolution",
+      "philosopher": "Immanuel Kant",
+      "visual_mood": "bg-slate-950",
+      "explore_title": "The Limits of Mind",
+      "explore_subtext": "Our minds do not passively discover the world, they actively construct it.",
+      "layoutVariant": "epigraph",
+      "presentation": {
+        "title": "The Legacy of the Critical Project",
+        "reading_parts": [
+          {
+            "part_number": 1,
+            "text": "Kant’s legacy extends far beyond ethics into metaphysics with his 'Copernican Revolution' in philosophy. He proved that space, time, and causality are not external realities, but the internal software of the human mind, filtering and organizing raw sensory data. We can never know reality as it is in itself (*the noumenon*), only as it appears to us (*the phenomenon*).\n\nThis synthesis of rationalism and empiricism defined the horizon of modern philosophy, inspiring German Idealism, phenomenology, and modern human rights law. Kant leaves us with a majestic vision of human responsibility: we are the creators of our intellectual universe and the absolute guardians of our moral actions."
+          }
+        ]
+      }
+    }
+  ],
+  "epic-journey_homer": [
+    {
+      "id": "epic-journey_homer_card_0",
+      "stack_id": "epic-journey_homer",
+      "category": "literature",
+      "topic": "The Heroic Code",
+      "philosopher": "Homer",
+      "visual_mood": "bg-orange-950",
+      "explore_title": "The Currency of Glory",
+      "explore_subtext": "In a universe ruled by uncaring gods, mortal honor (*timē*) and eternal fame (*kleos*) are everything.",
+      "layoutVariant": "thesis",
+      "presentation": {
+        "title": "The Loom of Fate and Fame",
+        "reading_parts": [
+          {
+            "part_number": 1,
+            "text": "Homer’s epics, *The Iliad* and *The Odyssey*, stand as the foundational mythological bedrock of Western literature. At their core is an existential meditation on mortality. In the Homeric universe, humans are playthings of capricious, immortal gods. Because human life is brief and fragile, meaning must be violently wrested from fate.\n\nThis birthed the heroic code, driven by *timē* (honor) and *kleos* (eternal glory achieved through song). To die young on the battlefield, like Achilles, in exchange for a name that echoes through centuries, was considered the ultimate triumph over the oblivion of death. Life is valued not by its longevity, but by the aesthetic and tragic intensity of its narrative closure."
+          }
+        ]
+      }
+    },
+    {
+      "id": "epic-journey_homer_card_1",
+      "stack_id": "epic-journey_homer",
+      "category": "literature",
+      "topic": "The Dualism of War and Homecoming",
+      "philosopher": "Homer",
+      "visual_mood": "bg-red-950",
+      "explore_title": "Rage and Reclamation",
+      "explore_subtext": "The tragic friction between the violent destruction of Ilium and the desperate longing for Ithaca.",
+      "layoutVariant": "blockquote",
+      "presentation": {
+        "title": "The Crushed Soul of Humanity",
+        "reading_parts": [
+          {
+            "part_number": 1,
+            "text": "The profound conflict running through the Homeric catalogue is the friction between *The Iliad's* focus on violent devastation and *The Odyssey's* focus on restoration. *The Iliad* studies the dehumanizing reality of war—the raw rage (*menin*) of Achilles that brings down countless sorrows on Greeks and Trojans alike. Simone Weil called it 'the poem of force,' showing how violence turns humans into inanimate objects.\n\nIn contrast, *The Odyssey* presents the counter-impulse: the agonizing journey home (*nostos*). Odysseus fights not for glory on a battlefield, but to reclaim his identity, his family, and his homeland. This creates an eternal literary tension between our destructive urge for conquest and our deep spiritual need for belonging and peace."
+          }
+        ]
+      }
+    },
+    {
+      "id": "epic-journey_homer_card_2",
+      "stack_id": "epic-journey_homer",
+      "category": "literature",
+      "topic": "Metis over Bie",
+      "philosopher": "Homer",
+      "visual_mood": "bg-yellow-950",
+      "explore_title": "The Wiles of the Mind",
+      "explore_subtext": "Brute force must ultimately yield to the elegant, deceptive power of intelligence.",
+      "layoutVariant": "fragment",
+      "presentation": {
+        "title": "The Triumph of the Nobody",
+        "reading_parts": [
+          {
+            "part_number": 1,
+            "text": "Homer introduces brilliant psychological nuance by contrasting *bie* (brute physical force) with *metis* (cunning intelligence, resourcefulness). While *The Iliad* belongs to the muscle and absolute wrath of Achilles, *The Odyssey* champions Odysseus, the man of twists and turns (*polytropos*).\n\nOdysseus’s greatest victory occurs not when he swings a sword, but when he outwits the Cyclops Polyphemus by calling himself 'Nobody.' This nuance marks a massive civilizational pivot: survival and heroism require adaptability, narrative deception, and strategic patience. The mind becomes a weapon capable of navigating monsters, intoxicating sirens, and the terrifying caprices of the sea."
+          }
+        ]
+      }
+    },
+    {
+      "id": "epic-journey_homer_card_3",
+      "stack_id": "epic-journey_homer",
+      "category": "literature",
+      "topic": "The Narrative Scaffolding",
+      "philosopher": "Homer",
+      "visual_mood": "bg-stone-900",
+      "explore_title": "The Archetypal Journey",
+      "explore_subtext": "Inventing the narrative structures that would map the human psyche forever.",
+      "layoutVariant": "epigraph",
+      "presentation": {
+        "title": "The Horizon of Western Storytelling",
+        "reading_parts": [
+          {
+            "part_number": 1,
+            "text": "Homer’s legacy is the structural blueprint of Western narrative. From the technique of starting *in medias res* (in the middle of things) to the invention of the monomyth (the Hero’s Journey), Homeric poetry constructed the vocabulary of identity, tragedy, and psychology that Virgil, Dante, Joyce, and cinema would inherit.\n\nBy treating his characters with profound psychological empathy—granting dignity even to the doomed Trojan enemy Hector—Homer established literature as a space of universal human recognition. His epics remain a timeless reminder that though our individual journeys are plagued by monsters and storms, the act of storytelling is our ultimate homecoming."
+          }
+        ]
+      }
+    }
+  ],
+  "divine-comedy_dante": [
+    {
+      "id": "divine-comedy_dante_card_0",
+      "stack_id": "divine-comedy_dante",
+      "category": "literature",
+      "topic": "The Contrapasso",
+      "philosopher": "Dante Alighieri",
+      "visual_mood": "bg-red-950",
+      "explore_title": "The Geometry of Justice",
+      "explore_subtext": "The punishments of the afterlife are the literal, poetic mirror of our earthly choices.",
+      "layoutVariant": "thesis",
+      "presentation": {
+        "title": "The Architecture of the Lost Soul",
+        "reading_parts": [
+          {
+            "part_number": 1,
+            "text": "Dante Alighieri’s *Divine Comedy* is a massive theological and poetic synthesis that maps the soul’s journey through Inferno, Purgatorio, and Paradiso. The organizing core of his underworld is the law of *contrapasso*—the counter-pass. Dante posits that divine punishment is not an arbitrary, external penalty, but the absolute realization of the sin itself.\n\nThe lustful, who were swept away by storms of passion on earth, are blown about by an actual, eternal tempest in hell. The fortune-tellers, who tried to look too far into the future, have their heads turned backward. Sin is its own punishment; hell is simply an individual’s earthly psychology eternalized in stone and fire."
+          }
+        ]
+      }
+    },
+    {
+      "id": "divine-comedy_dante_card_1",
+      "stack_id": "divine-comedy_dante",
+      "category": "literature",
+      "topic": "The Dark Wood",
+      "philosopher": "Dante Alighieri",
+      "visual_mood": "bg-stone-950",
+      "explore_title": "The Midlife Abyss",
+      "explore_subtext": "Spiritual salvation requires a terrifying descent through the core of evil.",
+      "layoutVariant": "blockquote",
+      "presentation": {
+        "title": "The Ascent Through the Depths",
+        "reading_parts": [
+          {
+            "part_number": 1,
+            "text": "The poem opens with Dante lost in a dark wood (*selva oscura*) midway through his life's journey, his path blocked by three terrifying beasts. He cannot climb the sunlit mountain of salvation directly; his guide, Virgil, informs him that he must take a different path—one that goes straight down through the center of hell.\n\nThis establishes a profound psychological conflict: you cannot bypass or ignore your own shadow. To achieve spiritual illumination and psychic integration, you must look directly into the worst horrors of human nature, betrayal, and systemic corruption. Salvation is not an escape from reality, but a painful process of understanding and transforming it."
+          }
+        ]
+      }
+    },
+    {
+      "id": "divine-comedy_dante_card_2",
+      "stack_id": "divine-comedy_dante",
+      "category": "literature",
+      "topic": "Reason and Revelation",
+      "philosopher": "Dante Alighieri",
+      "visual_mood": "bg-teal-950",
+      "explore_title": "The Limits of Virgil",
+      "explore_subtext": "Human reason can guide us through the dark, but divine love must carry us into the light.",
+      "layoutVariant": "fragment",
+      "presentation": {
+        "title": "The Handover of the Intellect",
+        "reading_parts": [
+          {
+            "part_number": 1,
+            "text": "Dante introduces a subtle, complex dynamic through his choice of guides. Virgil, the embodiment of classical human reason, philosophy, and poetry, can lead Dante through Hell and up the terraces of Purgatory. However, because Virgil is a pagan, he cannot enter Paradise.\n\nReason has an absolute ceiling. To step into the realm of grace, light, and ultimate truth, Virgil must step aside for Beatrice, who represents divine revelation and theological love. This nuance asserts that while philosophy is indispensable for ordering our earthly lives and confronting our inner demons, it must eventually surrender to a transcendent experience of beauty and love to reach fulfillment."
+          }
+        ]
+      }
+    },
+    {
+      "id": "divine-comedy_dante_card_3",
+      "stack_id": "divine-comedy_dante",
+      "category": "literature",
+      "topic": "The Love That Moves the Stars",
+      "philosopher": "Dante Alighieri",
+      "visual_mood": "bg-amber-950",
+      "explore_title": "The Cosmic Synthesis",
+      "explore_subtext": "The ultimate integration of literature, politics, and theology into a single, unified vision.",
+      "layoutVariant": "epigraph",
+      "presentation": {
+        "title": "The Legacy of the Poetic Cosmos",
+        "reading_parts": [
+          {
+            "part_number": 1,
+            "text": "Dante’s legacy is the creation of a totalizing poetic universe that practically invented the modern Italian language. He unified the vernacular speech of the streets with the highest scholastic philosophy of Thomas Aquinas, proving that literature can hold the entire weight of human knowledge.\n\nHis epic ends with a blinding vision of the cosmos bound up in a single volume of love—'the Love that moves the sun and the other stars.' Dante leaves humanity with the comforting, architectural assurance that despite the chaotic tragedies of politics and exile, our individual lives are part of a beautifully ordered and meaningful cosmic design."
+          }
+        ]
+      }
+    }
+  ],
+  "human-condition_shakespeare": [
+    {
+      "id": "human-condition_shakespeare_card_0",
+      "stack_id": "human-condition_shakespeare",
+      "category": "literature",
+      "topic": "The Fractured Self",
+      "philosopher": "William Shakespeare",
+      "visual_mood": "bg-zinc-900",
+      "explore_title": "The Theater of the Soul",
+      "explore_subtext": "Human identity is not a unified essence, but a complex, contradictory performance.",
+      "layoutVariant": "thesis",
+      "presentation": {
+        "title": "The Interiority of the Character",
+        "reading_parts": [
+          {
+            "part_number": 1,
+            "text": "William Shakespeare transformed Western literature by inventing modern interiority. Before his plays, characters in drama were often archetypes or flat personifications of virtues and vices. Shakespeare introduced the radical premise that the human self is a vast, shifting labyrinth of hidden motives, conflicting desires, and self-deception.\n\nHis characters don't just speak to the audience; they overhear themselves thinking, wrestling with their own thoughts in soliloquies. Identity is revealed as an ongoing, unstable performance. We are all actors cast in a larger drama, wearing masks that often obscure our true nature even from ourselves."
+          }
+        ]
+      }
+    },
+    {
+      "id": "human-condition_shakespeare_card_1",
+      "stack_id": "human-condition_shakespeare",
+      "category": "literature",
+      "topic": "The Problem of Evil and Madness",
+      "philosopher": "William Shakespeare",
+      "visual_mood": "bg-slate-950",
+      "explore_title": "The Chasm of Chaos",
+      "explore_subtext": "When the social order breaks, the terrifying abyss of human cruelty and madness opens.",
+      "layoutVariant": "blockquote",
+      "presentation": {
+        "title": "The Storm on the Heath",
+        "reading_parts": [
+          {
+            "part_number": 1,
+            "text": "In tragedies like *Macbeth*, *Othello*, and *King Lear*, Shakespeare explores the terrifyingly fragile boundary between civilization and absolute chaos. The core conflict erupts when ambition, jealousy, or vanity shatters the moral order, unleashing an uncontained torrent of nihilism and madness.\n\nOn the storm-lashed heath, Lear is stripped of his crown, his followers, and his sanity, reduced to 'a bare, forked animal.' Shakespeare forces us to confront an uncomfortable truth: our laws, titles, and social structures are thin illusions. Beneath them lies a capacity for monstrous cruelty and a terrifying cosmic indifference that can drive the human mind to the brink of insanity."
+          }
+        ]
+      }
+    },
+    {
+      "id": "human-condition_shakespeare_card_2",
+      "stack_id": "human-condition_shakespeare",
+      "category": "literature",
+      "topic": "The Ambiguity of Truth",
+      "philosopher": "William Shakespeare",
+      "visual_mood": "bg-neutral-900",
+      "explore_title": "The Pale Cast of Thought",
+      "explore_subtext": "Action is paralyzed by the agonizing complexity of moral uncertainty.",
+      "layoutVariant": "fragment",
+      "presentation": {
+        "title": "The Soliloquy of Hesitation",
+        "reading_parts": [
+          {
+            "part_number": 1,
+            "text": "In *Hamlet*, Shakespeare introduces his most profound philosophical nuance: the paralyzing weight of consciousness. Confronted with the duty to avenge his father's murder, Hamlet hesitates, analyzing every moral, metaphysical, and psychological consequence of his potential actions.\n\nThis nuance shatters the simplistic conventions of revenge tragedy. Shakespeare shows that deep intellectual awareness can cripple our ability to act. 'Conscience does make cowards of us all,' as the mind loops in infinite deliberation, caught between the certainty of death and the complete ambiguity of what lies beyond the grave."
+          }
+        ]
+      }
+    },
+    {
+      "id": "human-condition_shakespeare_card_3",
+      "stack_id": "human-condition_shakespeare",
+      "category": "literature",
+      "topic": "The Cosmic Stage",
+      "philosopher": "William Shakespeare",
+      "visual_mood": "bg-stone-950",
+      "explore_title": "Sound and Fury",
+      "explore_subtext": "Democratizing the human experience by capturing the entire spectrum of life in a single line.",
+      "layoutVariant": "epigraph",
+      "presentation": {
+        "title": "The Legacy of the Globe",
+        "reading_parts": [
+          {
+            "part_number": 1,
+            "text": "Shakespeare’s legacy is a matchless linguistic and psychological universe that permanently expanded the boundaries of human expression. By effortlessly blending high-stakes tragic philosophy with low-brow comedic vulgarity, he captured the total, messy democratic reality of the human condition.\n\nHis works stand as an mirror held up to nature, echoing Macbeth's despair that life is 'a tale told by an idiot, full of sound and fury, signifying nothing,' while simultaneously celebrating the sublime beauty of human potential. He leaves us with the ultimate literary paradox: we are fragile, brief creatures, yet we are made of the same stuff that dreams are made on."
+          }
+        ]
+      }
+    }
+  ],
+  "social-satire_austen": [
+    {
+      "id": "social-satire_austen_card_0",
+      "stack_id": "social-satire_austen",
+      "category": "literature",
+      "topic": "The Irony of the Ball",
+      "philosopher": "Jane Austen",
+      "visual_mood": "bg-stone-900",
+      "explore_title": "The Microcosm of Manners",
+      "explore_subtext": "The drawing room is a high-stakes battlefield where survival depends on wit and social literacy.",
+      "layoutVariant": "thesis",
+      "presentation": {
+        "title": "The Critical Architecture of the Everyday",
+        "reading_parts": [
+          {
+            "part_number": 1,
+            "text": "Jane Austen engineered a revolution in the English novel by rejecting gothic melodramas in favor of a hyper-precise observation of domestic life. Her core premise is that the seemingly trivial arenas of country balls, morning calls, and dinner parties are actually high-stakes battlefields where human character is tested and economic survival is decided.\n\nUsing a revolutionary narrative technique—free indirect speech—Austen blends the voice of her narrator with the thoughts of her characters. This creates an ironic detachment that exposes the underlying hypocrisy, greed, and vanity of the Regency gentry, proving that the deepest moral and philosophical insights can be extracted from a patch of provincial earth."
+          }
+        ]
+      }
+    },
+    {
+      "id": "social-satire_austen_card_1",
+      "stack_id": "social-satire_austen",
+      "category": "literature",
+      "topic": "The Marriage Market",
+      "philosopher": "Jane Austen",
+      "visual_mood": "bg-slate-900",
+      "explore_title": "The Economic Imperative",
+      "explore_subtext": "The tragic conflict between authentic romantic love and cold financial security.",
+      "layoutVariant": "blockquote",
+      "presentation": {
+        "title": "The Price of Autonomy",
+        "reading_parts": [
+          {
+            "part_number": 1,
+            "text": "The structural engine of Austen’s plots is a brutal economic reality: women in her world could not inherit property and had no respectable means of earning a living. Marriage was not a romantic option, but an urgent financial necessity. This creates a sharp conflict between systemic materialism and moral integrity.\n\nCharacters like Charlotte Lucas in *Pride and Prejudice* accept loveless marriages with foolish men out of a desperate need for a home. Austen forces her heroines to walk a perilous tightrope: they must secure their material future without sacrificing their moral self-respect or intellectual freedom in a world that treats women as economic commodities."
+          }
+        ]
+      }
+    },
+    {
+      "id": "social-satire_austen_card_2",
+      "stack_id": "social-satire_austen",
+      "category": "literature",
+      "topic": "Cognitive Blindspots",
+      "philosopher": "Jane Austen",
+      "visual_mood": "bg-zinc-900",
+      "explore_title": "Pride and Misperception",
+      "explore_subtext": "True maturity requires the humiliating dismantling of our own psychological biases.",
+      "layoutVariant": "fragment",
+      "presentation": {
+        "title": "The Education of the Judgement",
+        "reading_parts": [
+          {
+            "part_number": 1,
+            "text": "Austen introduces deep psychological nuance by exploring the themes of pride and prejudice as universal cognitive blindspots. In her masterpieces, the central obstacle to happiness is not an external villain, but the characters' own faulty judgments. Elizabeth Bennet must overcome her vanity-driven prejudice, while Darcy must dismantle his class-bound pride.\n\nThis nuance shifts her novels from mere social satires to profound tracking of intellectual and moral development. True self-knowledge is won through a painful process of misreading others, recognizing one's own blind spots, and undergoing a humbling intellectual restructuring, elevating self-correction into an essential moral duty."
+          }
+        ]
+      }
+    },
+    {
+      "id": "social-satire_austen_card_3",
+      "stack_id": "social-satire_austen",
+      "category": "literature",
+      "topic": "The Ethical Realism",
+      "philosopher": "Jane Austen",
+      "visual_mood": "bg-neutral-900",
+      "explore_title": "The Sovereign Wit",
+      "explore_subtext": "Establishing a modern literary standard where comedy serves as the ultimate vehicle for ethical clarity.",
+      "layoutVariant": "epigraph",
+      "presentation": {
+        "title": "The Legacy of the Drawing Room",
+        "reading_parts": [
+          {
+            "part_number": 1,
+            "text": "Jane Austen’s legacy is the invention of the modern realistic novel. By demonstrating that ordinary human relationships can be analyzed with the same psychological depth as epic poetry or theological tracts, she paved the way for George Eliot, Henry James, and the psychological realism of the 20th century.\n\nHer sharp wit and unmatched mastery of irony remain historic weapons against pomposity and social delusion. She leaves behind a timeless literary truth: true virtue is neither performative nor puritanical; it is quiet, clear-sighted, resilient, and always accompanied by a healthy capacity to laugh at the absurdities of the world."
+          }
+        ]
+      }
+    }
+  ],
+  "stream-consciousness_woolf": [
+    {
+      "id": "stream-consciousness_woolf_card_0",
+      "stack_id": "stream-consciousness_woolf",
+      "category": "literature",
+      "topic": "The Luminous Halo",
+      "philosopher": "Virginia Woolf",
+      "visual_mood": "bg-sky-950",
+      "explore_title": "The Fluidity of Time",
+      "explore_subtext": "Life is not a series of symmetrical gig-lamps; it is a luminous halo, a semi-transparent envelope.",
+      "layoutVariant": "thesis",
+      "presentation": {
+        "title": "The Dissolution of the Linear Plot",
+        "reading_parts": [
+          {
+            "part_number": 1,
+            "text": "Virginia Woolf launched a radical assault on the traditional realistic novel, arguing that it failed to capture the actual experience of human consciousness. Her core premise was that reality does not exist in an external sequence of chronological events, but inside the fluid, impressions-driven theater of the mind.\n\nShe developed the stream-of-consciousness technique to capture the mind's interior monologue—where past memories, immediate sensory perceptions, and existential anxieties collide in a single moment. By abandoning linear plots, Woolf focused on the 'luminous halo' of existence, translating the raw, fragmented texture of human thought into poetic prose."
+          }
+        ]
+      }
+    },
+    {
+      "id": "stream-consciousness_woolf_card_1",
+      "stack_id": "stream-consciousness_woolf",
+      "category": "literature",
+      "topic": "The Fragility of Identity",
+      "philosopher": "Virginia Woolf",
+      "visual_mood": "bg-teal-950",
+      "explore_title": "The Splintered Self",
+      "explore_subtext": "The terrifying conflict between our private, boundless consciousness and our rigid public roles.",
+      "layoutVariant": "blockquote",
+      "presentation": {
+        "title": "The Strike of the Clock",
+        "reading_parts": [
+          {
+            "part_number": 1,
+            "text": "In works like *Mrs. Dalloway* and *To the Lighthouse*, Woolf tracks the sharp conflict between internal psychological time and external, patriarchal time (represented by the cold chiming of Big Ben). Her characters enjoy a boundless, rich interiority, yet they are constantly forced to contract themselves to fit into artificial social roles.\n\nThis creates a deep existential isolation. Clarissa Dalloway walks through London feeling simultaneously connected to everything and completely invisible. Woolf exposes the constant terror of psychic dissolution—the fear that our internal world is too fragile to withstand the crushing, mechanical expectations of a rigid, patriarchal society."
+          }
+        ]
+      }
+    },
+    {
+      "id": "stream-consciousness_woolf_card_2",
+      "stack_id": "stream-consciousness_woolf",
+      "category": "literature",
+      "topic": "Moments of Being",
+      "philosopher": "Virginia Woolf",
+      "visual_mood": "bg-indigo-950",
+      "explore_title": "The Epiphany of the Ordinary",
+      "explore_subtext": "Shattering the numb routine of daily life to touch an underlying, unified reality.",
+      "layoutVariant": "fragment",
+      "presentation": {
+        "title": "The Tear in the Cotton Wool",
+        "reading_parts": [
+          {
+            "part_number": 1,
+            "text": "Woolf introduced a profound philosophical nuance through her concept of 'moments of being.' She argued that most of our lives are lived in a state of 'non-being'—a numb, mechanical routine she called 'the cotton wool of daily existence.' Occasionally, however, this cotton wool tears, exposing a sudden, intense flash of absolute awareness.\n\nIn these rare moments—whether triggered by the sight of a flower, a wave crashing, or a shared glance at a dinner table—the chaotic fragmentation of existence vanishes, revealing an underlying, transcendent unity. These epiphanies provide a temporary, secular salvation, offering an artistic stay against the terrifying rush of time and death."
+          }
+        ]
+      }
+    },
+    {
+      "id": "stream-consciousness_woolf_card_3",
+      "stack_id": "stream-consciousness_woolf",
+      "category": "literature",
+      "topic": "A Room of One's Own",
+      "philosopher": "Virginia Woolf",
+      "visual_mood": "bg-slate-950",
+      "explore_title": "The Materiality of Genius",
+      "explore_subtext": "An unyielding feminist legacy linking intellectual freedom directly to economic independence.",
+      "layoutVariant": "epigraph",
+      "presentation": {
+        "title": "The Legacy of the Unfettered Mind",
+        "reading_parts": [
+          {
+            "part_number": 1,
+            "text": "Woolf’s legacy is twin-fold: she fundamentally expanded the stylistic boundaries of modernist literature and authored the foundational texts of feminist literary criticism. In *A Room of One's Own*, she demystified artistic genius, proving that a woman must have money and a literal room with a lock if she is to write fiction.\n\nBy tracing the hypothetical tragic life of Shakespeare’s equally talented but illiterate sister, Judith, Woolf exposed how systemic patriarchy suffocates female potential. She leaves us with a beautiful, urgent manifesto: to cultivate an 'androgynous mind' capable of transcending gender boundaries and looking directly at the incandescent truth of reality."
+          }
+        ]
+      }
+    }
+  ],
+  "dystopian-truth_orwell": [
+    {
+      "id": "dystopian-truth_orwell_card_0",
+      "stack_id": "dystopian-truth_orwell",
+      "category": "literature",
+      "topic": "Totalitarian Semantics",
+      "philosopher": "George Orwell",
+      "visual_mood": "bg-zinc-900",
+      "explore_title": "The Weaponization of Language",
+      "explore_subtext": "If thought can corrupt language, language can also corrupt thought.",
+      "layoutVariant": "thesis",
+      "presentation": {
+        "title": "The Corruption of the Word",
+        "reading_parts": [
+          {
+            "part_number": 1,
+            "text": "George Orwell’s core premise is that political tyranny does not begin with tanks and wire, but with the systematic destruction of language. In his terrifying masterpiece *1984*, he demonstrated that whoever controls the vocabulary controls the boundaries of human consciousness.\n\nThrough the invention of 'Newspeak,' the totalitarian state of Oceania systematically prunes the English language, deleting words like 'freedom,' 'rebellion,' and 'justice.' The goal is to make unorthodox thoughts literally impossible because there are no words left to express them. Language is transformed from a medium of truth into a psychological cage designed to paralyze critical thought."
+          }
+        ]
+      }
+    },
+    {
+      "id": "dystopian-truth_orwell_card_1",
+      "stack_id": "dystopian-truth_orwell",
+      "category": "literature",
+      "topic": "Doublethink",
+      "philosopher": "George Orwell",
+      "visual_mood": "bg-stone-900",
+      "explore_title": "The Epistemological Dictatorship",
+      "explore_subtext": "The capacity to hold two contradictory beliefs in one's mind simultaneously, and accept both of them.",
+      "layoutVariant": "blockquote",
+      "presentation": {
+        "title": "The Erasure of Reality",
+        "reading_parts": [
+          {
+            "part_number": 1,
+            "text": "The terrifying conflict at the heart of Orwellian dystopianism is the state's war against objective reality. Through 'Doublethink,' the Party requires citizens to alter their memories and beliefs on command, accepting absurd contradictions like 'War is Peace' or '2 + 2 = 5.'\n\nThis creates a total psychological fracture. Winston Smith’s lonely rebellion is an attempt to defend the sanity of his own perceptions against an all-powerful apparatus that can rewrite history overnight. Orwell forces us to confront a chilling conflict: when objective truth is erased, power becomes the sole author of reality, leaving the individual mind completely isolated."
+          }
+        ]
+      }
+    },
+    {
+      "id": "dystopian-truth_orwell_card_2",
+      "stack_id": "dystopian-truth_orwell",
+      "category": "literature",
+      "topic": "The Illusion of Progress",
+      "philosopher": "George Orwell",
+      "visual_mood": "bg-neutral-900",
+      "explore_title": "The Revolution Betrayed",
+      "explore_subtext": "How idealistic liberation movements can mutate into new systems of exploitation.",
+      "layoutVariant": "fragment",
+      "presentation": {
+        "title": "The Mirror of the Pig",
+        "reading_parts": [
+          {
+            "part_number": 1,
+            "text": "In *Animal Farm*, Orwell introduces a devastating political nuance: the cyclical nature of tyranny. The animals revolt against their human oppressor out of an authentic longing for equality and freedom, establishing a utopian collective based on solidarity.\n\nHowever, Orwell traces the slow, insidious emergence of a new elite—the pigs—who gradually alter the revolutionary commandments to justify their own privileges, culminating in the chilling formula: 'All animals are equal, but some animals are more equal than others.' This nuance warns us that without unyielding skepticism of power, revolutions will simply replace one tyrant with another."
+          }
+        ]
+      }
+    },
+    {
+      "id": "dystopian-truth_orwell_card_3",
+      "stack_id": "dystopian-truth_orwell",
+      "category": "literature",
+      "topic": "Democratic Socialism and Decency",
+      "philosopher": "George Orwell",
+      "visual_mood": "bg-slate-950",
+      "explore_title": "The Clarity of Prose",
+      "explore_subtext": "A legacy that turned political writing into an art form and a shield for human dignity.",
+      "layoutVariant": "epigraph",
+      "presentation": {
+        "title": "The Legacy of the Critical Witness",
+        "reading_parts": [
+          {
+            "part_number": 1,
+            "text": "George Orwell’s legacy is an unyielding commitment to objective truth and what he called 'common decency.' He weaponized literary prose, stripping it of jargon and propaganda to create a clear window through which we can see historical horrors directly.\n\nHis name has become an adjective—'Orwellian'—a universal alarm system alerting humanity to the surveillance state, post-truth politics, and linguistic manipulation. He leaves behind an urgent, eternal duty: the struggle to see what is in front of one's nose requires constant, courageous intellectual effort."
+          }
+        ]
+      }
+    }
+  ],
+  "renaissance-man_davinci": [
+    {
+      "id": "renaissance-man_davinci_card_0",
+      "stack_id": "renaissance-man_davinci",
+      "category": "arts",
+      "topic": "Sfumato and Perception",
+      "philosopher": "Leonardo da Vinci",
+      "visual_mood": "bg-amber-950",
+      "explore_title": "The Dissolution of the Line",
+      "explore_subtext": "Nature has no hard outlines; reality exists in a continuous gradation of shadow and light.",
+      "layoutVariant": "thesis",
+      "presentation": {
+        "title": "The Mystery of the Smoke",
+        "reading_parts": [
+          {
+            "part_number": 1,
+            "text": "Leonardo da Vinci approached art not as a mechanical trade, but as a supreme scientific inquiry. His core painterly innovation was *sfumato*—the intentional blending of tones and colors without perceptible transitions or hard lines, imitating the natural behavior of smoke and human vision.\n\nLeonardo realized that hard outlines are an intellectual fiction; our eyes perceive the world through atmospheric depth and soft transitions. By layering micro-thin glazes of transparent oil paint, he captured the elusive fluidity of life, imbuing faces like the *Mona Lisa* with an ambiguous psychological mystery that mirrors the complexity of the soul."
+          }
+        ]
+      }
+    },
+    {
+      "id": "renaissance-man_davinci_card_1",
+      "stack_id": "renaissance-man_davinci",
+      "category": "arts",
+      "topic": "The Unity of Art and Science",
+      "philosopher": "Leonardo da Vinci",
+      "visual_mood": "bg-yellow-950",
+      "explore_title": "The Anatomy of Truth",
+      "explore_subtext": "Shattering the artificial barrier between poetic beauty and cold empirical observation.",
+      "layoutVariant": "blockquote",
+      "presentation": {
+        "title": "The Scalpel and the Brush",
+        "reading_parts": [
+          {
+            "part_number": 1,
+            "text": "Leonardo lived a creative conflict with the dogmatic scholasticism of his era. He refused to rely on ancient texts, proclaiming himself a 'disciple of experience.' This drove him to perform gruesome human dissections, study fluid dynamics, and sketch military weaponry.\n\nThis created a profound tension within his life: his insatiable scientific curiosity often paralyzed his artistic production, leaving countless masterpieces unfinished. Yet, for Leonardo, this was not a failure. He believed that to paint a human face, one must understand the mechanics of the jaw, the flow of the blood, and the optical physics of how light strikes the retina, treating art as the ultimate synthesis of all human knowledge."
+          }
+        ]
+      }
+    },
+    {
+      "id": "renaissance-man_davinci_card_2",
+      "stack_id": "renaissance-man_davinci",
+      "category": "arts",
+      "topic": "The Cosmic Analogy",
+      "philosopher": "Leonardo da Vinci",
+      "visual_mood": "bg-stone-900",
+      "explore_title": "The Vitruvian Harmony",
+      "explore_subtext": "The human body is an absolute microcosm of the structural laws of the entire universe.",
+      "layoutVariant": "fragment",
+      "presentation": {
+        "title": "The Geometry of Man",
+        "reading_parts": [
+          {
+            "part_number": 1,
+            "text": "Leonardo introduced his most profound philosophical nuance through his drawings and notes on analogy, famously crystallized in the *Vitruvian Man*. He posited that the structural laws governing the human anatomy are identical to the laws governing the macrocosm of the earth and stars.\n\nHe compared the flow of blood in the veins to the movement of water in rivers, and the stability of bones to the architecture of mountains. This nuance elevates the human being to a cosmic map. Art is not a superficial decoration, but a sacred geometric translation of the hidden mathematical harmony that binds the cosmos together."
+          }
+        ]
+      }
+    },
+    {
+      "id": "renaissance-man_davinci_card_3",
+      "stack_id": "renaissance-man_davinci",
+      "category": "arts",
+      "topic": "The Renaissance Paradigm",
+      "philosopher": "Leonardo da Vinci",
+      "visual_mood": "bg-neutral-900",
+      "explore_title": "The Infinite Notebook",
+      "explore_subtext": "The universal archetype of curiosity, stretching the human intellect across all disciplines.",
+      "layoutVariant": "epigraph",
+      "presentation": {
+        "title": "The Legacy of Universal Curiosity",
+        "reading_parts": [
+          {
+            "part_number": 1,
+            "text": "Leonardo da Vinci’s legacy is the definition of the 'Renaissance Man'—an unyielding monument to infinite curiosity. His notebooks, filled with backwards mirror-writing, contain prescient designs for flying machines, submarines, and automated machinery that anticipated modern engineering by centuries.\n\nHe liberated the artist from the status of an artisan to that of a divine philosopher and visionary thinker. Leonardo leaves humanity with a majestic, integrated vision of reality, challenging us to tear down the walls between our sciences and our humanities, and look at the universe as a single, beautiful, and completely coherent masterpiece."
+          }
+        ]
+      }
+    }
+  ],
+  "divine-sculpture_michelangelo": [
+    {
+      "id": "divine-sculpture_michelangelo_card_0",
+      "stack_id": "divine-sculpture_michelangelo",
+      "category": "arts",
+      "topic": "The Non-Finito",
+      "philosopher": "Michelangelo Buonarroti",
+      "visual_mood": "bg-stone-900",
+      "explore_title": "Liberating the Form",
+      "explore_subtext": "Sculpture is not an addition of material, but a subtraction that frees the soul trapped in stone.",
+      "layoutVariant": "thesis",
+      "presentation": {
+        "title": "The Prison of the Marble",
+        "reading_parts": [
+          {
+            "part_number": 1,
+            "text": "Michelangelo Buonarroti operated under a deeply Neoplatonic philosophy of art. He believed that every block of marble contained a fully formed, divine concept (*concetto*) sculpted by God. The task of the mortal sculptor was not to invent a form, but to use a chisel to cut away the excess stone and liberate the trapped entity.\n\nThis birthed his aesthetic of the *non-finito* (the unfinished), where figures appear to be violently struggling out of the raw, uncarved marble block. This technique transforms sculpture from a decorative craft into a profound existential allegory of the human condition—the immortal spirit trapped in the heavy, decaying prison of material flesh."
+          }
+        ]
+      }
+    },
+    {
+      "id": "divine-sculpture_michelangelo_card_1",
+      "stack_id": "divine-sculpture_michelangelo",
+      "category": "arts",
+      "topic": "Terribilità",
+      "philosopher": "Michelangelo Buonarroti",
+      "visual_mood": "bg-zinc-950",
+      "explore_title": "The Sublime Terror",
+      "explore_subtext": "An art of overwhelming emotional intensity that triggers awe, fear, and religious ecstasy.",
+      "layoutVariant": "blockquote",
+      "presentation": {
+        "title": "The Wrath of the Creator",
+        "reading_parts": [
+          {
+            "part_number": 1,
+            "text": "Michelangelo’s art was characterized by *terribilità*—a fierce, awe-inspiring, and terrifying emotional intensity that overwhelmed his contemporaries and patrons, including Popes. From the tense, coiled energy of *David* to the apocalyptic storm of *The Last Judgment* in the Sistine Chapel, his figures overflow with muscular and psychic power.\n\nThis created a lifelong conflict within Michelangelo. Commissioned by absolute rulers to paint and sculpt divine narratives, he chafed against their political control, packing his works with hidden defiance, anatomical secrets, and a dark, brooding anxiety that shattered the calm, harmonious proportions of the High Renaissance."
+          }
+        ]
+      }
+    },
+    {
+      "id": "divine-sculpture_michelangelo_card_2",
+      "stack_id": "divine-sculpture_michelangelo",
+      "category": "arts",
+      "topic": "The Divine Spark",
+      "philosopher": "Michelangelo Buonarroti",
+      "visual_mood": "bg-slate-900",
+      "explore_title": "The Space Between Fingers",
+      "explore_subtext": "Redefining the relationship between God and humanity through the raw geometry of touch.",
+      "layoutVariant": "fragment",
+      "presentation": {
+        "title": "The Dynamic Equilibrium of Creation",
+        "reading_parts": [
+          {
+            "part_number": 1,
+            "text": "In his legendary fresco *The Creation of Adam*, Michelangelo introduced a radical theological nuance. Instead of depicting God physically touching Adam to spark him into life, he painted an infinite, electric gap of a few millimeters between their extended fingers.\n\nThis nuance reframed humanity not as a passive, puppet-like creation, but as an autonomous, longing agent. The cosmic energy flows through that tiny negative space, elevating human dignity to near-divine levels. He suggests that the human soul is defined by this eternal tension—always reaching out for the transcendent source, suspended in the act of becoming."
+          }
+        ]
+      }
+    },
+    {
+      "id": "divine-sculpture_michelangelo_card_3",
+      "stack_id": "divine-sculpture_michelangelo",
+      "category": "arts",
+      "topic": "Mannerist Evolution",
+      "philosopher": "Michelangelo Buonarroti",
+      "visual_mood": "bg-neutral-900",
+      "explore_title": "The Titan of Anatomy",
+      "explore_subtext": "The colossal legacy that redefined the expressive limits of the human body and architecture.",
+      "layoutVariant": "epigraph",
+      "presentation": {
+        "title": "The Legacy of the Colossus",
+        "reading_parts": [
+          {
+            "part_number": 1,
+            "text": "Michelangelo’s legacy is that of an artistic titan who single-handedly broke the classical symmetry of the Renaissance, paving the way for Mannerism and the Baroque. His design for the dome of St. Peter’s Basilica and his twisting, elongated human figures proved that art must express inner emotional truth over mathematical rules.\n\nHe raised the social status of the artist to an unprecedented height, establishing the archetype of the tormented, divinely inspired genius (*Il Divino*). Michelangelo leaves behind a stunning testament to human capability, proving that marble and paint can be forced to express the deepest, most agonized yearnings of the immortal spirit."
+          }
+        ]
+      }
+    }
+  ],
+  "chiaroscuro-soul_rembrandt": [
+    {
+      "id": "chiaroscuro-soul_rembrandt_card_0",
+      "stack_id": "chiaroscuro-soul_rembrandt",
+      "category": "arts",
+      "topic": "Psychological Chiaroscuro",
+      "philosopher": "Rembrandt van Rijn",
+      "visual_mood": "bg-neutral-950",
+      "explore_title": "The Radiance of the Dark",
+      "explore_subtext": "Light is not an external spotlight, but an internal spiritual presence emerging from deep shadow.",
+      "layoutVariant": "thesis",
+      "presentation": {
+        "title": "The Theater of the Inner Light",
+        "reading_parts": [
+          {
+            "part_number": 1,
+            "text": "Rembrandt van Rijn revolutionized Dutch Golden Age painting by transforming the technique of *chiaroscuro* (the contrast of light and dark) from an optical trick into a psychological depth-charge. His core premise is that human truth is found not in pristine, flat illumination, but in the soft, mysterious shadows where the soul hides.\n\nIn his works, light does not flood the canvas; it emerges selectively from an atmospheric, velvety gloom. This selective illumination forces the viewer to look past external clothing, jewelry, and social status, focusing entirely on the exposed face or hands, which radiate an intense, quiet interiority."
+          }
+        ]
+      }
+    },
+    {
+      "id": "chiaroscuro-soul_rembrandt_card_1",
+      "stack_id": "chiaroscuro-soul_rembrandt",
+      "category": "arts",
+      "topic": "The Demystification of the Sacred",
+      "philosopher": "Rembrandt van Rijn",
+      "visual_mood": "bg-amber-950",
+      "explore_title": "The Fleshly Scripture",
+      "explore_subtext": "Bringing biblical narratives down into the dirty, wrinkled reality of Amsterdam's streets.",
+      "layoutVariant": "blockquote",
+      "presentation": {
+        "title": "The Sacred in the Mundane",
+        "reading_parts": [
+          {
+            "part_number": 1,
+            "text": "Rembrandt lived out an aesthetic conflict with the idealized, classical art standards of his time. When painting religious or historical scenes, he refused to use perfect, statue-like Italian models. Instead, he painted real people—wrinkled beggars, old Jewish elders from his neighborhood, and his own tired wives.\n\nThis created an intense stylistic friction. Critics accused him of being a painter of 'low things.' But for Rembrandt, the divine was found precisely within human vulnerability and imperfection. By depicting sacred stories through the rough, unvarnished flesh of ordinary people, he stripped religion of its institutional pomposity, making faith an intimately human experience."
+          }
+        ]
+      }
+    },
+    {
+      "id": "chiaroscuro-soul_rembrandt_card_2",
+      "stack_id": "chiaroscuro-soul_rembrandt",
+      "category": "arts",
+      "topic": "The Self-Portrait as Biography",
+      "philosopher": "Rembrandt van Rijn",
+      "visual_mood": "bg-orange-950",
+      "explore_title": "The Unflinching Mirror",
+      "explore_subtext": "Tracking the brutal progress of age, sorrow, and financial ruin across one's own face.",
+      "layoutVariant": "fragment",
+      "presentation": {
+        "title": "The Chronology of Decay",
+        "reading_parts": [
+          {
+            "part_number": 1,
+            "text": "Rembrandt introduced an unprecedented nuance to portraiture through his lifelong series of nearly one hundred self-portraits. He used his own face as an anatomical and psychological laboratory, charting his journey from a cocky, wealthy young artist to a bankrupt, lonely old man.\n\nHe painted his own wrinkles, baggy eyes, and sagging skin with an unflinching, compassionate honesty. This nuance transforms the self-portrait into an existential diary. He does not seek to flatter his ego; he uses his changing face to study the universal mechanics of time, loss, and resilience, turning self-scrutiny into an act of supreme philosophical courage."
+          }
+        ]
+      }
+    },
+    {
+      "id": "chiaroscuro-soul_rembrandt_card_3",
+      "stack_id": "chiaroscuro-soul_rembrandt",
+      "category": "arts",
+      "topic": "The Impasto Expression",
+      "philosopher": "Rembrandt van Rijn",
+      "visual_mood": "bg-stone-900",
+      "explore_title": "The Modernity of Tactility",
+      "explore_subtext": "A legacy that liberated paint from smooth illusion, making the physical texture of the canvas feel alive.",
+      "layoutVariant": "epigraph",
+      "presentation": {
+        "title": "The Legacy of the Humanist Brush",
+        "reading_parts": [
+          {
+            "part_number": 1,
+            "text": "Rembrandt’s legacy is that of history’s greatest psychological painter. His radical use of *impasto*—applying thick, heavily textured layers of paint that stand out from the canvas—broke with classical smoothness, anticipating Modern Expressionism and artists like Vincent van Gogh.\n\nHe taught future generations that a portrait is not a static copy of a face, but an empathetic record of an interior life. Rembrandt leaves us with an enduring humanist philosophy: human dignity is not found in perfection, but in our capacity to endure suffering and retain our inner light amid the deepening shadows of existence."
+          }
+        ]
+      }
+    }
+  ],
+  "impressionist-light_monet": [
+    {
+      "id": "impressionist-light_monet_card_0",
+      "stack_id": "impressionist-light_monet",
+      "category": "arts",
+      "topic": "The Fleeting Instant",
+      "philosopher": "Claude Monet",
+      "visual_mood": "bg-sky-900",
+      "explore_title": "The Tyranny of the Present",
+      "explore_subtext": "Reality is not a collection of permanent objects, but a fluid kaleidoscope of changing light.",
+      "layoutVariant": "thesis",
+      "presentation": {
+        "title": "The Dissolution of the Solid Object",
+        "reading_parts": [
+          {
+            "part_number": 1,
+            "text": "Claude Monet shattered centuries of academic art tradition with a radical ontological premise: we do not see objects themselves; we only see the light reflected off them. Therefore, an object has no fixed color or permanent form.\n\nPainting *en plein air* (outdoors), Monet sought to capture the *impression*—the immediate, unanalyzed visual sensation of a landscape at a single, specific moment in time. He abandoned the clean lines and studio lighting of the Academy to paint the actual, shimmering atmosphere, transforming the canvas into a dynamic laboratory of the immediate present."
+          }
+        ]
+      }
+    },
+    {
+      "id": "impressionist-light_monet_card_1",
+      "stack_id": "impressionist-light_monet",
+      "category": "arts",
+      "topic": "The Series as Time Machine",
+      "philosopher": "Claude Monet",
+      "visual_mood": "bg-cyan-900",
+      "explore_title": "The Multiplicity of Being",
+      "explore_subtext": "Painting the same cathedral dozens of times to prove that an object changes with the clock.",
+      "layoutVariant": "blockquote",
+      "presentation": {
+        "title": "The War Against Chronology",
+        "reading_parts": [
+          {
+            "part_number": 1,
+            "text": "Monet encountered a deep creative conflict: how do you capture a single moment of light when the sun is constantly moving? To resolve this, he engaged in his famous series paintings, executing dozens of canvases of the same subject—such as Rouen Cathedral or Haystacks—at different hours of the day.\n\nThis created a sharp conflict with traditional representation. A cathedral was no longer depicted as an unyielding monument of stone, but as a fluid entity that dissolves into pink light at dawn, burns in yellow at noon, and fades into blue at dusk. Monet’s conflict became an obsession with tracking the relentless, ungraspable flow of time itself."
+          }
+        ]
+      }
+    },
+    {
+      "id": "impressionist-light_monet_card_2",
+      "stack_id": "impressionist-light_monet",
+      "category": "arts",
+      "topic": "Optical Mixing",
+      "philosopher": "Claude Monet",
+      "visual_mood": "bg-blue-900",
+      "explore_title": "The Geometry of the Eye",
+      "explore_subtext": "Shattering the brushstroke to force the viewer's brain into an act of creative synthesis.",
+      "layoutVariant": "fragment",
+      "presentation": {
+        "title": "The Collaboration of Perception",
+        "reading_parts": [
+          {
+            "part_number": 1,
+            "text": "Monet introduced a brilliant technical nuance known as optical mixing. Instead of blending colors smoothly on his palette, he applied pure, unmixed strokes of complementary colors directly onto the canvas side by side.\n\nUp close, an Impressionist painting looks like a chaotic, unintelligible mess of thick paint splatters. However, when the viewer steps back, their eye and brain automatically perform the synthesis, blending the raw strokes into a vibrant, shimmering image of water or fields. This nuance transformed the viewer from a passive observer into an active, creative participant in the mechanics of perception."
+          }
+        ]
+      }
+    },
+    {
+      "id": "impressionist-light_monet_card_3",
+      "stack_id": "impressionist-light_monet",
+      "category": "arts",
+      "topic": "The Water Lilies abstraction",
+      "philosopher": "Claude Monet",
+      "visual_mood": "bg-indigo-900",
+      "explore_title": "The Gateway to Abstraction",
+      "explore_subtext": "The monumental legacy that dissolved the horizon and paved the way for modern art.",
+      "layoutVariant": "epigraph",
+      "presentation": {
+        "title": "The Legacy of the Liquid Canvas",
+        "reading_parts": [
+          {
+            "part_number": 1,
+            "text": "Claude Monet’s legacy is the birth of modern art. In his final, monumental *Water Lilies* series, painted in near-blindness at Giverny, he took his philosophy to its logical extreme: he removed the horizon line and the sky entirely, focusing solely on the shifting reflections on the surface of the water.\n\nArt ceased to be a window looking out at a landscape; it became an immersive, abstract plane of pure color and emotional texture. By liberating paint from the duty of narrative and literal description, Monet opened the floodgates for Abstract Expressionism, leaving us with a beautiful lesson: reality is an endless, flowing river, and our perception is the ultimate artist."
+          }
+        ]
+      }
+    }
+  ],
+  "post-impressionist-emotion_vangogh": [
+    {
+      "id": "post-impressionist-emotion_vangogh_card_0",
+      "stack_id": "post-impressionist-emotion_vangogh",
+      "category": "arts",
+      "topic": "The Emotional Palette",
+      "philosopher": "Vincent van Gogh",
+      "visual_mood": "bg-amber-950",
+      "explore_title": "The Exaggeration of Reality",
+      "explore_subtext": "Color must be used not for local accuracy, but to express terrible human passions.",
+      "layoutVariant": "thesis",
+      "presentation": {
+        "title": "The Incandescent Soul",
+        "reading_parts": [
+          {
+            "part_number": 1,
+            "text": "Vincent van Gogh broke with both classical realism and Impressionist observation to pioneer Post-Impressionism. His core premise was that art should not record what the external world looks like, but what it *feels* like in the depths of a tormented, hyper-sensitive psyche.\n\nHe weaponized color, using it arbitrarily and aggressively to project psychological states. In *The Night Café*, he used clashing greens and blood-reds to express the 'terrible human passions' of an environment where a person can ruin themselves or go mad. Art became an existential projection of internal emotion onto the canvas."
+          }
+        ]
+      }
+    },
+    {
+      "id": "post-impressionist-emotion_vangogh_card_1",
+      "stack_id": "post-impressionist-emotion_vangogh",
+      "category": "arts",
+      "topic": "The Tactile Impasto",
+      "philosopher": "Vincent van Gogh",
+      "visual_mood": "bg-yellow-950",
+      "explore_title": "The Kinetic Brush",
+      "explore_subtext": "A violent, rhythmic application of paint that mirrors an internal psychological storm.",
+      "layoutVariant": "blockquote",
+      "presentation": {
+        "title": "The Agony of the Stroke",
+        "reading_parts": [
+          {
+            "part_number": 1,
+            "text": "Van Gogh lived an agonizing conflict between his profound spiritual longing to connect with humanity and his severe mental illness, which left him isolated and institutionalized. This internal storm bled directly into his brushwork.\n\nHe did not paint with calm, intellectual deliberation; he applied thick, unblended tracks of pure pigment with a frantic, rhythmic intensity (*impasto*). His brushstrokes crawl, swirl, and vibrate across the canvas like waves of energy. This create a dynamic friction where the act of painting looks like a physical wrestling match between the artist and his existential despair."
+          }
+        ]
+      }
+    },
+    {
+      "id": "post-impressionist-emotion_vangogh_card_2",
+      "stack_id": "post-impressionist-emotion_vangogh",
+      "category": "arts",
+      "topic": "The Divinization of the Lowly",
+      "philosopher": "Vincent van Gogh",
+      "visual_mood": "bg-stone-900",
+      "explore_title": "The Halo of the Sunflower",
+      "explore_subtext": "Transforming ordinary peasants, worn shoes, and common weeds into sacred icons.",
+      "layoutVariant": "fragment",
+      "presentation": {
+        "title": "The Sacramental Everyday",
+        "reading_parts": [
+          {
+            "part_number": 1,
+            "text": "Van Gogh introduced a profound philosophical nuance by merging art with a secular, pantheistic spirituality. Having failed as a Christian missionary to impoverished miners, he sought salvation through the brush, finding a holy energy inside the lowliest subjects.\n\nA pair of mud-caked peasant boots, a single cypress tree twisting toward the stars, or a simple sunflower became sacred icons in his hands. He painted them with an explosive intensity that revealed an underlying, vibrating cosmic vitality, proving that the divine is not hidden in a distant heaven, but burning brightly inside the ordinary, fragile things of the earth."
+          }
+        ]
+      }
+    },
+    {
+      "id": "post-impressionist-emotion_vangogh_card_3",
+      "stack_id": "post-impressionist-emotion_vangogh",
+      "category": "arts",
+      "topic": "Expressionism Genesis",
+      "philosopher": "Vincent van Gogh",
+      "visual_mood": "bg-neutral-900",
+      "explore_title": "The Starry Cosmos",
+      "explore_subtext": "The monumental legacy that liberated individual emotion as the ultimate arbiter of modern art.",
+      "layoutVariant": "epigraph",
+      "presentation": {
+        "title": "The Legacy of the Sun-Drenched Canvas",
+        "reading_parts": [
+          {
+            "part_number": 1,
+            "text": "Vincent van Gogh’s legacy is the birth of Modern Expressionism. Though he sold only one painting in his lifetime and died of a self-inflicted gunshot wound, his radical subjectivity permanently liberated future artists from the constraints of objective imitation.\n\nHis masterpiece *The Starry Night* transformed the night sky into a swirling cosmic ocean of pure energy, anticipating the emotional freedom of Fauvism and Expressionism. Van Gogh leaves behind a beautiful, tragic proof that art can be a powerful instrument of empathy, capable of converting deep individual pain into a source of light for humanity."
+          }
+        ]
+      }
+    }
+  ],
+  "surreal-pain_kahlo": [
+    {
+      "id": "surreal-pain_kahlo_card_0",
+      "stack_id": "surreal-pain_kahlo",
+      "category": "arts",
+      "topic": "Autobiographical Symbolism",
+      "philosopher": "Frida Kahlo",
+      "visual_mood": "bg-red-950",
+      "explore_title": "The Internal Anatomy",
+      "explore_subtext": "I never paint dreams or nightmares. I paint my own reality.",
+      "layoutVariant": "thesis",
+      "presentation": {
+        "title": "The Dissection of the Self",
+        "reading_parts": [
+          {
+            "part_number": 1,
+            "text": "Frida Kahlo constructed a singular visual vocabulary by turning her canvas into an anatomical and psychological laboratory of her own body. Her core premise was a rejection of external realism in favor of a hyper-visceral, symbolic projection of her internal life.\n\nLeft shattered by a catastrophic bus accident in her youth and enduring dozens of surgeries, she spent months staring at a mirror mounted on her canopy bed. She used her own face and bleeding anatomy as a stage to map themes of physical pain, fertility, and existential loneliness, inventing an intensely intimate style that dissolved the border between autobiography and myth."
+          }
+        ]
+      }
+    },
+    {
+      "id": "surreal-pain_kahlo_card_1",
+      "stack_id": "surreal-pain_kahlo",
+      "category": "arts",
+      "topic": "The Broken Column",
+      "philosopher": "Frida Kahlo",
+      "visual_mood": "bg-rose-950",
+      "explore_title": "The Fragile Monolith",
+      "explore_subtext": "The agonizing conflict between physical destruction and unyielding psychological resilience.",
+      "layoutVariant": "blockquote",
+      "presentation": {
+        "title": "The Splintered Core",
+        "reading_parts": [
+          {
+            "part_number": 1,
+            "text": "The defining conflict in Kahlo's art is the constant friction between her physical vulnerability and her ferocious psychological strength. In *The Broken Column*, she depicts her open torso containing a crumbling Ionic column instead of a spine, her flesh pierced by countless nails.\n\nYet, despite this horrific imagery of torture, her gaze remains direct, proud, and completely unblinking. She refuses to play the victim. This creates a powerful tension: the body is a site of absolute betrayal and fragmentation, but the conscious mind remains an unassailable fortress, staring down the viewer with sovereign defiance."
+          }
+        ]
+      }
+    },
+    {
+      "id": "surreal-pain_kahlo_card_2",
+      "stack_id": "surreal-pain_kahlo",
+      "category": "arts",
+      "topic": "The Divided Identity",
+      "philosopher": "Frida Kahlo",
+      "visual_mood": "bg-amber-950",
+      "explore_title": "The Two Fridas",
+      "explore_subtext": "Navigating the painful split between colonial European heritage and indigenous Mexican identity.",
+      "layoutVariant": "fragment",
+      "presentation": {
+        "title": "The Blood Ties of Culture",
+        "reading_parts": [
+          {
+            "part_number": 1,
+            "text": "Kahlo introduced a profound socio-philosophical nuance by using her personal pain to mirror her country’s cultural schizophrenia. In *The Two Fridas*, she paints two versions of herself holding hands, their hearts exposed and connected by a single, bleeding vein.\n\nOne wears a European Victorian gown, representing her father’s heritage; the other wears a traditional Tehuana dress, representing her indigenous Mexican mother. This nuance elevates her work from simple psychological therapy to a complex study of post-colonial identity, showing how the modern individual must navigate conflicting cultural histories while bleeding from the effort to synthesize them."
+          }
+        ]
+      }
+    },
+    {
+      "id": "surreal-pain_kahlo_card_3",
+      "stack_id": "surreal-pain_kahlo",
+      "category": "arts",
+      "topic": "Surrealist Defiance",
+      "philosopher": "Frida Kahlo",
+      "visual_mood": "bg-neutral-900",
+      "explore_title": "The Icon of Autonomy",
+      "explore_subtext": "A monumental legacy that transformed individual suffering into a universal symbol of political resistance.",
+      "layoutVariant": "epigraph",
+      "presentation": {
+        "title": "The Legacy of the Bleeding Canvas",
+        "reading_parts": [
+          {
+            "part_number": 1,
+            "text": "Frida Kahlo’s legacy is that of a global feminist and cultural icon who radically expanded what subjects could be represented in art. André Breton famously described her work as a 'ribbon around a bomb,' attempting to claim her for European Surrealism; Kahlo rejected the label, asserting that she painted her own concrete reality, not dreams.\n\nBy fearlessly depicting abortion, miscarriage, gender fluidity, and physical disability, she shattered centuries of artistic taboos. She leaves humanity with an unyielding philosophy of resilience: a proof that personal trauma can be converted into raw, political, and aesthetic power, transforming the body's vulnerabilities into an immortal cry of freedom."
+          }
+        ]
+      }
+    }
+  ],
+  "organic-architecture_gaudi": [
+    {
+      "id": "organic-architecture_gaudi_card_0",
+      "stack_id": "organic-architecture_gaudi",
+      "category": "arts",
+      "topic": "The Geometric Organism",
+      "philosopher": "Antoni Gaudí",
+      "visual_mood": "bg-emerald-950",
+      "explore_title": "The Architecture of Nature",
+      "explore_subtext": "There are no straight lines or sharp corners in nature; therefore, architecture must not have them.",
+      "layoutVariant": "thesis",
+      "presentation": {
+        "title": "The Mimicry of the Divine Design",
+        "reading_parts": [
+          {
+            "part_number": 1,
+            "text": "Antoni Gaudí pioneered a radical architectural philosophy that rejected the rigid, industrial geometry of his contemporaries in favor of organic structuralism. His core premise was that God’s creation contains the highest engineering efficiency and aesthetic perfection.\n\nInstead of copy-pasting historical boxes, Gaudí studied the geometry of trees, skeletons, and mountain caves. He utilized complex mathematical forms like hyperboloids, paraboloids, and catenary arches, which allow stone to support its own weight naturally without clumsy external buttresses. Architecture was recontextualized as a living, breathing extension of the natural world."
+          }
+        ]
+      }
+    },
+    {
+      "id": "organic-architecture_gaudi_card_1",
+      "stack_id": "organic-architecture_gaudi",
+      "category": "arts",
+      "topic": "Trencadís and Light",
+      "philosopher": "Antoni Gaudí",
+      "visual_mood": "bg-teal-950",
+      "explore_title": "The Shattered Mosaic",
+      "explore_subtext": "The dynamic conflict between structural engineering and a chaotic explosion of color and light.",
+      "layoutVariant": "blockquote",
+      "presentation": {
+        "title": "The Symphony of the Broken Ceramic",
+        "reading_parts": [
+          {
+            "part_number": 1,
+            "text": "Gaudí lived a deep creative conflict, attempting to build hyper-complex, monumentally scale structures while maintaining a playful, artisanal texture. To resolve this, he developed *trencadís*—a technique of coating curved, organic stone surfaces with a mosaic of broken tiles and glass.\n\nThis created a vibrant conflict with the cold, gray uniformity of modern industrial cities. In buildings like Casa Batlló, the façade shimmers like fish scales, reflecting shifting daylight. Gaudí’s conflict was an refusal to let science turn life drab, forcing advanced structural mechanics to wear a garment of pure, festive, and chaotic color."
+          }
+        ]
+      }
+    },
+    {
+      "id": "organic-architecture_gaudi_card_2",
+      "stack_id": "organic-architecture_gaudi",
+      "category": "arts",
+      "topic": "The Forest of Faith",
+      "philosopher": "Antoni Gaudí",
+      "visual_mood": "bg-stone-900",
+      "explore_title": "The Sagrada Família",
+      "explore_subtext": "Transforming a cathedral into a literal, mathematical forest of stone and stained glass.",
+      "layoutVariant": "fragment",
+      "presentation": {
+        "title": "The Lithic Prayer",
+        "reading_parts": [
+          {
+            "part_number": 1,
+            "text": "In his ultimate masterpiece, the Sagrada Família, Gaudí introduced his most profound spiritual and philosophical nuance. He designed the interior columns to split and branch like ancient trees, creating a literal stone forest where the roof mimics a canopy of leaves.\n\nWhen sunlight filters through the abstract stained-glass windows, the interior undergoes a dynamic, shifting transformation of light and shadow, mimicking a forest clearing. This nuance turns a religious building into a cosmic cathedral. Faith is not experienced through cold, dogmatic geometry, but through an immersive encounter with a living, growing, and mathematically precise nature."
+          }
+        ]
+      }
+    },
+    {
+      "id": "organic-architecture_gaudi_card_3",
+      "stack_id": "organic-architecture_gaudi",
+      "category": "arts",
+      "topic": "Modernisme Català",
+      "philosopher": "Antoni Gaudí",
+      "visual_mood": "bg-neutral-900",
+      "explore_title": "The Master of Fluidity",
+      "explore_subtext": "A monumental legacy that permanently altered the relationship between materials, geometry, and spirit.",
+      "layoutVariant": "epigraph",
+      "presentation": {
+        "title": "The Legacy of the Curved Horizon",
+        "reading_parts": [
+          {
+            "part_number": 1,
+            "text": "Antoni Gaudí’s legacy is a towering testament to individual vision and Catalan identity. His works, seven of which are UNESCO World Heritage Sites, proved that architecture can achieve the expressive freedom of abstract sculpture without losing structural integrity.\n\nBy dedicating his final years to a building that would take over a century to complete, he modeled an artistic humility that worked for future generations rather than immediate gratification. Gaudí leaves humanity with an inspiring philosophy: to build beautifully is to remember that we are not the masters of nature, but its humble students, tasked with continuing the divine work of creation."
+          }
+        ]
+      }
+    }
+  ],
+  "prairie-style_wright": [
+    {
+      "id": "prairie-style_wright_card_0",
+      "stack_id": "prairie-style_wright",
+      "category": "arts",
+      "topic": "Organic Architecture",
+      "philosopher": "Frank Lloyd Wright",
+      "visual_mood": "bg-stone-900",
+      "explore_title": "The Horizon as Anchor",
+      "explore_subtext": "A building should grow out of the landscape, not look like a box dropped onto it.",
+      "layoutVariant": "thesis",
+      "presentation": {
+        "title": "The Demolition of the Box",
+        "reading_parts": [
+          {
+            "part_number": 1,
+            "text": "Frank Lloyd Wright launched a radical rebellion against the European, classical architecture that dominated America, inventing what he called Organic Architecture. His core premise was that a building should be an indigenous child of its environment, harmonizing seamlessly with the topography, climate, and local materials.\n\nIn his early Prairie Style homes, he emphasized the horizontal plane—mimicking the low, flat midwestern prairies. He lowered ceilings, extended dramatic overhanging eaves, and shattered the traditional concept of a house as a series of claustrophobic boxes, opening up the interior layout to create a fluid, continuous flow of democratic space."
+          }
+        ]
+      }
+    },
+    {
+      "id": "prairie-style_wright_card_1",
+      "stack_id": "prairie-style_wright",
+      "category": "arts",
+      "topic": "Fallingwater",
+      "philosopher": "Frank Lloyd Wright",
+      "visual_mood": "bg-amber-950",
+      "explore_title": "The Cantilevered Stream",
+      "explore_subtext": "The tense conflict of suspending tons of reinforced concrete directly over a roaring waterfall.",
+      "layoutVariant": "blockquote",
+      "presentation": {
+        "title": "The Domestication of the Torrent",
+        "reading_parts": [
+          {
+            "part_number": 1,
+            "text": "Wright’s philosophy faced its ultimate test in his masterpiece, Fallingwater. Commissioned to build a house near a waterfall, he shocked his clients by cantilevering the house directly *over* the roaring stream, rather than facing it from across the bank.\n\nThis created a sharp engineering and aesthetic conflict: using heavy, industrial reinforced concrete slabs to mimic the natural rock ledges beneath. The structural tension is palpable; the building seems to float over the water while anchoring itself deeply into the hillside, forcing a direct, visceral integration between human luxury and untamed nature."
+          }
+        ]
+      }
+    },
+    {
+      "id": "prairie-style_wright_card_2",
+      "stack_id": "prairie-style_wright",
+      "category": "arts",
+      "topic": "The Usonian Ideal",
+      "philosopher": "Frank Lloyd Wright",
+      "visual_mood": "bg-orange-950",
+      "explore_title": "Democratic Architecture",
+      "explore_subtext": "Designing affordable, beautiful, and functional spaces for the average citizen.",
+      "layoutVariant": "fragment",
+      "presentation": {
+        "title": "The Soul of the Small Dwelling",
+        "reading_parts": [
+          {
+            "part_number": 1,
+            "text": "Wright introduced a crucial social nuance to his philosophy through his 'Usonian' house designs, created during the Great Depression. He sought to democratize high design, stripping away expensive trim, garages, and basements to create affordable, beautiful, and highly functional homes for middle-class families.\n\nThese houses featured radiant floor heating, open kitchens that integrated the housewife into social life, and massive glass walls looking out at private gardens. This nuance proved that organic architecture was not an elitist luxury, but a democratic blueprint intended to liberate the individual spirit through daily contact with light, space, and nature."
+          }
+        ]
+      }
+    },
+    {
+      "id": "prairie-style_wright_card_3",
+      "stack_id": "prairie-style_wright",
+      "category": "arts",
+      "topic": "The Guggenheim Spiral",
+      "philosopher": "Frank Lloyd Wright",
+      "visual_mood": "bg-neutral-900",
+      "explore_title": "The Continuous Wave",
+      "explore_subtext": "A legacy that permanently dissolved the architectural grid to invent the continuous spiral.",
+      "layoutVariant": "epigraph",
+      "presentation": {
+        "title": "The Legacy of the Infinite Line",
+        "reading_parts": [
+          {
+            "part_number": 1,
+            "text": "Frank Lloyd Wright’s legacy is that of America's greatest architect, a visionary who permanently altered the global spatial imagination. His final monument, the Solomon R. Guggenheim Museum, took his organic ideal into the city, replacing the traditional grid of museum rooms with a single, continuous, upward-spiraling concrete ramp.\n\nHe proved that architecture can influence human psychology, expanding or comforting the soul through spatial geometry. Wright leaves humanity with a profound environmental philosophy: that our buildings should not be monuments to human vanity, but harmonious shelters that teach us how to live in balance with the earth."
+          }
+        ]
+      }
+    }
+  ],
+  "modernist-machine_corbusier": [
+    {
+      "id": "modernist-machine_corbusier_card_0",
+      "stack_id": "modernist-machine_corbusier",
+      "category": "arts",
+      "topic": "The Machine for Living In",
+      "philosopher": "Le Corbusier",
+      "visual_mood": "bg-slate-900",
+      "explore_title": "The Functional Geometry",
+      "explore_subtext": "A house is a machine for living in, engineered for ultimate clarity, light, and speed.",
+      "layoutVariant": "thesis",
+      "presentation": {
+        "title": "The Purging of the Ornament",
+        "reading_parts": [
+          {
+            "part_number": 1,
+            "text": "Le Corbusier launched a radical, uncompromising modernist manifesto that sought to tear down historical ornamentation in favor of pure, industrial functionalism. His core premise was a response to the machine age: architecture must embrace the efficiency, speed, and geometric purity of airplanes, ships, and automobiles.\n\nHe famously declared that 'a house is a machine for living in.' By deploying new industrial materials—reinforced concrete, steel, and plate glass—he sought to engineer space scientifically, stripping away the dark, congested, and decorative traditions of the 19th century to usher humanity into an era of crystalline rationalism."
+          }
+        ]
+      }
+    },
+    {
+      "id": "modernist-machine_corbusier_card_1",
+      "stack_id": "modernist-machine_corbusier",
+      "category": "arts",
+      "topic": "The Five Points of Architecture",
+      "philosopher": "Le Corbusier",
+      "visual_mood": "bg-zinc-900",
+      "explore_title": "The Villa Savoye",
+      "explore_subtext": "The sharp conflict of elevating a pristine white box on stilts above the natural earth.",
+      "layoutVariant": "blockquote",
+      "presentation": {
+        "title": "The Architectural Revolution",
+        "reading_parts": [
+          {
+            "part_number": 1,
+            "text": "Le Corbusier formalized his philosophy into his revolutionary 'Five Points of Architecture,' perfectly embodied in the Villa Savoye. He used slender concrete columns (*pilotis*) to lift the building off the ground, reclaimed the footprint with a flat roof garden, and used horizontal ribbon windows to flood the interior with uninterrupted light.\n\nThis created an intense aesthetic conflict with the natural landscape. The house does not grow out of the earth; it hovers over it like a pristine, geometric alien artifact. This clean break with tradition generated a deep tension between our romantic longing for rustic organicism and Corbusier’s unyielding faith in industrial progress."
+          }
+        ]
+      }
+    },
+    {
+      "id": "modernist-machine_corbusier_card_2",
+      "stack_id": "modernist-machine_corbusier",
+      "category": "arts",
+      "topic": "The Modulor Scale",
+      "philosopher": "Le Corbusier",
+      "visual_mood": "bg-blue-950",
+      "explore_title": "The Geometry of Man",
+      "explore_subtext": "Inventing a universal scale of proportion based on human anatomy and the golden ratio.",
+      "layoutVariant": "fragment",
+      "presentation": {
+        "title": "The Standard of the Body",
+        "reading_parts": [
+          {
+            "part_number": 1,
+            "text": "Le Corbusier introduced a vital humanist nuance to his mechanical rationalism through the invention of the Modulor—a universal scale of architectural proportion based on the human body and the Golden Ratio. He sought to ensure that even in a mass-produced, industrial world, buildings would remain scaled to human proportions.\n\nThis nuance transformed his later work. In the *Cité Radieuse* of Marseille, he abandoned smooth white surfaces for rough, sculptural exposed concrete (*béton brut*). The building became an intricate, self-contained vertical city, proving that industrial modularity could retain a visceral, textured, and deeply human presence."
+          }
+        ]
+      }
+    },
+    {
+      "id": "modernist-machine_corbusier_card_3",
+      "stack_id": "modernist-machine_corbusier",
+      "category": "arts",
+      "topic": "Brutalist Urbanism",
+      "philosopher": "Le Corbusier",
+      "visual_mood": "bg-neutral-900",
+      "explore_title": "The Master of Concrete",
+      "explore_subtext": "The monumental legacy that defined the skyline of modern global cities.",
+      "layoutVariant": "epigraph",
+      "presentation": {
+        "title": "The Legacy of the Radiant Grid",
+        "reading_parts": [
+          {
+            "part_number": 1,
+            "text": "Le Corbusier’s legacy is nothing less than the blueprint of the modern global city. His radical urban planning concepts and use of raw concrete birthed the Brutalist movement and transformed postwar reconstruction from Europe to Chandigarh, India.\n\nWhile his utopian urban clearances remain highly controversial, his spatial innovations permanently redefined how humanity lives in dense urban centers. He leaves behind an eternal architectural challenge: a reminder that the spaces we build are not passive containers, but powerful social machines capable of engineering either human alienation or collective liberation."
           }
         ]
       }

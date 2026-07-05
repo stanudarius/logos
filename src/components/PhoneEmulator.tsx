@@ -8,24 +8,6 @@ import ThoughtStream from "./ThoughtStream";
 import CommonplaceBook from "./CommonplaceBook";
 import ReadingTrailsDashboard from "./ReadingTrailsDashboard";
 
-const StatusBarTime = () => {
-  const [currentTime, setCurrentTime] = useState<string>("9:41");
-  useEffect(() => {
-    const updateTime = () => {
-      const now = new Date();
-      let hours = now.getHours();
-      const minutes = now.getMinutes();
-      hours = hours % 12 || 12; // 12-hour format
-      setCurrentTime(`${hours}:${minutes.toString().padStart(2, '0')}`);
-    };
-    updateTime(); // Initial set
-    const interval = setInterval(updateTime, 10000); // Check every 10 seconds
-    return () => clearInterval(interval);
-  }, []);
-  return <span className="opacity-45 text-[#1C1C1E] hidden sm:block">{currentTime}</span>;
-};
-
-
 interface PhoneEmulatorProps {
   // Display state
   phoneTab: "explore" | "vault" | "trails" | "trail-view";
@@ -165,10 +147,7 @@ const PhoneEmulator: React.FC<PhoneEmulatorProps> = ({
       className={`relative rounded-none sm:rounded-[40px] h-[100dvh] sm:h-[90vh] sm:max-h-[850px] sm:min-h-[600px] w-full border-0 sm:border-[10px] sm:border-[#1A1A1A] bg-[#FAF8F3] shadow-none sm:shadow-[0_15px_40px_rgba(0,0,0,0.08)] flex flex-col justify-between overflow-hidden transition-all duration-700 ease-out`}
     >
 
-      <div className="relative z-50 flex justify-between items-center text-[10px] font-bold tracking-widest uppercase px-5 pt-4 pb-2 pointer-events-none">
-        <div className="flex items-center gap-2">
-          <StatusBarTime />
-        </div>
+      <div className="relative z-50 flex justify-end items-center text-[10px] font-bold tracking-widest uppercase px-5 pt-4 pb-2 pointer-events-none">
 
         {phoneTab === "explore" && (
           <div className="flex items-center gap-1.5 pointer-events-auto">
