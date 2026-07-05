@@ -2,7 +2,7 @@ import React, { useState, useCallback } from "react";
 import { createPortal } from "react-dom";
 import { motion, AnimatePresence, useScroll, useTransform, Variants } from "motion/react";
 import { useRef } from "react";
-import { Bookmark, BookmarkCheck, BookOpen, X, MessageCircle } from "lucide-react";
+import { Bookmark, BookmarkCheck, BookOpen, X, MessageCircle, Heart } from "lucide-react";
 import type { FeedCard, LayoutVariant, ReadingPart } from "../types";
 import { getInitials } from "../utils/aesthetics";
 import SocraticChat from "./SocraticChat";
@@ -31,16 +31,28 @@ const ThoughtAtom: React.FC<ThoughtAtomProps> = ({
 }) => {
   const [isDeepDiveOpen, setIsDeepDiveOpen] = useState(false);
   const [isChatOpen, setIsChatOpen] = useState(false);
+  const [showHeart, setShowHeart] = useState(false);
 
-  const handleCardTap = useCallback(
+  const handleDoubleTap = useCallback(
     (e: React.MouseEvent) => {
-      // Don't trigger deep dive if clicking a button
+      e.preventDefault();
       const target = e.target as HTMLElement;
       if (target.closest("button")) return;
-      setIsDeepDiveOpen(true);
-      onTriggerToast("Opening Deep Dive essay!");
+
+      if (!isSaved) {
+        onToggleSave();
+      }
+      
+      // Heart animation
+      setShowHeart(true);
+      setTimeout(() => setShowHeart(false), 800);
+      
+      // Haptic feedback
+      if (typeof navigator !== 'undefined' && navigator.vibrate) {
+        navigator.vibrate(50);
+      }
     },
-    [onTriggerToast]
+    [isSaved, onToggleSave]
   );
 
   const handleCloseDeepDive = useCallback(() => {
@@ -60,11 +72,11 @@ const ThoughtAtom: React.FC<ThoughtAtomProps> = ({
   const y = useTransform(scrollYProgress, [0, 0.3, 0.7, 1], [-50, 0, 0, 50]);
 
   return (
-    <div id={`thought-atom-${index}`} ref={containerRef} className="thought-atom relative overflow-hidden" data-card-index={index}>
+    <div id={`thought-atom-${index}`} ref={containerRef} className="thought-atom relative overflow-hidden h-[100dvh] w-full snap-center" data-card-index={index}>
       {/* Main Card Surface */}
       <motion.div
-        className={`h-full w-full bg-[#FAF8F3] flex flex-col relative cursor-pointer select-none layout-${layoutVariant}`}
-        onClick={handleCardTap}
+        className={`h-full w-full bg-[#FAF8F3] flex flex-col relative select-none layout-${layoutVariant}`}
+        onDoubleClick={handleDoubleTap}
         style={{ rotate, scale, y }}
       >
         {/* Subtle grain texture overlay */}
@@ -75,8 +87,59 @@ const ThoughtAtom: React.FC<ThoughtAtomProps> = ({
           }}
         />
 
+        {/* Double Tap Heart Overlay */}
+        <AnimatePresence>
+          {showHeart && (
+            <motion.div 
+              initial={{ scale: 0.5, opacity: 0, rotate: -15 }}
+              animate={{ scale: 1.5, opacity: 0.8, rotate: 0 }}
+              exit={{ scale: 2, opacity: 0 }}
+              transition={{ type: "spring", stiffness: 200, damping: 15 }}
+              className="absolute inset-0 z-50 flex items-center justify-center pointer-events-none"
+            >
+              <Heart className="w-32 h-32 text-red-500 fill-current drop-shadow-2xl" />
+            </motion.div>
+          )}
+        </AnimatePresence>
+
         {renderLayout(card, layoutVariant)}
       </motion.div>
+
+      {/* Vertical Action Bar (TikTok Style) */}
+      <div className="absolute right-3 bottom-24 z-40 flex flex-col gap-5 pointer-events-auto">
+        <button 
+          onClick={onToggleSave}
+          className="group flex flex-col items-center gap-1 active:scale-90 transition-transform"
+        >
+          <div className="w-10 h-10 rounded-full bg-white/80 backdrop-blur-md shadow-lg border border-white/50 flex items-center justify-center">
+            {isSaved ? <Heart className="w-5 h-5 text-red-500 fill-current" /> : <Heart className="w-5 h-5 text-[#1C1C1E]" />}
+          </div>
+          <span className="text-[9px] font-bold text-white drop-shadow-md">Save</span>
+        </button>
+
+        <button 
+          onClick={() => {
+            setIsDeepDiveOpen(true);
+            onTriggerToast("Opening Deep Dive essay!");
+          }}
+          className="group flex flex-col items-center gap-1 active:scale-90 transition-transform"
+        >
+          <div className="w-10 h-10 rounded-full bg-[#1C1C1E] shadow-lg border border-[#3A3A3E] flex items-center justify-center">
+            <BookOpen className="w-4 h-4 text-[#FAF8F3]" />
+          </div>
+          <span className="text-[9px] font-bold text-white drop-shadow-md">Read</span>
+        </button>
+
+        <button 
+          onClick={() => setIsChatOpen(true)}
+          className="group flex flex-col items-center gap-1 active:scale-90 transition-transform"
+        >
+          <div className="w-10 h-10 rounded-full bg-[#FAF8F3] shadow-lg border border-[#D4CFC5] flex items-center justify-center">
+            <MessageCircle className="w-4 h-4 text-[#B5A48B]" />
+          </div>
+          <span className="text-[9px] font-bold text-white drop-shadow-md">Debate</span>
+        </button>
+      </div>
 
       {/* Deep Dive Drawer */}
       {createPortal(
@@ -180,14 +243,14 @@ const ThoughtAtom: React.FC<ThoughtAtomProps> = ({
 };
 
 /**
- * Typewriter text component for category labels
+ * Typewriter text component for kinetic typography
  */
-const TypewriterText = ({ text, className }: { text: string; className?: string }) => {
+const TypewriterText = ({ text, className, speed = 0.04, delay = 0.2 }: { text: string; className?: string; speed?: number; delay?: number }) => {
   const container: Variants = {
     hidden: { opacity: 1 },
     visible: {
       opacity: 1,
-      transition: { staggerChildren: 0.04, delayChildren: 0.2 },
+      transition: { staggerChildren: speed, delayChildren: delay },
     },
   };
   const child: Variants = {
@@ -258,7 +321,7 @@ function renderLayout(card: FeedCard, variant: LayoutVariant) {
             variants={titleAnim} initial="hidden" whileInView="visible" viewport={{ once: false }}
             className="atom-title font-serif text-[2rem] leading-[1.08] font-semibold italic text-[#1C1C1E] mb-5 tracking-tight relative z-10"
           >
-            {card.explore_title}
+            <TypewriterText text={card.explore_title} speed={0.015} delay={0.4} />
           </motion.h1>
           <motion.p 
             variants={descAnim} initial="hidden" whileInView="visible" viewport={{ once: false }}
@@ -280,7 +343,7 @@ function renderLayout(card: FeedCard, variant: LayoutVariant) {
             variants={titleAnim} initial="hidden" whileInView="visible" viewport={{ once: false }}
             className="atom-title text-[1.375rem] leading-[1.35] font-normal italic text-[#1C1C1E] mb-4 relative z-10" style={{ fontFamily: "var(--font-literary)" }}
           >
-            "{card.explore_title}"
+            "<TypewriterText text={card.explore_title} speed={0.015} delay={0.4} />"
           </motion.h1>
           <motion.p 
             variants={descAnim} initial="hidden" whileInView="visible" viewport={{ once: false }}
@@ -304,7 +367,7 @@ function renderLayout(card: FeedCard, variant: LayoutVariant) {
             variants={titleAnim} initial="hidden" whileInView="visible" viewport={{ once: false }}
             className="atom-title text-[1.125rem] leading-[1.6] font-medium text-[#1C1C1E] text-justify mb-5 relative z-10" style={{ letterSpacing: "-0.025em", fontFamily: "var(--font-sans)", hyphens: "auto" }}
           >
-            {card.explore_title}. {card.explore_subtext}
+            <TypewriterText text={card.explore_title} speed={0.015} delay={0.4} />. {card.explore_subtext}
           </motion.h1>
           <motion.p 
             variants={descAnim} initial="hidden" whileInView="visible" viewport={{ once: false }}
@@ -327,7 +390,7 @@ function renderLayout(card: FeedCard, variant: LayoutVariant) {
             variants={titleAnim} initial="hidden" whileInView="visible" viewport={{ once: false }}
             className="atom-title text-[1.5rem] leading-[1.35] font-normal italic text-[#1C1C1E] mb-5 relative z-10" style={{ fontFamily: "var(--font-literary)" }}
           >
-            {card.explore_title}
+            <TypewriterText text={card.explore_title} speed={0.015} delay={0.4} />
           </motion.h1>
           <div className="atom-rule-bottom w-8 h-px bg-[#D4CFC5] mb-4 relative z-10" />
           <motion.p 

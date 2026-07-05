@@ -153,7 +153,8 @@ const ThoughtStream: React.FC<ThoughtStreamProps> = ({
   return (
     <div
       ref={containerRef}
-      className="thought-stream h-full w-full"
+      className="thought-stream h-full w-full overflow-y-auto snap-y snap-mandatory scroll-smooth"
+      style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }} // Hide scrollbar for a cleaner look
     >
       {cards.map((card, index) => (
         <ThoughtAtom
