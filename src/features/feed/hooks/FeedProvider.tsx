@@ -7,14 +7,14 @@ type FeedContextType = ReturnType<typeof useFeedHook>;
 
 const FeedContext = createContext<FeedContextType | undefined>(undefined);
 
-export const FeedProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+export const FeedProvider: React.FC<{ children: ReactNode }> = ({
+  children,
+}) => {
   const { phoneTab } = useNavigation();
   const feedState = useFeedHook(phoneTab);
 
   return (
-    <FeedContext.Provider value={feedState}>
-      {children}
-    </FeedContext.Provider>
+    <FeedContext.Provider value={feedState}>{children}</FeedContext.Provider>
   );
 };
 

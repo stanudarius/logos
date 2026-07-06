@@ -1,7 +1,17 @@
 import React from "react";
 import { motion } from "motion/react";
 
-export const TypewriterText = ({ text, className, speed = 0.04, delay = 0.2 }: { text: string; className?: string; speed?: number; delay?: number }) => {
+export const FadeText = ({
+  text,
+  className,
+  speed = 0.04,
+  delay = 0.2,
+}: {
+  text: string;
+  className?: string;
+  speed?: number;
+  delay?: number;
+}) => {
   return (
     <motion.span
       className={className}

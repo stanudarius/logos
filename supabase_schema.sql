@@ -2,7 +2,7 @@
 
 -- 1. Create Profiles Table
 CREATE TABLE profiles (
-  id UUID REFERENCES auth.users NOT NULL PRIMARY KEY,
+  id UUID REFERENCES auth.users ON DELETE CASCADE NOT NULL PRIMARY KEY,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc', NOW()),
   has_completed_quiz BOOLEAN DEFAULT false,
   quiz_preferences JSONB
@@ -11,7 +11,7 @@ CREATE TABLE profiles (
 -- 2. Create Vault Cards Table
 CREATE TABLE vault_cards (
   id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
-  user_id UUID REFERENCES auth.users NOT NULL,
+  user_id UUID REFERENCES auth.users ON DELETE CASCADE NOT NULL,
   card_id TEXT NOT NULL,
   card_data JSONB NOT NULL,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc', NOW())
@@ -101,4 +101,10 @@ CREATE POLICY "Anyone can view constellation nodes"
 CREATE POLICY "Anyone can view constellation edges" 
   ON constellation_edges FOR SELECT 
   USING ( true );
+
+-- 11. Create Indexes
+CREATE INDEX IF NOT EXISTS idx_vault_cards_user_id ON vault_cards(user_id);
+CREATE INDEX IF NOT EXISTS idx_constellation_edges_from_node ON constellation_edges(from_node);
+CREATE INDEX IF NOT EXISTS idx_constellation_edges_to_node ON constellation_edges(to_node);
+CREATE INDEX IF NOT EXISTS idx_feed_cards_stack_id_category ON feed_cards(stack_id, category);
 

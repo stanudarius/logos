@@ -1,10 +1,13 @@
 import React, { useState, useCallback, useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "motion/react";
-import { BookOpen, X, MessageCircle, Heart, Share as ShareIcon, Timer } from "lucide-react";
-import type { FeedCard, LayoutVariant, ReadingPart } from "@/src/features/feed/types";
+import { BookOpen, X, Heart, Share as ShareIcon } from "lucide-react";
+import type {
+  FeedCard,
+  LayoutVariant,
+  ReadingPart,
+} from "@/src/features/feed/types";
 import { getInitials } from "@/src/utils/aesthetics";
-import SocraticChat from "@/src/features/chat/components/SocraticChat";
 import FocusLock from "react-focus-lock";
 
 import { useNavigation } from "@/src/providers/NavigationProvider";
@@ -18,7 +21,6 @@ interface ThoughtAtomProps {
   isSaved: boolean;
   onToggleSave: (index: number) => void;
   onOpenDeepDive?: (index: number) => void;
-  onOpenChat?: (index: number) => void;
   isActive?: boolean;
   isTrailMode?: boolean;
 }
@@ -30,12 +32,10 @@ const ThoughtAtom: React.FC<ThoughtAtomProps> = ({
   isSaved,
   onToggleSave,
   onOpenDeepDive,
-  onOpenChat,
   isActive = false,
-  isTrailMode = false
+  isTrailMode = false,
 }) => {
-  const { setIsZenModeOpen, isDeepDiveOpen, setIsDeepDiveOpen } = useNavigation();
-  const [isChatOpen, setIsChatOpen] = useState(false);
+  const { isDeepDiveOpen, setIsDeepDiveOpen } = useNavigation();
   const [showHeart, setShowHeart] = useState(false);
   const heartTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const isMountedRef = useRef(true);
@@ -48,8 +48,6 @@ const ThoughtAtom: React.FC<ThoughtAtomProps> = ({
       if (heartTimeoutRef.current) clearTimeout(heartTimeoutRef.current);
     };
   }, []);
-
-
 
   const handleDoubleTap = useCallback(
     (e: React.MouseEvent) => {
@@ -67,15 +65,14 @@ const ThoughtAtom: React.FC<ThoughtAtomProps> = ({
         }, 1000);
       }
 
-      if (typeof navigator !== 'undefined' && navigator.vibrate) {
+      if (typeof navigator !== "undefined" && navigator.vibrate) {
         navigator.vibrate([30, 50, 30]);
       }
     },
-    [index, isSaved, layoutVariant, onToggleSave]
+    [index, isSaved, layoutVariant, onToggleSave],
   );
 
   const handleCloseDeepDive = useCallback(() => setIsDeepDiveOpen(false), []);
-  const handleCloseChat = useCallback(() => setIsChatOpen(false), []);
 
   const containerRef = useRef<HTMLDivElement>(null);
   const { isExporting, handleExportImage } = useCardExport(card, containerRef);
@@ -87,7 +84,6 @@ const ThoughtAtom: React.FC<ThoughtAtomProps> = ({
       className="thought-atom relative overflow-hidden h-full w-full snap-center"
       data-card-index={index}
     >
-      {/* Main Card Surface */}
       <motion.div
         ref={cardRef}
         className={`h-full w-full bg-[#FAF8F3] flex flex-col relative select-none layout-${layoutVariant}`}
@@ -95,7 +91,6 @@ const ThoughtAtom: React.FC<ThoughtAtomProps> = ({
       >
         {/* Subtle grain texture overlay with cinematic parallax is rendered once at PhoneEmulator level */}
 
-        {/* Double Tap Heart Overlay */}
         <AnimatePresence>
           {showHeart && (
             <motion.div
@@ -116,7 +111,7 @@ const ThoughtAtom: React.FC<ThoughtAtomProps> = ({
       {/* Author Footer (Clickable to open Deep Dive) */}
       {layoutVariant !== "interstitial" && (
         <div
-          className={`absolute bottom-5 left-5 z-40 pointer-events-auto transition-all duration-300 ${isExporting ? 'right-5' : 'right-16'}`}
+          className={`absolute bottom-5 left-5 z-40 pointer-events-auto transition-all duration-300 ${isExporting ? "right-5" : "right-16"}`}
           onClick={(e) => {
             e.stopPropagation();
             setIsDeepDiveOpen(true);
@@ -139,7 +134,7 @@ const ThoughtAtom: React.FC<ThoughtAtomProps> = ({
                 {isTrailMode && (
                   <div className="flex items-center gap-1 mt-1.5">
                     {(() => {
-                      const cardSequence = (index % 5) + 1;
+                      const cardSequence = (index % 4) + 1;
                       return [...Array(4)].map((_, i) => (
                         <div
                           key={i}
@@ -155,7 +150,6 @@ const ThoughtAtom: React.FC<ThoughtAtomProps> = ({
         </div>
       )}
 
-      {/* Vertical Action Bar */}
       {layoutVariant !== "interstitial" && isActive && (
         <div className="absolute right-3 bottom-[88px] z-40 flex flex-col gap-3.5 pointer-events-auto action-bar-exclude">
           <button
@@ -164,12 +158,18 @@ const ThoughtAtom: React.FC<ThoughtAtomProps> = ({
             aria-label={isSaved ? "Remove from Vault" : "Save to Vault"}
             className="group flex flex-col items-center gap-1 active:scale-90 hover:scale-110 transition-transform duration-200"
           >
-            <div className={`w-9 h-9 rounded-full backdrop-blur-md shadow-lg border flex items-center justify-center transition-all ${
-              isSaved
-                ? "bg-red-50/90 border-red-200"
-                : "bg-white/80 border-[#E8E4DC]"
-            }`}>
-              {isSaved ? <Heart className="w-4 h-4 text-red-500 fill-current" /> : <Heart className="w-4 h-4 text-[#1C1C1E]" />}
+            <div
+              className={`w-9 h-9 rounded-full backdrop-blur-md shadow-lg border flex items-center justify-center transition-all ${
+                isSaved
+                  ? "bg-red-50/90 border-red-200"
+                  : "bg-white/80 border-[#E8E4DC]"
+              }`}
+            >
+              {isSaved ? (
+                <Heart className="w-4 h-4 text-red-500 fill-current" />
+              ) : (
+                <Heart className="w-4 h-4 text-[#1C1C1E]" />
+              )}
             </div>
           </button>
 
@@ -177,7 +177,7 @@ const ThoughtAtom: React.FC<ThoughtAtomProps> = ({
             onClick={handleExportImage}
             disabled={isExporting}
             aria-label="Export as Image"
-            className={`group flex flex-col items-center gap-1 active:scale-90 hover:scale-110 transition-transform duration-200 ${isExporting ? 'opacity-50 pointer-events-none' : ''}`}
+            className={`group flex flex-col items-center gap-1 active:scale-90 hover:scale-110 transition-transform duration-200 ${isExporting ? "opacity-50 pointer-events-none" : ""}`}
           >
             <div className="w-9 h-9 rounded-full bg-white/80 backdrop-blur-md shadow-lg border border-[#E8E4DC] flex items-center justify-center">
               <ShareIcon className="w-3.5 h-3.5 text-[#1C1C1E] ml-px" />
@@ -210,15 +210,19 @@ const ThoughtAtom: React.FC<ThoughtAtomProps> = ({
               className="absolute inset-0 z-[60] flex flex-col shadow-[0_-10px_30px_rgba(0,0,0,0.1)] pointer-events-auto"
               style={{
                 willChange: "transform",
-                background: "linear-gradient(to bottom, #F5F3ED 0%, #FFFFFF 60%)",
+                background:
+                  "linear-gradient(to bottom, #F5F3ED 0%, #FFFFFF 60%)",
                 borderTop: "3px solid #B5A48B",
               }}
               onClick={(e) => e.stopPropagation()}
               onWheel={(e) => e.stopPropagation()}
               onTouchMove={(e) => e.stopPropagation()}
             >
-              <FocusLock returnFocus autoFocus={false} className="flex flex-col h-full w-full">
-                {/* Header */}
+              <FocusLock
+                returnFocus
+                autoFocus={false}
+                className="flex flex-col h-full w-full"
+              >
                 <div className="flex items-center justify-between px-5 pb-4 pt-[max(env(safe-area-inset-top),1rem)] border-b border-[#E8E4DC]">
                   <div className="flex items-center gap-2">
                     <BookOpen className="w-4 h-4 text-[#B5A48B]" />
@@ -240,8 +244,10 @@ const ThoughtAtom: React.FC<ThoughtAtomProps> = ({
                   </div>
                 </div>
 
-                {/* Reading content */}
-                <div className="flex-1 overflow-y-auto px-5 pt-5 pb-[max(env(safe-area-inset-bottom),2rem)] space-y-4" style={{ overscrollBehaviorY: "contain" }}>
+                <div
+                  className="flex-1 overflow-y-auto px-5 pt-5 pb-[max(env(safe-area-inset-bottom),2rem)] space-y-4"
+                  style={{ overscrollBehaviorY: "contain" }}
+                >
                   <div className="mb-3 space-y-1.5">
                     <span className="text-[9px] font-bold font-mono uppercase tracking-[0.2em] text-[#B5A48B] block">
                       {card.topic}
@@ -255,8 +261,16 @@ const ThoughtAtom: React.FC<ThoughtAtomProps> = ({
                   </div>
 
                   {card.presentation?.reading_parts?.map(
-                    (part: ReadingPart, partIdx: number, arr: ReadingPart[]) => (
-                      <div key={partIdx} className="space-y-1.5 animate-fade-in-up" style={{ animationDelay: `${partIdx * 0.08}s` }}>
+                    (
+                      part: ReadingPart,
+                      partIdx: number,
+                      arr: ReadingPart[],
+                    ) => (
+                      <div
+                        key={partIdx}
+                        className="space-y-1.5 animate-fade-in-up"
+                        style={{ animationDelay: `${partIdx * 0.08}s` }}
+                      >
                         <p className="text-xs leading-relaxed text-[#3A3A3E] font-serif font-light text-justify">
                           {part.text}
                         </p>
@@ -266,15 +280,13 @@ const ThoughtAtom: React.FC<ThoughtAtomProps> = ({
                           </div>
                         )}
                       </div>
-                    )
+                    ),
                   )}
                 </div>
 
-                {/* Footer */}
                 <div className="px-5 py-3 border-t border-[#E8E4DC] text-center text-[8px] font-mono text-[#B5A48B] uppercase tracking-widest pb-12">
                   End of Essay
                 </div>
-
               </FocusLock>
             </motion.div>
           )}

@@ -9,12 +9,18 @@ export const ParallaxBackground = () => {
 
   const transform = useTransform(
     [smoothX, smoothY],
-    ([x, y]) => `translate3d(${x}px, ${y}px, 0) scale(1.05)`
+    ([x, y]) => `translate3d(${x}px, ${y}px, 0) scale(1.05)`,
   );
 
   useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (prefersReducedMotion) return;
+
     let ticking = false;
     let rAF: number;
+    let isMounted = true;
 
     const handleMouseMove = (e: MouseEvent) => {
       if (!ticking) {
@@ -44,14 +50,47 @@ export const ParallaxBackground = () => {
     };
 
     window.addEventListener("mousemove", handleMouseMove, { passive: true });
-    if (typeof window !== 'undefined' && window.DeviceOrientationEvent) {
-      window.addEventListener("deviceorientation", handleDeviceOrientation, { passive: true });
+
+    let interactionHandler: (() => void) | null = null;
+
+    if (
+      typeof DeviceOrientationEvent !== "undefined" &&
+      typeof (DeviceOrientationEvent as any).requestPermission === "function"
+    ) {
+      interactionHandler = () => {
+        (DeviceOrientationEvent as any)
+          .requestPermission()
+          .then((permissionState: string) => {
+            if (!isMounted) return;
+            if (permissionState === "granted") {
+              window.addEventListener("deviceorientation", handleDeviceOrientation, {
+                passive: true,
+              });
+              if (interactionHandler) {
+                window.removeEventListener("click", interactionHandler);
+                window.removeEventListener("touchstart", interactionHandler);
+              }
+            }
+          })
+          .catch(console.error);
+      };
+      window.addEventListener("click", interactionHandler);
+      window.addEventListener("touchstart", interactionHandler);
+    } else if (typeof window !== "undefined" && window.DeviceOrientationEvent) {
+      window.addEventListener("deviceorientation", handleDeviceOrientation, {
+        passive: true,
+      });
     }
 
     return () => {
+      isMounted = false;
       window.removeEventListener("mousemove", handleMouseMove);
-      if (typeof window !== 'undefined' && window.DeviceOrientationEvent) {
+      if (typeof window !== "undefined" && window.DeviceOrientationEvent) {
         window.removeEventListener("deviceorientation", handleDeviceOrientation);
+      }
+      if (interactionHandler) {
+        window.removeEventListener("click", interactionHandler);
+        window.removeEventListener("touchstart", interactionHandler);
       }
       cancelAnimationFrame(rAF);
     };

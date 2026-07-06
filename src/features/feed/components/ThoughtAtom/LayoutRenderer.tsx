@@ -12,7 +12,10 @@ interface LayoutRendererProps {
   layoutVariant: LayoutVariant;
 }
 
-export const LayoutRenderer: React.FC<LayoutRendererProps> = ({ card, layoutVariant }) => {
+export const LayoutRenderer: React.FC<LayoutRendererProps> = ({
+  card,
+  layoutVariant,
+}) => {
   switch (layoutVariant) {
     case "interstitial":
       return <InterstitialLayout card={card} />;

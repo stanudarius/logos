@@ -1,13 +1,15 @@
-import React, { useState } from 'react';
-import { supabase } from '@/src/lib/supabase';
-import { motion, AnimatePresence } from 'motion/react';
-
-interface AuthScreenProps {
-}
+import React, { useState } from "react";
+import { supabase } from "@/src/lib/supabase";
+import { motion, AnimatePresence, type Variants } from "motion/react";
 
 /** Lambda monogram — bespoke SVG lettermark for Logos */
 const LogosMonogram = () => (
-  <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-9 h-9">
+  <svg
+    viewBox="0 0 48 48"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    className="w-9 h-9"
+  >
     <path
       d="M8 40 L24 8 L40 40"
       stroke="#1C1C1E"
@@ -26,22 +28,26 @@ const LogosMonogram = () => (
   </svg>
 );
 
-const containerVariants = {
+const containerVariants: Variants = {
   hidden: { opacity: 0 },
   visible: {
     opacity: 1,
-    transition: { staggerChildren: 0.12, delayChildren: 0.1 }
-  }
+    transition: { staggerChildren: 0.12, delayChildren: 0.1 },
+  },
 };
 
-const itemVariants = {
+const itemVariants: Variants = {
   hidden: { opacity: 0, y: 18 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.55, ease: [0.16, 1, 0.3, 1] } }
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.55, ease: [0.16, 1, 0.3, 1] },
+  },
 };
 
-export const AuthScreen: React.FC<AuthScreenProps> = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+export const AuthScreen: React.FC = () => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
@@ -56,17 +62,24 @@ export const AuthScreen: React.FC<AuthScreenProps> = () => {
 
     try {
       if (isDelete) {
-        const { error: signInError } = await supabase.auth.signInWithPassword({ email, password });
-        if (signInError) throw new Error("Invalid email or password. Cannot delete account.");
-        
-        const { error: rpcError } = await supabase.rpc('delete_user');
-        if (rpcError) throw new Error("Failed to delete account. Did you run the SQL setup script?");
-        
+        const { error: signInError } = await supabase.auth.signInWithPassword({
+          email,
+          password,
+        });
+        if (signInError)
+          throw new Error("Invalid email or password. Cannot delete account.");
+
+        const { error: rpcError } = await supabase.rpc("delete_user");
+        if (rpcError)
+          throw new Error(
+            "Failed to delete account. Did you run the SQL setup script?",
+          );
+
         await supabase.auth.signOut();
-        
+
         setSuccess("Your account has been permanently deleted.");
         setIsDelete(false);
-        setPassword('');
+        setPassword("");
         return;
       }
 
@@ -75,7 +88,10 @@ export const AuthScreen: React.FC<AuthScreenProps> = () => {
         if (error) throw error;
         setSuccess("Check your email for the confirmation link!");
       } else {
-        const { error } = await supabase.auth.signInWithPassword({ email, password });
+        const { error } = await supabase.auth.signInWithPassword({
+          email,
+          password,
+        });
         if (error) throw error;
       }
     } catch (err: any) {
@@ -107,34 +123,34 @@ export const AuthScreen: React.FC<AuthScreenProps> = () => {
 
   return (
     <div className="flex flex-col items-center justify-center h-full w-full bg-[#FAF8F3] text-[#1C1C1E] p-4 relative overflow-y-auto">
-      {/* Decorative Orbs */}
       <div className="absolute top-[10%] left-[20%] w-[40vw] h-[40vw] max-w-[500px] max-h-[500px] bg-[#B5A48B]/10 rounded-full blur-[80px] pointer-events-none mix-blend-multiply" />
       <div className="absolute bottom-[10%] right-[20%] w-[35vw] h-[35vw] max-w-[400px] max-h-[400px] bg-[#D4CFC5]/20 rounded-full blur-[80px] pointer-events-none mix-blend-multiply" />
-      
+
       <motion.div
         className="w-full max-w-[380px] bg-white rounded-[2rem] p-8 sm:p-10 shadow-[0_8px_40px_-12px_rgba(0,0,0,0.06)] border border-[#E8E4DC]/80 relative z-10"
         variants={containerVariants}
         initial="hidden"
         animate="visible"
       >
-        {/* ── Brand Header ── */}
-        <motion.div variants={itemVariants} className="flex flex-col items-center mb-8">
-          {/* Monogram */}
+        <motion.div
+          variants={itemVariants}
+          className="flex flex-col items-center mb-8"
+        >
           <div className="w-16 h-16 bg-[#FAF8F3] rounded-2xl flex items-center justify-center mb-5 shadow-inner border border-[#E8E4DC] relative overflow-hidden">
             <div className="absolute inset-0 bg-gradient-to-tr from-[#E8E4DC]/20 to-transparent" />
             <LogosMonogram />
           </div>
 
-          {/* Wordmark */}
           <h1 className="text-3xl font-serif italic font-semibold tracking-tight mb-1 text-[#1C1C1E]">
             Logos
           </h1>
-
-
         </motion.div>
 
-        {/* ── Auth Form ── */}
-        <motion.form variants={itemVariants} onSubmit={handleAuth} className="space-y-3">
+        <motion.form
+          variants={itemVariants}
+          onSubmit={handleAuth}
+          className="space-y-3"
+        >
           <input
             type="email"
             placeholder="Email address"
@@ -151,7 +167,7 @@ export const AuthScreen: React.FC<AuthScreenProps> = () => {
             className="w-full bg-[#FAF8F3]/50 hover:bg-[#FAF8F3] focus:bg-white border border-[#E8E4DC] rounded-xl px-4 py-3.5 text-base sm:text-sm text-[#1C1C1E] placeholder-neutral-400 focus:outline-none focus:ring-2 focus:ring-[#B5A48B]/20 focus:border-[#B5A48B]/50 transition-all duration-300"
             required
           />
-          
+
           <AnimatePresence mode="wait">
             {error && (
               <motion.p
@@ -186,13 +202,20 @@ export const AuthScreen: React.FC<AuthScreenProps> = () => {
                 : "bg-gradient-to-b from-[#2A2A2E] to-[#1C1C1E] text-white shadow-[0_2px_10px_rgba(28,28,30,0.12)] hover:shadow-[0_4px_14px_rgba(28,28,30,0.2)] hover:-translate-y-[1px] border border-[#1C1C1E]"
             }`}
           >
-            {loading ? "Processing…" : isDelete ? "Permanently Delete Account" : isSignUp ? "Create Account" : "Sign In"}
+            {loading
+              ? "Processing…"
+              : isDelete
+                ? "Permanently Delete Account"
+                : isSignUp
+                  ? "Create Account"
+                  : "Sign In"}
           </button>
         </motion.form>
 
-
-        {/* ── Secondary Actions ── */}
-        <motion.div variants={itemVariants} className="mt-8 flex flex-col items-center gap-3">
+        <motion.div
+          variants={itemVariants}
+          className="mt-8 flex flex-col items-center gap-3"
+        >
           {!isDelete && (
             <button
               onClick={() => {
@@ -203,7 +226,9 @@ export const AuthScreen: React.FC<AuthScreenProps> = () => {
               type="button"
               className="text-xs text-neutral-500 hover:text-[#1C1C1E] transition-colors"
             >
-              {isSignUp ? "Already have an account? Sign in." : "Need an account? Sign up."}
+              {isSignUp
+                ? "Already have an account? Sign in."
+                : "Need an account? Sign up."}
             </button>
           )}
 
@@ -218,8 +243,10 @@ export const AuthScreen: React.FC<AuthScreenProps> = () => {
           )}
         </motion.div>
 
-        {/* ── Danger Zone (visually subordinate) ── */}
-        <motion.div variants={itemVariants} className="mt-8 pt-6 border-t border-[#E8E4DC]/60 flex justify-center">
+        <motion.div
+          variants={itemVariants}
+          className="mt-8 pt-6 border-t border-[#E8E4DC]/60 flex justify-center"
+        >
           <button
             onClick={() => {
               setIsDelete(!isDelete);

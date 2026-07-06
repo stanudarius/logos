@@ -2,7 +2,12 @@ import React, { useRef, useEffect, useCallback, useState, memo } from "react";
 import type { FeedCard, LayoutVariant } from "@/src/features/feed/types";
 import ThoughtAtom from "@/src/features/feed/components/ThoughtAtom/ThoughtAtom";
 
-const LAYOUT_CYCLE: LayoutVariant[] = ["thesis", "blockquote", "fragment", "epigraph"];
+const LAYOUT_CYCLE: LayoutVariant[] = [
+  "thesis",
+  "blockquote",
+  "fragment",
+  "epigraph",
+];
 
 interface ThoughtStreamProps {
   cards: FeedCard[];
@@ -13,7 +18,6 @@ interface ThoughtStreamProps {
   savedVaultCardIds: Set<string>;
   onToggleSave: (index: number) => void;
   onOpenDeepDive?: (index: number) => void;
-  onOpenChat?: (index: number) => void;
   isTrailMode?: boolean;
   isActiveTab?: boolean;
 }
@@ -31,9 +35,8 @@ const ThoughtStream: React.FC<ThoughtStreamProps> = ({
   savedVaultCardIds,
   onToggleSave,
   onOpenDeepDive,
-  onOpenChat,
   isTrailMode = false,
-  isActiveTab = true
+  isActiveTab = true,
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [activeIndex, setActiveIndex] = useState(0);
@@ -54,21 +57,32 @@ const ThoughtStream: React.FC<ThoughtStreamProps> = ({
     onFetchMoreRef.current = onFetchMore;
   }, [onFetchMore]);
 
+  const onActiveCardChangeRef = useRef(onActiveCardChange);
   useEffect(() => {
+    onActiveCardChangeRef.current = onActiveCardChange;
+  }, [onActiveCardChange]);
+
+  const cardsLengthRef = useRef(cards.length);
+  useEffect(() => {
+    cardsLengthRef.current = cards.length;
+  }, [cards.length]);
+
+  const observedCountRef = useRef(0);
+
+  // Create the IntersectionObserver once per active-tab session, instead of on
+  // every cards.length change — recreating it on each infinite-scroll page load
+  // was disconnecting and re-observing every previously-seen card.
+  useEffect(() => {
+    observedCountRef.current = 0;
+
     if (!isActiveTab) {
-      if (cardObserverRef.current) {
-        cardObserverRef.current.disconnect();
-        cardObserverRef.current = null;
-      }
+      cardObserverRef.current?.disconnect();
+      cardObserverRef.current = null;
       return;
     }
 
     const container = containerRef.current;
     if (!container) return;
-
-    if (cardObserverRef.current) {
-      cardObserverRef.current.disconnect();
-    }
 
     cardObserverRef.current = new IntersectionObserver(
       (entries) => {
@@ -80,31 +94,50 @@ const ThoughtStream: React.FC<ThoughtStreamProps> = ({
               if (activeIndexRef.current !== newIndex) {
                 activeIndexRef.current = newIndex;
                 setActiveIndex(newIndex);
-                
-                onActiveCardChange(newIndex);
 
-                if (newIndex >= cards.length - 2 && !isLoadingRef.current) {
+                onActiveCardChangeRef.current(newIndex);
+
+                if (
+                  newIndex >= cardsLengthRef.current - 2 &&
+                  !isLoadingRef.current
+                ) {
                   onFetchMoreRef.current();
                 }
+              }
+            }
+          } else {
+            const indexStr = entry.target.getAttribute("data-card-index");
+            if (indexStr !== null) {
+              const cardIndex = parseInt(indexStr, 10);
+              if (cardIndex < activeIndexRef.current) {
+                cardObserverRef.current?.unobserve(entry.target);
               }
             }
           }
         }
       },
-      { root: container, threshold: 0.6 }
+      { root: container, threshold: 0.6 },
     );
 
-    const atoms = container.querySelectorAll(".thought-atom");
-    atoms.forEach((atom) => cardObserverRef.current?.observe(atom));
-
     return () => {
-      if (cardObserverRef.current) {
-        cardObserverRef.current.disconnect();
-      }
+      cardObserverRef.current?.disconnect();
+      cardObserverRef.current = null;
     };
-  }, [cards.length, onActiveCardChange, isActiveTab]);
+  }, [isActiveTab]);
 
+  // Observe newly-appended cards as the feed grows, or re-observe all if feed changes.
+  useEffect(() => {
+    if (!isActiveTab) return;
+    const container = containerRef.current;
+    const observer = cardObserverRef.current;
+    if (!container || !observer) return;
 
+    const atoms = container.querySelectorAll(".thought-atom");
+    for (let i = observedCountRef.current; i < atoms.length; i++) {
+      observer.observe(atoms[i]);
+    }
+    observedCountRef.current = atoms.length;
+  }, [cards, isActiveTab]);
 
   useEffect(() => {
     if (!isActiveTab) {
@@ -131,7 +164,7 @@ const ThoughtStream: React.FC<ThoughtStreamProps> = ({
         root: container,
         threshold: 0,
         rootMargin: "0px 0px 100% 0px",
-      }
+      },
     );
 
     sentinelObserverRef.current.observe(sentinel);
@@ -157,7 +190,7 @@ const ThoughtStream: React.FC<ThoughtStreamProps> = ({
       const atoms = container.querySelectorAll(".thought-atom");
       atoms[nextIndex]?.scrollIntoView({ behavior: "smooth", block: "center" });
     },
-    [cards.length]
+    [cards.length],
   );
 
   useEffect(() => {
@@ -181,39 +214,64 @@ const ThoughtStream: React.FC<ThoughtStreamProps> = ({
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [scrollToCard]);
 
+  const [pendingReset, setPendingReset] = useState(false);
+
   useEffect(() => {
-    const container = containerRef.current;
-    if (container) {
-      container.scrollTo({ top: 0, behavior: "instant" as ScrollBehavior });
+    observedCountRef.current = 0;
+    
+    if (isActiveTab) {
+      const container = containerRef.current;
+      if (container) {
+        container.scrollTo({ top: 0, behavior: "instant" as ScrollBehavior });
+        setActiveIndex(0);
+        activeIndexRef.current = 0;
+      }
+    } else {
+      setPendingReset(true);
     }
   }, [cards[0]?.id]);
+
+  useEffect(() => {
+    if (isActiveTab && pendingReset) {
+      const container = containerRef.current;
+      if (container) {
+        container.scrollTo({ top: 0, behavior: "instant" as ScrollBehavior });
+        setActiveIndex(0);
+        activeIndexRef.current = 0;
+      }
+      setPendingReset(false);
+    }
+  }, [isActiveTab, pendingReset]);
 
   return (
     <div
       ref={containerRef}
       className="thought-stream h-full w-full overflow-y-auto snap-y snap-mandatory scroll-smooth"
-      style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }} // Hide scrollbar for a cleaner look
+      style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
     >
       {cards.map((card, index) => (
         <ThoughtAtom
           key={card.id}
           card={card}
-          layoutVariant={card.layoutVariant || LAYOUT_CYCLE[index % LAYOUT_CYCLE.length]}
+          layoutVariant={
+            card.layoutVariant || LAYOUT_CYCLE[index % LAYOUT_CYCLE.length]
+          }
           index={index}
           isSaved={savedVaultCardIds.has(card.base_id || card.id)}
           isActive={index === activeIndex}
           onToggleSave={onToggleSave}
           onOpenDeepDive={onOpenDeepDive}
-          onOpenChat={onOpenChat}
           isTrailMode={isTrailMode}
         />
       ))}
 
-      {/* ── Skeleton Loading State (Initial Load) ── */}
       {cards.length === 0 && isLoading && (
         <div className="w-full h-full flex flex-col items-center justify-center space-y-12 snap-center shrink-0">
           {[1, 2].map((i) => (
-            <div key={i} className="w-full h-full sm:h-[80%] max-w-[420px] mx-auto p-8 sm:p-12 flex flex-col items-center justify-center opacity-40">
+            <div
+              key={i}
+              className="w-full h-full sm:h-[80%] max-w-[420px] mx-auto p-8 sm:p-12 flex flex-col items-center justify-center opacity-40"
+            >
               <div className="w-24 h-[9px] bg-gradient-to-r from-[#E8E4DC] via-[#D4CFC5] to-[#E8E4DC] rounded-sm mb-12 animate-pulse" />
               <div className="w-full max-w-[280px] h-8 bg-gradient-to-r from-[#E8E4DC] via-[#D4CFC5] to-[#E8E4DC] rounded-sm mb-4 animate-pulse" />
               <div className="w-3/4 max-w-[200px] h-8 bg-gradient-to-r from-[#E8E4DC] via-[#D4CFC5] to-[#E8E4DC] rounded-sm mb-16 animate-pulse" />
@@ -227,16 +285,16 @@ const ThoughtStream: React.FC<ThoughtStreamProps> = ({
         </div>
       )}
 
-      {/* ── Background Pagination Loading Spinner ── */}
       {cards.length > 0 && isLoading && !isFeedExhausted && (
         <div className="h-32 w-full flex-shrink-0 flex flex-col items-center justify-center opacity-50 space-y-4 snap-center">
           <div className="w-5 h-5 border-2 border-[#1C1C1E] border-t-transparent rounded-full animate-spin" />
-          <p className="text-[9px] font-mono tracking-widest uppercase text-[#1C1C1E]">Summoning Thoughts...</p>
+          <p className="text-[9px] font-mono tracking-widest uppercase text-[#1C1C1E]">
+            Summoning Thoughts...
+          </p>
         </div>
       )}
 
-      {/* ── End of Stream Card ── */}
-      {isFeedExhausted && cards.length > 0 && !isTrailMode && (
+      {isFeedExhausted && !isTrailMode && (
         <div className="w-full h-full snap-start shrink-0 flex flex-col items-center justify-center bg-[#FAF8F3] px-8 text-center">
           <div className="w-12 h-12 rounded-full border border-[#D4CFC5] flex items-center justify-center mb-6">
             <div className="w-2 h-2 rounded-full bg-[#1C1C1E] opacity-20" />
@@ -245,12 +303,17 @@ const ThoughtStream: React.FC<ThoughtStreamProps> = ({
             The Stream Ebbs
           </h2>
           <p className="text-sm font-sans font-light text-[#8A8A8E] max-w-[240px] leading-relaxed">
-            You have reached the limits of the current constellation. Return later as more thoughts coalesce.
+            You have reached the limits of the current constellation. Return
+            later as more thoughts coalesce.
           </p>
         </div>
       )}
 
-      <div ref={sentinelRef} className="h-4 w-full flex-shrink-0" aria-hidden="true" />
+      <div
+        ref={sentinelRef}
+        className="h-4 w-full flex-shrink-0"
+        aria-hidden="true"
+      />
     </div>
   );
 };

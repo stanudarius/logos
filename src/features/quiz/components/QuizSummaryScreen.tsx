@@ -1,17 +1,20 @@
-import React, { useEffect, useState, useRef } from 'react';
-import { motion } from 'motion/react';
-import { useFeedContext } from '@/src/features/feed/hooks/FeedProvider';
-import { useVaultContext } from '@/src/features/vault/hooks/VaultProvider';
-import { useNavigation } from '@/src/providers/NavigationProvider';
-import { STARTER_QUOTES } from '@/src/data/quizData';
-import { READING_TRAILS } from '@/src/data/trailsData';
+import React, { useEffect, useState, useRef } from "react";
+import { motion } from "motion/react";
+import { useFeedContext } from "@/src/features/feed/hooks/FeedProvider";
+import { useVaultContext } from "@/src/features/vault/hooks/VaultProvider";
+import { useNavigation } from "@/src/providers/NavigationProvider";
+import { STARTER_QUOTES } from "@/src/data/quizData";
+import { READING_TRAILS } from "@/src/data/trailsData";
 
 interface QuizSummaryProps {
   answers: Record<string, string>;
   onComplete: () => void;
 }
 
-export const QuizSummaryScreen: React.FC<QuizSummaryProps> = ({ answers, onComplete }) => {
+export const QuizSummaryScreen: React.FC<QuizSummaryProps> = ({
+  answers,
+  onComplete,
+}) => {
   const { handleStartTrail } = useFeedContext();
   const { toggleSaveToVault, savedVaultCards } = useVaultContext();
   const { setActiveTrailIndex, setPhoneTab } = useNavigation();
@@ -24,30 +27,38 @@ export const QuizSummaryScreen: React.FC<QuizSummaryProps> = ({ answers, onCompl
   const getReflectionText = () => {
     const intent = answers.intent;
     const craving = answers.craving;
-    
+
     let p1 = `We've built your philosophical space based on your connection with ${selectedThinker}. `;
-    
+
     if (intent === "hard_time") {
-      p1 += "Philosophy has always been a refuge in difficult times, offering enduring strength rather than temporary comfort.";
+      p1 +=
+        "Philosophy has always been a refuge in difficult times, offering enduring strength rather than temporary comfort.";
     } else if (intent === "clarity") {
-      p1 += "Clear thinking is the foundation of a well-lived life, helping you cut through the noise of the modern world.";
+      p1 +=
+        "Clear thinking is the foundation of a well-lived life, helping you cut through the noise of the modern world.";
     } else if (intent === "perspective") {
-      p1 += "Stepping back to see the bigger picture is exactly what the greatest minds did when faced with complexity.";
+      p1 +=
+        "Stepping back to see the bigger picture is exactly what the greatest minds did when faced with complexity.";
     } else {
-      p1 += "The love of wisdom is a lifelong journey, and every great philosopher started exactly where you are.";
+      p1 +=
+        "The love of wisdom is a lifelong journey, and every great philosopher started exactly where you are.";
     }
 
     let p2 = "";
     if (craving === "silence") {
-      p2 = "Through daily reflection, your vault will become a place of inner stillness.";
+      p2 =
+        "Through daily reflection, your vault will become a place of inner stillness.";
     } else if (craving === "wisdom") {
-      p2 = "We've curated practical insights that you can apply directly to your daily actions.";
+      p2 =
+        "We've curated practical insights that you can apply directly to your daily actions.";
     } else if (craving === "ideas") {
-      p2 = "Prepare to grapple with profound concepts that will stretch the boundaries of your mind.";
+      p2 =
+        "Prepare to grapple with profound concepts that will stretch the boundaries of your mind.";
     } else {
-      p2 = "These thinkers will serve as your conversational partners across time.";
+      p2 =
+        "These thinkers will serve as your conversational partners across time.";
     }
-    
+
     return { p1, p2 };
   };
 
@@ -56,13 +67,13 @@ export const QuizSummaryScreen: React.FC<QuizSummaryProps> = ({ answers, onCompl
   useEffect(() => {
     if (initialized.current) return;
     initialized.current = true;
-    
+
     const setupAccount = async () => {
-      const savedIds = new Set(savedVaultCards.map(c => c.base_id || c.id));
-      
+      const savedIds = new Set(savedVaultCards.map((c) => c.base_id || c.id));
+
       for (const quote of quotes) {
         if (!savedIds.has(quote.base_id || quote.id)) {
-          await toggleSaveToVault(quote, 0);
+          await toggleSaveToVault(quote);
         }
       }
     };
@@ -72,14 +83,16 @@ export const QuizSummaryScreen: React.FC<QuizSummaryProps> = ({ answers, onCompl
 
   const handleExplore = async () => {
     setIsFinishing(true);
-    
-    const trail = READING_TRAILS.find(t =>
-      t.thinkerIds.some(tid =>
-        tid.toLowerCase() === selectedThinker.toLowerCase() ||
-        selectedThinker.toLowerCase().includes(tid.toLowerCase()) ||
-        tid.toLowerCase().includes(selectedThinker.toLowerCase())
-      )
-    ) || READING_TRAILS[0];
+
+    const trail =
+      READING_TRAILS.find((t) =>
+        t.thinkerIds.some(
+          (tid) =>
+            tid.toLowerCase() === selectedThinker.toLowerCase() ||
+            selectedThinker.toLowerCase().includes(tid.toLowerCase()) ||
+            tid.toLowerCase().includes(selectedThinker.toLowerCase()),
+        ),
+      ) || READING_TRAILS[0];
 
     if (trail) {
       const success = await handleStartTrail(trail.id);
@@ -101,31 +114,29 @@ export const QuizSummaryScreen: React.FC<QuizSummaryProps> = ({ answers, onCompl
         transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
         className="w-full max-w-lg flex flex-col h-full flex-grow pt-4 pb-4"
       >
-        {/* Editorial Header */}
         <div className="w-full flex items-center gap-4 mb-8">
           <div className="h-[1px] flex-grow bg-[#1C1C1E]/30"></div>
-          <span className="text-[#1C1C1E] uppercase tracking-[0.2em] text-[10px] font-semibold">Prologue</span>
+          <span className="text-[#1C1C1E] uppercase tracking-[0.2em] text-[10px] font-semibold">
+            Prologue
+          </span>
           <div className="h-[1px] w-6 bg-[#1C1C1E]/30"></div>
         </div>
-        
-        {/* Massive Serif Title */}
+
         <h1 className="text-5xl md:text-6xl font-serif text-[#1C1C1E] tracking-tight leading-[1.05] mb-8">
-          Your<br />Logos.
+          Your
+          <br />
+          Logos.
         </h1>
-        
-        {/* Stark Divider */}
+
         <div className="w-full h-[1px] bg-[#1C1C1E]/20 mb-6"></div>
-        
-        {/* Editorial Body Text */}
+
         <div className="flex flex-col gap-5 text-[#1C1C1E]/80 text-lg md:text-xl leading-relaxed font-serif mb-6">
           <p>{p1}</p>
           <p>{p2}</p>
         </div>
 
-        {/* Push button to bottom */}
         <div className="mt-auto"></div>
 
-        {/* Sharp Editorial Button */}
         <motion.button
           whileHover={{ scale: 1.01 }}
           whileTap={{ scale: 0.99 }}
@@ -143,8 +154,18 @@ export const QuizSummaryScreen: React.FC<QuizSummaryProps> = ({ answers, onCompl
             ) : (
               <>
                 <span>Enter Your Vault</span>
-                <svg viewBox="0 0 24 24" fill="none" className="w-5 h-5 transition-transform duration-300 group-hover:translate-x-2">
-                  <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  className="w-5 h-5 transition-transform duration-300 group-hover:translate-x-2"
+                >
+                  <path
+                    d="M5 12H19M19 12L12 5M19 12L12 19"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
                 </svg>
               </>
             )}

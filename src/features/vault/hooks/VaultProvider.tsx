@@ -7,16 +7,16 @@ type VaultContextType = ReturnType<typeof useVaultHook>;
 
 const VaultContext = createContext<VaultContextType | undefined>(undefined);
 
-export const VaultProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+export const VaultProvider: React.FC<{ children: ReactNode }> = ({
+  children,
+}) => {
   const { session } = useAuth();
   const { trackCardInteraction } = useFeedContext();
-  
+
   const vaultState = useVaultHook(session, trackCardInteraction);
 
   return (
-    <VaultContext.Provider value={vaultState}>
-      {children}
-    </VaultContext.Provider>
+    <VaultContext.Provider value={vaultState}>{children}</VaultContext.Provider>
   );
 };
 

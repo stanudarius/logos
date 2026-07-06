@@ -4,9 +4,9 @@ import type { FeedCard } from "@/src/features/feed/types";
 import { descAnim } from "@/src/components/ui/sharedAnim";
 
 export const InterstitialLayout = ({ card }: { card: FeedCard }) => {
-  const words = card.explore_title.split(' ');
+  const words = card.explore_title.split(" ");
   const hugeWord = words[words.length - 1];
-  const restTitle = words.slice(0, -1).join(' ') || card.topic;
+  const restTitle = words.slice(0, -1).join(" ") || card.topic;
   return (
     <div className="flex-1 w-full h-full bg-[#F5F0E8] relative overflow-hidden">
       <motion.div
@@ -30,7 +30,10 @@ export const InterstitialLayout = ({ card }: { card: FeedCard }) => {
         </span>
       </div>
       <motion.div
-        variants={descAnim} initial="hidden" whileInView="visible" viewport={{ once: false }}
+        variants={descAnim}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: false }}
         className="absolute top-[45%] right-6 pt-6 w-[55%] z-10"
       >
         <p className="text-[13px] font-serif text-[#2C2825] leading-[1.65] text-right">

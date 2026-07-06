@@ -8,7 +8,6 @@ Logos is an intelligent application designed for philosophical thinking and cine
 
 1. Install dependencies:
    `npm install`
-2. Set your Gemini API key in `.env`:
-   `GEMINI_API_KEY="your-api-key"`
+2. Set your API key in `.env`.
 3. Start the dev server:
    `npm run dev`

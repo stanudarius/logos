@@ -2,7 +2,14 @@ import { useEffect } from "react";
 import { useAuth } from "@/src/features/auth/hooks/useAuth";
 
 export const useAppRouter = () => {
-  const { session, isRecoveringPassword, setIsRecoveringPassword, isLoading, hasCompletedQuiz, completeQuiz } = useAuth();
+  const {
+    session,
+    isRecoveringPassword,
+    setIsRecoveringPassword,
+    isLoading,
+    hasCompletedQuiz,
+    completeQuiz,
+  } = useAuth();
 
   let currentRoute = "";
   if (!isLoading) {
@@ -12,14 +19,25 @@ export const useAppRouter = () => {
       currentRoute = "/auth";
     } else if (!hasCompletedQuiz) {
       currentRoute = "/quiz";
+    } else {
+      currentRoute = "/";
     }
   }
 
   useEffect(() => {
     if (!isLoading && currentRoute !== "") {
-      window.history.replaceState(null, '', currentRoute);
+      if (window.location.pathname !== currentRoute) {
+        window.history.pushState(null, "", currentRoute);
+      }
     }
   }, [currentRoute, isLoading]);
 
-  return { session, isRecoveringPassword, setIsRecoveringPassword, isLoading, hasCompletedQuiz, completeQuiz };
+  return {
+    session,
+    isRecoveringPassword,
+    setIsRecoveringPassword,
+    isLoading,
+    hasCompletedQuiz,
+    completeQuiz,
+  };
 };

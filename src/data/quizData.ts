@@ -17,8 +17,8 @@ export const QUIZ_QUESTIONS: QuizQuestion[] = [
       { label: "Deep thinker", value: "deep_thinker" },
       { label: "Curious explorer", value: "explorer" },
       { label: "Student", value: "student" },
-      { label: "Professional", value: "professional" }
-    ]
+      { label: "Professional", value: "professional" },
+    ],
   },
   {
     id: "intent",
@@ -27,8 +27,8 @@ export const QUIZ_QUESTIONS: QuizQuestion[] = [
       { label: "I want to think more clearly", value: "clarity" },
       { label: "I'm going through a hard time", value: "hard_time" },
       { label: "I love philosophy", value: "love_philosophy" },
-      { label: "I need perspective", value: "perspective" }
-    ]
+      { label: "I need perspective", value: "perspective" },
+    ],
   },
   {
     id: "thinker",
@@ -42,8 +42,8 @@ export const QUIZ_QUESTIONS: QuizQuestion[] = [
       { label: "Seneca", value: "Seneca" },
       { label: "Jean-Paul Sartre", value: "Jean-Paul Sartre" },
       { label: "Albert Camus", value: "Albert Camus" },
-      { label: "None yet", value: "Socrates" } // Default to Socrates
-    ]
+      { label: "None yet", value: "Socrates" },
+    ],
   },
   {
     id: "frequency",
@@ -52,8 +52,8 @@ export const QUIZ_QUESTIONS: QuizQuestion[] = [
       { label: "Daily", value: "daily" },
       { label: "Weekly", value: "weekly" },
       { label: "When I'm stuck", value: "stuck" },
-      { label: "Never — I want to start", value: "never" }
-    ]
+      { label: "Never — I want to start", value: "never" },
+    ],
   },
   {
     id: "craving",
@@ -62,8 +62,8 @@ export const QUIZ_QUESTIONS: QuizQuestion[] = [
       { label: "Silence & clarity", value: "silence" },
       { label: "Deep conversations", value: "conversations" },
       { label: "Big ideas", value: "ideas" },
-      { label: "Practical wisdom", value: "wisdom" }
-    ]
+      { label: "Practical wisdom", value: "wisdom" },
+    ],
   },
   {
     id: "uncertainty",
@@ -72,8 +72,8 @@ export const QUIZ_QUESTIONS: QuizQuestion[] = [
       { label: "I plan for the worst", value: "plan" },
       { label: "I try to embrace it", value: "embrace" },
       { label: "I seek guidance", value: "guidance" },
-      { label: "I get overwhelmed", value: "overwhelmed" }
-    ]
+      { label: "I get overwhelmed", value: "overwhelmed" },
+    ],
   },
   {
     id: "failure",
@@ -82,8 +82,8 @@ export const QUIZ_QUESTIONS: QuizQuestion[] = [
       { label: "It's a learning opportunity", value: "learning" },
       { label: "It's an unavoidable part of life", value: "unavoidable" },
       { label: "I struggle to move past it", value: "struggle" },
-      { label: "I fear it deeply", value: "fear" }
-    ]
+      { label: "I fear it deeply", value: "fear" },
+    ],
   },
   {
     id: "knowledge",
@@ -92,9 +92,9 @@ export const QUIZ_QUESTIONS: QuizQuestion[] = [
       { label: "Self-knowledge", value: "self" },
       { label: "Understanding the universe", value: "universe" },
       { label: "How to live a good life", value: "good_life" },
-      { label: "How to change the world", value: "change_world" }
-    ]
-  }
+      { label: "How to change the world", value: "change_world" },
+    ],
+  },
 ];
 
 export const STARTER_QUOTES: Record<string, FeedCard[]> = {
@@ -111,8 +111,13 @@ export const STARTER_QUOTES: Record<string, FeedCard[]> = {
       layoutVariant: "blockquote",
       presentation: {
         title: "The Inner Citadel",
-        reading_parts: [{ part_number: 1, text: "You have power over your mind - not outside events. Realize this, and you will find strength." }]
-      }
+        reading_parts: [
+          {
+            part_number: 1,
+            text: "You have power over your mind - not outside events. Realize this, and you will find strength.",
+          },
+        ],
+      },
     },
     {
       id: "starter_marcus_2",
@@ -126,9 +131,14 @@ export const STARTER_QUOTES: Record<string, FeedCard[]> = {
       layoutVariant: "thesis",
       presentation: {
         title: "The Obstacle",
-        reading_parts: [{ part_number: 1, text: "The impediment to action advances action. What stands in the way becomes the way." }]
-      }
-    }
+        reading_parts: [
+          {
+            part_number: 1,
+            text: "The impediment to action advances action. What stands in the way becomes the way.",
+          },
+        ],
+      },
+    },
   ],
   "Friedrich Nietzsche": [
     {
@@ -143,8 +153,13 @@ export const STARTER_QUOTES: Record<string, FeedCard[]> = {
       layoutVariant: "blockquote",
       presentation: {
         title: "Purpose",
-        reading_parts: [{ part_number: 1, text: "He who has a why to live for can bear almost any how." }]
-      }
+        reading_parts: [
+          {
+            part_number: 1,
+            text: "He who has a why to live for can bear almost any how.",
+          },
+        ],
+      },
     },
     {
       id: "starter_nietzsche_2",
@@ -158,9 +173,9 @@ export const STARTER_QUOTES: Record<string, FeedCard[]> = {
       layoutVariant: "thesis",
       presentation: {
         title: "Self-Actualization",
-        reading_parts: [{ part_number: 1, text: "Become who you are." }]
-      }
-    }
+        reading_parts: [{ part_number: 1, text: "Become who you are." }],
+      },
+    },
   ],
   "Simone de Beauvoir": [
     {
@@ -175,8 +190,13 @@ export const STARTER_QUOTES: Record<string, FeedCard[]> = {
       layoutVariant: "blockquote",
       presentation: {
         title: "Constructed Identity",
-        reading_parts: [{ part_number: 1, text: "One is not born, but rather becomes, a woman." }]
-      }
+        reading_parts: [
+          {
+            part_number: 1,
+            text: "One is not born, but rather becomes, a woman.",
+          },
+        ],
+      },
     },
     {
       id: "starter_beauvoir_2",
@@ -190,11 +210,16 @@ export const STARTER_QUOTES: Record<string, FeedCard[]> = {
       layoutVariant: "thesis",
       presentation: {
         title: "Action",
-        reading_parts: [{ part_number: 1, text: "Change your life today. Don't gamble on the future, act now, without delay." }]
-      }
-    }
+        reading_parts: [
+          {
+            part_number: 1,
+            text: "Change your life today. Don't gamble on the future, act now, without delay.",
+          },
+        ],
+      },
+    },
   ],
-  "Epictetus": [
+  Epictetus: [
     {
       id: "starter_epictetus_1",
       stack_id: "starter",
@@ -207,8 +232,13 @@ export const STARTER_QUOTES: Record<string, FeedCard[]> = {
       layoutVariant: "blockquote",
       presentation: {
         title: "Perception",
-        reading_parts: [{ part_number: 1, text: "It's not what happens to you, but how you react to it that matters." }]
-      }
+        reading_parts: [
+          {
+            part_number: 1,
+            text: "It's not what happens to you, but how you react to it that matters.",
+          },
+        ],
+      },
     },
     {
       id: "starter_epictetus_2",
@@ -222,11 +252,16 @@ export const STARTER_QUOTES: Record<string, FeedCard[]> = {
       layoutVariant: "thesis",
       presentation: {
         title: "Becoming",
-        reading_parts: [{ part_number: 1, text: "First say to yourself what you would be; and then do what you have to do." }]
-      }
-    }
+        reading_parts: [
+          {
+            part_number: 1,
+            text: "First say to yourself what you would be; and then do what you have to do.",
+          },
+        ],
+      },
+    },
   ],
-  "Socrates": [
+  Socrates: [
     {
       id: "starter_socrates_1",
       stack_id: "starter",
@@ -239,8 +274,13 @@ export const STARTER_QUOTES: Record<string, FeedCard[]> = {
       layoutVariant: "blockquote",
       presentation: {
         title: "Socratic Ignorance",
-        reading_parts: [{ part_number: 1, text: "The only true wisdom is in knowing you know nothing." }]
-      }
+        reading_parts: [
+          {
+            part_number: 1,
+            text: "The only true wisdom is in knowing you know nothing.",
+          },
+        ],
+      },
     },
     {
       id: "starter_socrates_2",
@@ -254,11 +294,13 @@ export const STARTER_QUOTES: Record<string, FeedCard[]> = {
       layoutVariant: "thesis",
       presentation: {
         title: "Reflection",
-        reading_parts: [{ part_number: 1, text: "The unexamined life is not worth living." }]
-      }
-    }
+        reading_parts: [
+          { part_number: 1, text: "The unexamined life is not worth living." },
+        ],
+      },
+    },
   ],
-  "Aristotle": [
+  Aristotle: [
     {
       id: "starter_aristotle_1",
       stack_id: "starter",
@@ -271,11 +313,16 @@ export const STARTER_QUOTES: Record<string, FeedCard[]> = {
       layoutVariant: "blockquote",
       presentation: {
         title: "Habitual Excellence",
-        reading_parts: [{ part_number: 1, text: "We are what we repeatedly do. Excellence, then, is not an act, but a habit." }]
-      }
-    }
+        reading_parts: [
+          {
+            part_number: 1,
+            text: "We are what we repeatedly do. Excellence, then, is not an act, but a habit.",
+          },
+        ],
+      },
+    },
   ],
-  "Seneca": [
+  Seneca: [
     {
       id: "starter_seneca_1",
       stack_id: "starter",
@@ -288,9 +335,14 @@ export const STARTER_QUOTES: Record<string, FeedCard[]> = {
       layoutVariant: "thesis",
       presentation: {
         title: "Imagined Troubles",
-        reading_parts: [{ part_number: 1, text: "We suffer more often in imagination than in reality." }]
-      }
-    }
+        reading_parts: [
+          {
+            part_number: 1,
+            text: "We suffer more often in imagination than in reality.",
+          },
+        ],
+      },
+    },
   ],
   "Jean-Paul Sartre": [
     {
@@ -305,9 +357,14 @@ export const STARTER_QUOTES: Record<string, FeedCard[]> = {
       layoutVariant: "blockquote",
       presentation: {
         title: "Radical Freedom",
-        reading_parts: [{ part_number: 1, text: "Man is condemned to be free; because once thrown into the world, he is responsible for everything he does." }]
-      }
-    }
+        reading_parts: [
+          {
+            part_number: 1,
+            text: "Man is condemned to be free; because once thrown into the world, he is responsible for everything he does.",
+          },
+        ],
+      },
+    },
   ],
   "Albert Camus": [
     {
@@ -322,8 +379,13 @@ export const STARTER_QUOTES: Record<string, FeedCard[]> = {
       layoutVariant: "thesis",
       presentation: {
         title: "Inner Strength",
-        reading_parts: [{ part_number: 1, text: "In the depth of winter, I finally learned that within me there lay an invincible summer." }]
-      }
+        reading_parts: [
+          {
+            part_number: 1,
+            text: "In the depth of winter, I finally learned that within me there lay an invincible summer.",
+          },
+        ],
+      },
     },
     {
       id: "starter_camus_2",
@@ -337,8 +399,13 @@ export const STARTER_QUOTES: Record<string, FeedCard[]> = {
       layoutVariant: "blockquote",
       presentation: {
         title: "Rebellion",
-        reading_parts: [{ part_number: 1, text: "The only way to deal with an unfree world is to become so absolutely free that your very existence is an act of rebellion." }]
-      }
-    }
-  ]
+        reading_parts: [
+          {
+            part_number: 1,
+            text: "The only way to deal with an unfree world is to become so absolutely free that your very existence is an act of rebellion.",
+          },
+        ],
+      },
+    },
+  ],
 };

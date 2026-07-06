@@ -37,7 +37,7 @@
   --color-literature: #B59A6A;   /* muted amber */
 
   /* Focus ring */
-  --color-focus: rgba(181, 164, 139, 0.8);
+  --color-focus: #8B7355;
 }
 
 /* ================================================
@@ -75,8 +75,6 @@ body {
   overflow-x: hidden;
   overscroll-behavior-y: none;
   -webkit-touch-callout: none;
-  -webkit-user-select: none;
-  user-select: none;
 }
 
 input, textarea {

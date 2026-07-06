@@ -1,10 +1,6 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
 import { createClient } from "npm:@supabase/supabase-js@2"
-
-const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
-}
+import { corsHeaders } from "../_shared/cors.ts"
 
 serve(async (req: any) => {
   if (req.method === 'OPTIONS') {
@@ -12,15 +8,25 @@ serve(async (req: any) => {
   }
 
   try {
-    const { rabbitHoleContext, seenIds } = await req.json()
+    const body = await req.json()
+    const { rabbitHoleContext, seenIds } = body ?? {}
+
+    if (rabbitHoleContext !== undefined && rabbitHoleContext !== null && !Array.isArray(rabbitHoleContext)) {
+      throw new Error('Invalid "rabbitHoleContext".')
+    }
+    if (seenIds !== undefined && seenIds !== null && !Array.isArray(seenIds)) {
+      throw new Error('Invalid "seenIds".')
+    }
+
+    const authHeader = req.headers.get('Authorization') ?? `Bearer ${Deno.env.get('SUPABASE_ANON_KEY') ?? ''}`
 
     const supabaseClient = createClient(
       Deno.env.get('SUPABASE_URL') ?? '',
       Deno.env.get('SUPABASE_ANON_KEY') ?? '',
-      { global: { headers: { Authorization: req.headers.get('Authorization')! } } }
+      { global: { headers: { Authorization: authHeader } } }
     )
 
-    const { data: allCards, error } = await supabaseClient.from('feed_cards').select('*')
+    const { data: allCards, error } = await supabaseClient.from('feed_cards').select('*').limit(100)
     if (error) throw error
 
     const stacksMap = new Map<string, any[]>()
@@ -38,8 +44,8 @@ serve(async (req: any) => {
       .filter(stack => stack.length > 0)
 
     if (availableStacks.length === 0) {
-      return new Response(JSON.stringify({ error: "Feed exhausted.", feed_exhausted: true }), {
-        status: 404, headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+      return new Response(JSON.stringify([]), {
+        status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' }
       })
     }
 
@@ -62,7 +68,7 @@ serve(async (req: any) => {
     for (let i = 0; i < 4; i++) {
       let chosenStack: any[] | undefined
       const roll = Math.random()
-      
+
       const validMatching = matchingStacks.filter(s => s.length > 0 && s[0].philosopher !== lastPhilosopher)
       const validNonMatching = nonMatchingStacks.filter(s => s.length > 0 && s[0].philosopher !== lastPhilosopher)
       const validAll = availableStacks.filter(s => s.length > 0 && s[0].philosopher !== lastPhilosopher)
@@ -97,7 +103,8 @@ serve(async (req: any) => {
 
     return new Response(JSON.stringify(uniqueStack), { headers: { ...corsHeaders, 'Content-Type': 'application/json' } })
   } catch (error: any) {
-    return new Response(JSON.stringify({ error: error.message }), {
+    console.error('[generate] request failed:', error)
+    return new Response(JSON.stringify({ error: "Something went wrong, please try again." }), {
       status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' }
     })
   }

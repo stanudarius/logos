@@ -7,7 +7,8 @@ export interface Node {
 }
 
 /** Relationship types for Knowledge Constellation edges */
-export type EdgeRelationship = "Influenced" | "Critiqued" | "Contradicts" | "Contemporaries" | "Inspired";
+export type EdgeRelationship =
+  "Influenced" | "Critiqued" | "Contradicts" | "Contemporaries" | "Inspired";
 
 /** Graph edge with philosophical relationship metadata */
 export interface GraphEdge {

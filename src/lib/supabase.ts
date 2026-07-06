@@ -1,10 +1,12 @@
-import { createClient } from '@supabase/supabase-js';
+import { createClient } from "@supabase/supabase-js";
 
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || '';
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || '';
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
 if (!supabaseUrl || !supabaseAnonKey) {
-  console.warn('[Logos] Supabase credentials missing — auth and vault features are disabled.');
+  throw new Error(
+    "[Logos] Missing VITE_SUPABASE_URL / VITE_SUPABASE_ANON_KEY — set them in your .env file before starting the app.",
+  );
 }
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey);

@@ -1,14 +1,12 @@
-
-
-
 /**
  * Extracts initials from a name string for avatar display.
  */
-export function getInitials(name: string): string {
-  if (!name) return "AC";
-  const parts = name.trim().split(/\s+/);
+export function getInitials(name?: string | null): string {
+  const trimmed = name?.trim();
+  if (!trimmed) return "AC";
+  const parts = trimmed.split(/\s+/);
   if (parts.length >= 2) {
-    return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+    return ([...parts[0]][0] + [...parts[parts.length - 1]][0]).toUpperCase();
   }
-  return name.slice(0, 2).toUpperCase();
+  return [...trimmed].slice(0, 2).join("").toUpperCase();
 }

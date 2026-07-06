@@ -9,7 +9,8 @@ export interface Presentation {
 }
 
 /** Typographic layout variants for the Thought Stream poster cards */
-export type LayoutVariant = "thesis" | "blockquote" | "fragment" | "epigraph" | "interstitial";
+export type LayoutVariant =
+  "thesis" | "blockquote" | "fragment" | "epigraph" | "interstitial";
 
 export interface FeedCard {
   id: string;
