@@ -1,0 +1,106 @@
+import React, { useEffect } from "react";
+import { motion, useMotionValue, useSpring, useTransform } from "motion/react";
+
+export const ParallaxBackground = () => {
+  const motionX = useMotionValue(0);
+  const motionY = useMotionValue(0);
+  const smoothX = useSpring(motionX, { damping: 40, stiffness: 150 });
+  const smoothY = useSpring(motionY, { damping: 40, stiffness: 150 });
+
+  const transform = useTransform(
+    [smoothX, smoothY],
+    ([x, y]) => `translate3d(${x}px, ${y}px, 0) scale(1.05)`,
+  );
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (prefersReducedMotion) return;
+
+    let ticking = false;
+    let rAF: number;
+    let isMounted = true;
+
+    const handleMouseMove = (e: MouseEvent) => {
+      if (!ticking) {
+        rAF = requestAnimationFrame(() => {
+          const x = (e.clientX / window.innerWidth - 0.5) * 20;
+          const y = (e.clientY / window.innerHeight - 0.5) * 20;
+          motionX.set(x);
+          motionY.set(y);
+          ticking = false;
+        });
+        ticking = true;
+      }
+    };
+
+    const handleDeviceOrientation = (e: DeviceOrientationEvent) => {
+      if (e.gamma === null || e.beta === null) return;
+      if (!ticking) {
+        rAF = requestAnimationFrame(() => {
+          const x = Math.min(Math.max(e.gamma! / 4.5, -10), 10);
+          const y = Math.min(Math.max((e.beta! - 45) / 4.5, -10), 10);
+          motionX.set(x);
+          motionY.set(y);
+          ticking = false;
+        });
+        ticking = true;
+      }
+    };
+
+    window.addEventListener("mousemove", handleMouseMove, { passive: true });
+
+    let interactionHandler: (() => void) | null = null;
+
+    if (
+      typeof DeviceOrientationEvent !== "undefined" &&
+      typeof (DeviceOrientationEvent as any).requestPermission === "function"
+    ) {
+      interactionHandler = () => {
+        (DeviceOrientationEvent as any)
+          .requestPermission()
+          .then((permissionState: string) => {
+            if (!isMounted) return;
+            if (permissionState === "granted") {
+              window.addEventListener("deviceorientation", handleDeviceOrientation, {
+                passive: true,
+              });
+              if (interactionHandler) {
+                window.removeEventListener("click", interactionHandler);
+                window.removeEventListener("touchstart", interactionHandler);
+              }
+            }
+          })
+          .catch(console.error);
+      };
+      window.addEventListener("click", interactionHandler);
+      window.addEventListener("touchstart", interactionHandler);
+    } else if (typeof window !== "undefined" && window.DeviceOrientationEvent) {
+      window.addEventListener("deviceorientation", handleDeviceOrientation, {
+        passive: true,
+      });
+    }
+
+    return () => {
+      isMounted = false;
+      window.removeEventListener("mousemove", handleMouseMove);
+      if (typeof window !== "undefined" && window.DeviceOrientationEvent) {
+        window.removeEventListener("deviceorientation", handleDeviceOrientation);
+      }
+      if (interactionHandler) {
+        window.removeEventListener("click", interactionHandler);
+        window.removeEventListener("touchstart", interactionHandler);
+      }
+      cancelAnimationFrame(rAF);
+    };
+  }, [motionX, motionY]);
+
+  return (
+    <motion.div
+      id="parallax-bg"
+      style={{ transform }}
+      className="bg-noise absolute inset-0 opacity-[0.035] pointer-events-none"
+    />
+  );
+};
