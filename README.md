@@ -2,6 +2,8 @@
 
 A cinematic microlearning app for philosophical thinking. Logos presents ideas as a swipeable stream of typographically designed "thought cards", and lets you follow thinkers, explore how they connect, and keep what resonates.
 
+**Live:** [www-logos.com](https://www-logos.com)
+
 ## Features
 
 - **Thought stream** – a feed of ideas rendered in distinct layouts (thesis, blockquote, epigraph, fragment, interstitial)
